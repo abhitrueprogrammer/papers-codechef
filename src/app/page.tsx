@@ -6,6 +6,10 @@ import axios from "axios";
 
 const Upload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
+  const [subject, setSubject] = useState<string>("");
+  const [slot, setSlot] = useState<string>("");
+  const [year, setYear] = useState<string>("");
+  const [exam, setExam] = useState<string>("");
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
@@ -38,13 +42,18 @@ const Upload: React.FC = () => {
     await Promise.all(pagePromises);
 
     const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
     const formData = new FormData();
-    formData.append("file", blob, "images.pdf");
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    console.log(blob);
+    formData.append("file", blob);
+    formData.append("subject", "prob");
+    formData.append("slot", "g1+tg1");
+    formData.append("year", "2024");
+    formData.append("exam", "fat");
 
     try {
-      const response = await axios.post("/api/upload-pdf", formData, {
+      const response = await axios.post("/api/papers", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -71,6 +80,38 @@ const Upload: React.FC = () => {
           <li key={index}>{file.name}</li>
         ))}
       </ul>
+      <div>
+        <label>Subject:</label>
+        <input
+          type="text"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Slot:</label>
+        <input
+          type="text"
+          value={slot}
+          onChange={(e) => setSlot(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Year:</label>
+        <input
+          type="text"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Exam:</label>
+        <input
+          type="text"
+          value={exam}
+          onChange={(e) => setExam(e.target.value)}
+        />
+      </div>
       <button onClick={generatePdf}>Generate PDF</button>
     </div>
   );
