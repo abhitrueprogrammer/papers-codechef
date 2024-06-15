@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dropzone {
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .dropzone p {
+    margin: 0;
+    font-size: 16px;
+    color: #888888;
+  }
+  
