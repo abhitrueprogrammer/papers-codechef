@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import path from "path";
-import { writeFile } from "fs/promises";
+import { connectToDatabase } from "@/lib/mongoose";
+import Paper from "@/db/papers";
 
 interface IFile {
   name: string;
@@ -9,9 +9,9 @@ interface IFile {
 
 export async function GET() {
   try {
-    // await connectToDatabase();
-    // const papers = await Paper.find({});
-    return NextResponse.json("hello");
+    const papers = await Paper.find({});
+
+    return NextResponse.json(papers);
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to fetch papers", error },
@@ -21,9 +21,13 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  await connectToDatabase();
   const formData = await req.formData();
   const files = formData.getAll("files");
-  const imagesArray: string[] = [];
+  const subject = formData.get("subject") as string;
+  const slot = formData.get("slot") as string;
+  const year = formData.get("year") as string;
+  const exam = formData.get("exam") as string;
 
   if (!files || files.length === 0) {
     return NextResponse.json({ error: "No files received." }, { status: 400 });
@@ -34,17 +38,22 @@ export async function POST(req: NextRequest) {
     const filename = Date.now() + (file as IFile).name.replaceAll(" ", "_");
 
     try {
-      await writeFile(
-        path.join(process.cwd(), "public/uploads/" + filename),
-        buffer,
-      );
-      imagesArray.push(path.join(process.cwd(), "public/uploads/" + filename));
+
+      const newPaper = new Paper({
+        file: buffer,
+        subject,
+        slot,
+        year,
+        exam,
+      });
+
+      await newPaper.save();
+
+      return filename;
     } catch (error) {
       console.log("Error occurred for file", (file as IFile).name, error);
       throw error;
     }
-
-    return filename;
   });
 
   try {
