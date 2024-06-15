@@ -14,6 +14,9 @@ dependencies:
   axios:
     specifier: ^1.7.2
     version: 1.7.2
+  cloudinary:
+    specifier: ^2.2.0
+    version: 2.2.0
   file-saver:
     specifier: ^2.0.5
     version: 2.0.5
@@ -35,6 +38,9 @@ dependencies:
   next:
     specifier: ^14.2.1
     version: 14.2.4(react-dom@18.3.1)(react@18.3.1)
+  next-cloudinary:
+    specifier: ^6.6.2
+    version: 6.6.2(next@14.2.4)(react@18.3.1)
   pdf-lib:
     specifier: ^1.17.1
     version: 1.17.1
@@ -111,6 +117,35 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.1
     dev: true
+
+  /@cloudinary-util/types@1.0.5:
+    resolution: {integrity: sha512-QySi6Q138yg/qrD7f6yscH9T+/8VwUfF9AiwFPMS89uI5wnSG9nhC+93a/8iUpgk9ujTDVqE8+TqYAbxvF0BMA==}
+    dev: false
+
+  /@cloudinary-util/url-loader@5.3.1:
+    resolution: {integrity: sha512-cYgnazu7cLjRaajGmhyVfMxjrOz4EaSQsWK1/utV4K5kknUUhu8vUovGunDQJbEGmBWB/TUt7zmwpdUAQ+pe4g==}
+    dependencies:
+      '@cloudinary-util/types': 1.0.5
+      '@cloudinary-util/util': 3.0.2
+      '@cloudinary/url-gen': 1.15.0
+      zod: 3.23.8
+    dev: false
+
+  /@cloudinary-util/util@3.0.2:
+    resolution: {integrity: sha512-EMmspJLVFn9hX92DaK/yuSzSUXF/BJ88crzN8vT1qCaJMMWKapGNo2HZ6YNgG69PP/Jngdk0mTINDU+GP3A1CA==}
+    dev: false
+
+  /@cloudinary/transformation-builder-sdk@1.13.3:
+    resolution: {integrity: sha512-tBMpjcwBjUgINGm2lKodb1fe32yBeq2KTSD7TrrFPm2/dQOb7lKmVuDaDe89IPcV+QZbb1JY/ZWL9pZjUV4aKw==}
+    dependencies:
+      '@cloudinary/url-gen': 1.15.0
+    dev: false
+
+  /@cloudinary/url-gen@1.15.0:
+    resolution: {integrity: sha512-bjU67eZxLUgoRy/Plli4TQio7q6P31OYqnEgXxeN9TKXrzr6h0DeEdIUhKI9gy3HkEBWXWWJIPh7j7gkOJPnyA==}
+    dependencies:
+      '@cloudinary/transformation-builder-sdk': 1.13.3
+    dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.57.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -397,6 +432,10 @@ packages:
       '@t3-oss/env-core': 0.10.1(typescript@5.4.5)(zod@3.23.8)
       typescript: 5.4.5
       zod: 3.23.8
+    dev: false
+
+  /@tsconfig/recommended@1.0.6:
+    resolution: {integrity: sha512-0IKu9GHYF1NGTJiYgfWwqnOQSlnE9V9R7YohHNNf0/fj/SyOZWzdd06JFr0fLpg1Mqw0kGbYg8w5xdkSqLKM9g==}
     dev: false
 
   /@types/eslint-scope@3.7.7:
@@ -1145,6 +1184,14 @@ packages:
 
   /client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
+
+  /cloudinary@2.2.0:
+    resolution: {integrity: sha512-akbLTZcNegGSkl07Frnt9fyiK9KZ2zPS+a+j7uLrjNYxVhDpDdIBz9G6snPCYqgk+WLVMRPfXTObalLr5L6g0Q==}
+    engines: {node: '>=9'}
+    dependencies:
+      lodash: 4.17.21
+      q: 1.5.1
     dev: false
 
   /color-convert@2.0.1:
@@ -2533,6 +2580,10 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
 
+  /lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
+
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
@@ -2767,6 +2818,20 @@ packages:
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
+
+  /next-cloudinary@6.6.2(next@14.2.4)(react@18.3.1):
+    resolution: {integrity: sha512-MbI5WpSk4dj9YnRgDp1C7vjtMivqOdkoR/jcmjIGR2Zth5RqGgiTpi7ee87d9pEdrfuJxdDzv27KA4s8tAVQkQ==}
+    peerDependencies:
+      next: ^12 || ^13 || ^14
+      react: ^17 || ^18
+    dependencies:
+      '@cloudinary-util/types': 1.0.5
+      '@cloudinary-util/url-loader': 5.3.1
+      '@cloudinary-util/util': 3.0.2
+      '@tsconfig/recommended': 1.0.6
+      next: 14.2.4(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+    dev: false
 
   /next@14.2.4(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-R8/V7vugY+822rsQGQCjoLhMuC9oFj9SOi4Cl4b2wjDrseD0LRZ10W7R6Czo4w9ZznVSshKjuIomsRjvm9EKJQ==}
@@ -3190,6 +3255,15 @@ packages:
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  /q@1.5.1:
+    resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
+    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
+    deprecated: |-
+      You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
+      (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
+    dev: false
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}

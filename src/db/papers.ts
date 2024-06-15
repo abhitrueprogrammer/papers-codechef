@@ -1,15 +1,8 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-
-interface IPaper extends Document {
-  file: Buffer;
-  subject: string;
-  slot: string;
-  year: string;
-  exam: "cat1" | "cat2" | "fat";
-}
+import { IPaper } from "@/interface";
 
 const paperSchema = new Schema<IPaper>({
-  file: { type: Buffer, required: true },
+  file: { type: String, required: true },
   subject: { type: String, required: true },
   slot: { type: String, required: true },
   year: { type: String, required: true },
