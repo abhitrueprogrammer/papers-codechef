@@ -1,40 +1,44 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect, use } from "react";
 import { PDFDocument } from "pdf-lib";
 import axios from "axios";
 import { CldUploadWidget } from "next-cloudinary";
-import { CloudinaryUploadResult } from "@/interface";
-
-
-let tag = "";
 
 const Upload: React.FC = () => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [subject, setSubject] = useState<string>("");
-  const [slot, setSlot] = useState<string>("");
-  const [year, setYear] = useState<string>("");
-  const [exam, setExam] = useState<string>("");
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+  const [subject, setSubject] = useState<string>("dcnjddc");
+  const [slot, setSlot] = useState<string>("dcscddc");
+  const [year, setYear] = useState<string>("ccdd");
+  const [exam, setExam] = useState<string>("cat1");
+  const [tag, setTag] = useState<string>();
+  useEffect(() => {
+    async function makeTage() {
+      const timestamp = Date.now();
+      setTag(`papers-${timestamp}`);
+      console.log("Tag:", tag);
+    }
+    void makeTage();
   }, []);
 
-  const generateTimestampTag = () => {
-    const timestamp = Date.now();
-    tag = `papers-${timestamp}`;
-  };
 
-  async function completeUpload(results: CloudinaryUploadResult) {
-    console.log("Upload successful:", results.tags[0]);
+  async function completeUpload() {
+    console.log();
     const body = {
-      tags: results.tags[0],
-    }
+      tag: tag,
+      subject: subject,
+      slot: slot,
+      year: year,
+      exam: exam,
+    };
     try {
       const response = await axios.post("/api/papers", body);
       console.log("Upload successful:", response.data);
     } catch (error) {
       console.error("Error uploading PDF:", error);
     }
+  }
+
+  if (!tag) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -44,17 +48,16 @@ const Upload: React.FC = () => {
         uploadPreset="papers-unsigned"
         options={{
           sources: ["camera", "local"],
-          multiple: true,
+          multiple: false,
+          cropping: true,
+          singleUploadAutoClose: false,
           maxFiles: 5,
           tags: [tag],
-          
         }}
-        
         onSuccess={(results) => {
-          void completeUpload(results.info as CloudinaryUploadResult);
+          console.log("Upload successful:", results.info);
         }}
         onClose={(result) => console.log(result)}
-        onOpen={() => generateTimestampTag()}
       >
         {({ open }) => {
           return (
@@ -67,11 +70,6 @@ const Upload: React.FC = () => {
           );
         }}
       </CldUploadWidget>
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>{file.name}</li>
-        ))}
-      </ul>
       <div>
         <label>Subject:</label>
         <input
@@ -104,6 +102,8 @@ const Upload: React.FC = () => {
           onChange={(e) => setExam(e.target.value)}
         />
       </div>
+      <button onClick={completeUpload}>Complete Upload</button>
+      <button onClick={() => console.log(tag)}>tag</button>
     </div>
   );
 };

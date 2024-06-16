@@ -48,5 +48,10 @@
   "ct3aMetadata": {
     "initVersion": "7.34.0"
   },
+  "eslintConfig": {
+    "rules": {
+      "no-var": 0
+    }
+  },
   "packageManager": "pnpm@9.1.4"
 }

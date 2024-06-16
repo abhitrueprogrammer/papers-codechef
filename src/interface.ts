@@ -29,8 +29,8 @@ export interface PostRequestBody {
   tags: string;
 }
 
-export interface IPaper extends Document {
-  file: string;
+export interface IPaper{
+  tag: string;
   subject: string;
   slot: string;
   year: string;
