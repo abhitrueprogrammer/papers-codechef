@@ -19,7 +19,7 @@ export async function POST(req: Request, res: Response) {
     
     if (!isPdf) {
       // @ts-expect-error: cloudinary was dumb this time
-      const response = await cloudinary.v2.uploader.multi({ urls: urls, format: "pdf", quality: "auto"}) as ConverttoPDFResponse
+      const response = await cloudinary.v2.uploader.multi({ urls: urls, format: "pdf", quality: "auto:best"}) as ConverttoPDFResponse
       console.log("Result:", response);
       finalUrl = response.url;
       const paper = new Paper({

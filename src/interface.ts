@@ -56,3 +56,12 @@ export interface ConverttoPDFResponse {
     public_id: string;
     version: number;
 }
+
+export interface LoginResponse {
+  token: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
