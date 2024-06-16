@@ -34,9 +34,25 @@ export interface PostRequestBody {
 }
 
 export interface IPaper{
+  finalUrl: string;
+  subject: string;
+  slot: string;
+  year: string;
+  exam: "cat1" | "cat2" | "fat";
+}
+export interface IAdminUpload{
   urls: Array<string>;
   subject: string;
   slot: string;
   year: string;
   exam: "cat1" | "cat2" | "fat";
+  isPdf: boolean;
+}
+
+export interface ConverttoPDFResponse {
+    url: string;
+    secure_url: string;
+    asset_id: string;
+    public_id: string;
+    version: number;
 }

@@ -1,7 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
-import { type IPaper } from "@/interface";
+import { type IAdminUpload, type ConverttoPDFResponse } from "@/interface";
+import Paper from "@/db/papers";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -12,12 +13,37 @@ cloudinary.v2.config({
 export async function POST(req: Request, res: Response) {
   try {
     await connectToDatabase();
-    const body = (await req.json()) as IPaper;
-    const { urls, slot, subject, exam, year } = body;
-    // @ts-expect-error: cloudinary was dumb this time
-    const result = cloudinary.v2.uploader.multi({ urls: urls, format: "pdf" });
-    console.log(result);
-    return NextResponse.json(urls);
+    const body = (await req.json()) as IAdminUpload;
+    const { urls, slot, subject, exam, year, isPdf } = body;
+    let finalUrl: string | undefined = '';
+    
+    if (!isPdf) {
+      // @ts-expect-error: cloudinary was dumb this time
+      const response = await cloudinary.v2.uploader.multi({ urls: urls, format: "pdf", quality: "auto"}) as ConverttoPDFResponse
+      console.log("Result:", response);
+      finalUrl = response.url;
+      const paper = new Paper({
+        finalUrl,
+        subject,
+        slot,
+        year,
+        exam,
+      });
+      await paper.save();
+    }
+    else{
+      finalUrl = urls[0];
+      const paper = new Paper({
+        finalUrl,
+        subject,
+        slot,
+        year,
+        exam,
+      });
+      await paper.save();
+    }
+    
+    return NextResponse.json(finalUrl);
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to fetch papers", error },

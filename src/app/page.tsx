@@ -12,6 +12,7 @@ const Upload: React.FC = () => {
   const [tag, setTag] = useState<string>();
   const [urls, setUrls] = useState<string[]>();
   const [givenURL, setGivenUrl] = useState<string>("");
+  const [isPdf, setIsPdf] = useState<boolean>(false);
 
   useEffect(() => {
     async function makeTage() {
@@ -22,17 +23,6 @@ const Upload: React.FC = () => {
     void makeTage();
   }, []);
 
-  const handleCompress = async () => {
-    const body = {
-      url: givenURL,
-    };
-    try {
-      const response = await axios.post("/api/compress", body);
-      console.log("Upload successful:", response.data);
-    } catch (error) {
-      console.error("Error uploading PDF:", error);
-    }
-  };
 
   async function completeUpload() {
     console.log();
@@ -42,6 +32,7 @@ const Upload: React.FC = () => {
       slot: slot,
       year: year,
       exam: exam,
+      isPdf: isPdf, 
     };
     try {
       const response = await axios.post("/api/papers", body);
@@ -117,17 +108,16 @@ const Upload: React.FC = () => {
           onChange={(e) => setExam(e.target.value)}
         />
       </div>
+      <div>
+        <label>Is PDF:</label>
+        <input
+          type="checkbox"
+          checked={isPdf}
+          onChange={(e) => setIsPdf(e.target.checked)}
+        />
+      </div>
       <button onClick={completeUpload}>Complete Upload</button>
       <button onClick={() => console.log(tag)}>tag</button>
-
-      <div className="bg-black/10">
-        <input
-          type="text"
-          value={givenURL}
-          onChange={(e) => setGivenUrl(e.target.value)}
-        />
-        <button onClick={handleCompress}>Compress</button>
-      </div>
     </div>
   );
 };
