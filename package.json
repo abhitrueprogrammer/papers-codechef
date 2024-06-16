@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ilovepdf/ilovepdf-nodejs": "^0.2.6",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@types/mongoose": "^5.11.97",
     "axios": "^1.7.2",
@@ -22,6 +23,8 @@
     "multer": "1.4.5-lts.1",
     "next": "^14.2.1",
     "next-cloudinary": "^6.6.2",
+    "node-fetch": "^3.3.2",
+    "pdf-compressor": "^1.0.5",
     "pdf-lib": "^1.17.1",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your Mongo URI to .env.local');
+  throw new Error("Please add your Mongo URI to .env.local");
 }
 
 const uri = process.env.MONGODB_URI;
@@ -21,9 +21,9 @@ export const connectToDatabase = async () => {
   try {
     await mongoose.connect(uri);
     isConnected = true;
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    throw new Error('Failed to connect to MongoDB');
+    console.error("Error connecting to MongoDB:", error);
+    throw new Error("Failed to connect to MongoDB");
   }
 };

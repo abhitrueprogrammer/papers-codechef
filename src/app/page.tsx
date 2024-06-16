@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CldUploadWidget } from "next-cloudinary";
-import { CloudinaryUploadWidgetProps } from "@/interface";
+import { type CloudinaryUploadWidgetProps } from "@/interface";
 
 const Upload: React.FC = () => {
   const [subject, setSubject] = useState<string>("dcnjddc");
@@ -11,6 +11,8 @@ const Upload: React.FC = () => {
   const [exam, setExam] = useState<string>("cat1");
   const [tag, setTag] = useState<string>();
   const [urls, setUrls] = useState<string[]>();
+  const [givenURL, setGivenUrl] = useState<string>("");
+
   useEffect(() => {
     async function makeTage() {
       const timestamp = Date.now();
@@ -20,6 +22,17 @@ const Upload: React.FC = () => {
     void makeTage();
   }, []);
 
+  const handleCompress = async () => {
+    const body = {
+      url: givenURL,
+    };
+    try {
+      const response = await axios.post("/api/compress", body);
+      console.log("Upload successful:", response.data);
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+    }
+  };
 
   async function completeUpload() {
     console.log();
@@ -106,6 +119,15 @@ const Upload: React.FC = () => {
       </div>
       <button onClick={completeUpload}>Complete Upload</button>
       <button onClick={() => console.log(tag)}>tag</button>
+
+      <div className="bg-black/10">
+        <input
+          type="text"
+          value={givenURL}
+          onChange={(e) => setGivenUrl(e.target.value)}
+        />
+        <button onClick={handleCompress}>Compress</button>
+      </div>
     </div>
   );
 };
