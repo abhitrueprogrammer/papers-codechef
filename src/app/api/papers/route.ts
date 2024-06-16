@@ -13,13 +13,11 @@ export async function POST(req: Request, res: Response) {
   try {
     await connectToDatabase();
     const body = (await req.json()) as IPaper;
-    const { tag, slot, subject, exam, year } = body;
-    const result = cloudinary.v2.uploader.multi(tag, {
-      format: "pdf",
-      transformation: { crop: "fill", gravity: "auto" },
-    });
+    const { urls, slot, subject, exam, year } = body;
+    // @ts-expect-error: cloudinary was dumb this time
+    const result = cloudinary.v2.uploader.multi({urls: urls, format: "pdf"})
     console.log(result);
-    return NextResponse.json(tag);
+    return NextResponse.json(urls);
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to fetch papers", error },

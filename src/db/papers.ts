@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import { IPaper } from "@/interface";
 
 const paperSchema = new Schema<IPaper>({
-  tag: { type: String, required: true },
+  urls: { type: [String], required: true },
   subject: { type: String, required: true },
   slot: { type: String, required: true },
   year: { type: String, required: true },

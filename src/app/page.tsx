@@ -1,8 +1,8 @@
 "use client";
-import React, { useCallback, useState, useEffect, use } from "react";
-import { PDFDocument } from "pdf-lib";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CldUploadWidget } from "next-cloudinary";
+import { CloudinaryUploadWidgetProps } from "@/interface";
 
 const Upload: React.FC = () => {
   const [subject, setSubject] = useState<string>("dcnjddc");
@@ -10,6 +10,7 @@ const Upload: React.FC = () => {
   const [year, setYear] = useState<string>("ccdd");
   const [exam, setExam] = useState<string>("cat1");
   const [tag, setTag] = useState<string>();
+  const [urls, setUrls] = useState<string[]>();
   useEffect(() => {
     async function makeTage() {
       const timestamp = Date.now();
@@ -23,7 +24,7 @@ const Upload: React.FC = () => {
   async function completeUpload() {
     console.log();
     const body = {
-      tag: tag,
+      urls: urls,
       subject: subject,
       slot: slot,
       year: year,
@@ -54,8 +55,9 @@ const Upload: React.FC = () => {
           maxFiles: 5,
           tags: [tag],
         }}
-        onSuccess={(results) => {
-          console.log("Upload successful:", results.info);
+        onSuccess={(results: CloudinaryUploadWidgetProps) => {
+          //@ts-expect-error: ts being an ass
+          setUrls((prevUrls) => [...(prevUrls ?? []), results.info?.url]);
         }}
         onClose={(result) => console.log(result)}
       >

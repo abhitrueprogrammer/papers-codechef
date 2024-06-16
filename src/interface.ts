@@ -25,12 +25,16 @@ export interface CloudinaryUploadResult {
   url: string;
 }
 
+export interface CloudinaryUploadWidgetProps {
+  info?: CloudinaryUploadResult | undefined | string;
+}
+
 export interface PostRequestBody {
   tags: string;
 }
 
 export interface IPaper{
-  tag: string;
+  urls: Array<string>;
   subject: string;
   slot: string;
   year: string;
