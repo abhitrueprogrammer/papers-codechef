@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import { type IAdminUpload, type ConverttoPDFResponse } from "@/interface";
@@ -10,7 +10,7 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     await connectToDatabase();
     const body = (await req.json()) as IAdminUpload;

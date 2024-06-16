@@ -1,11 +1,11 @@
 import { connectToDatabase } from "@/lib/mongoose";
 import bcrypt from "bcrypt";
-import User, { IUser } from "@/db/user";
+import User, { type IUser } from "@/db/user";
 import { generateToken } from "@/lib/auth";
-import { LoginRequest } from "@/interface";
+import { type LoginRequest } from "@/interface";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   await connectToDatabase();
 
   const body = (await req.json()) as LoginRequest;

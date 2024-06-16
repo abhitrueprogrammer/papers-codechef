@@ -61,6 +61,10 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface ErrorResponse {
+  message: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;

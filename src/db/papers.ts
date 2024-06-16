@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-import { IPaper } from "@/interface";
+import mongoose, { Schema, type Model } from "mongoose";
+import { type IPaper } from "@/interface";
 
 const paperSchema = new Schema<IPaper>({
   finalUrl: { type: String, required: true },

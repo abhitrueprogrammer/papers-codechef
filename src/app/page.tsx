@@ -3,19 +3,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CldUploadWidget } from "next-cloudinary";
 import { type CloudinaryUploadWidgetProps } from "@/interface";
+import { useRouter } from "next/navigation";
 
 const Upload: React.FC = () => {
+  const router = useRouter();
   const [subject, setSubject] = useState<string>("dcnjddc");
   const [slot, setSlot] = useState<string>("dcscddc");
   const [year, setYear] = useState<string>("ccdd");
   const [exam, setExam] = useState<string>("cat1");
   const [tag, setTag] = useState<string>();
   const [urls, setUrls] = useState<string[]>();
-  const [givenURL, setGivenUrl] = useState<string>("");
   const [isPdf, setIsPdf] = useState<boolean>(false);
 
   useEffect(() => {
     async function makeTage() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token not found in localStorage.");
+        router.push("/papersadminlogin");
+      }
       const timestamp = Date.now();
       setTag(`papers-${timestamp}`);
       console.log("Tag:", tag);
@@ -23,19 +29,25 @@ const Upload: React.FC = () => {
     void makeTage();
   }, []);
 
-
   async function completeUpload() {
-    console.log();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found in localStorage.");
+      return;
+    }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     const body = {
       urls: urls,
       subject: subject,
       slot: slot,
       year: year,
       exam: exam,
-      isPdf: isPdf, 
+      isPdf: isPdf,
     };
     try {
-      const response = await axios.post("/api/papers", body);
+      const response = await axios.post("/api/admin", body, { headers });
       console.log("Upload successful:", response.data);
     } catch (error) {
       console.error("Error uploading PDF:", error);
