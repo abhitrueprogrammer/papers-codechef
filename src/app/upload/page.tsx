@@ -47,7 +47,7 @@ const Page = () => {
 
   return (
     <div>
-      <input type="file" multiple ref={fileInputRef} />
+      <input type="file" accept="image/*,.pdf" multiple ref={fileInputRef} />
       {openCamera && <Camera />}
       <button onClick={toggleOpenCamera} className="bg-black/10 px-4 py-3">
         {openCamera ? "Close Camera" : "Open Camera"}
