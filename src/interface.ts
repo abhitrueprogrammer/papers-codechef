@@ -42,6 +42,7 @@ export interface IPaper{
 }
 export interface IAdminUpload{
   urls: Array<string>;
+  publicIds: Array<string>;
   subject: string;
   slot: string;
   year: string;
