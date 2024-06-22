@@ -24,6 +24,13 @@ export async function GET(req: Request) {
       { $project: { _id: 0, subject: "$_id" } },
     ]);
 
+    if (subjects.length === 0) {
+      return NextResponse.json(
+        { message: "No subjects found for the specified text" },
+        { status: 404 },
+      );
+    }
+
     const encryptedResponse = cryptr.encrypt(JSON.stringify({ subjects }));
 
     return NextResponse.json({ res: encryptedResponse }, { status: 200 });

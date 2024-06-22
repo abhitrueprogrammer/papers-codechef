@@ -22,6 +22,14 @@ export async function GET(req: Request) {
     const papers: IPaper[] = await Paper.find({
       subject: { $regex: new RegExp(`^${subject}$`, "i") },
     });
+
+    if (papers.length === 0) {
+      return NextResponse.json(
+        { message: "No papers found for the specified subject" },
+        { status: 404 },
+      );
+    }
+    
     const uniqueYears = Array.from(new Set(papers.map((paper) => paper.year)));
     const uniqueSlots = Array.from(new Set(papers.map((paper) => paper.slot)));
     const uniqueExams = Array.from(new Set(papers.map((paper) => paper.exam)));

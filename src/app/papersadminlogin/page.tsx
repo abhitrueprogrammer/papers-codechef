@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { type LoginResponse, type ErrorResponse } from "@/interface";
 import Cryptr from "cryptr";
 
-const cryptr = new Cryptr(process.env.NEXT_PUBLIC_CRYPTO_SECRET || "default_crypto_secret");
+const cryptr = new Cryptr(
+  process.env.NEXT_PUBLIC_CRYPTO_SECRET || "default_crypto_secret",
+);
 
 const LoginPage = () => {
   const router = useRouter();
@@ -26,10 +28,10 @@ const LoginPage = () => {
       const token = message.token;
       console.log("Decrypted token:", token);
       localStorage.setItem("token", token);
-      router.push("/");
+      router.push("/adminupload");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>
+        const axiosError = error as AxiosError<ErrorResponse>;
         setError(axiosError.response?.data.message ?? "Failed to login");
       } else {
         setError("Failed to login");
