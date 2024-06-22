@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return NextResponse.json({ message: "User already exists" });
+      return NextResponse.json({ message: "User already exists" }, { status: 409 });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -28,9 +28,9 @@ export async function POST(req: Request) {
     return NextResponse.json({
       token,
       user: { id: newUser._id, email: newUser.email },
-    });
+    }, { status: 201 });
   } catch (error) {
     console.error("Error signing up:", error);
-    return NextResponse.json({ message: "Failed to sign up", error });
+    return NextResponse.json({ message: "Failed to sign up", error }, { status: 500 });
   }
 }

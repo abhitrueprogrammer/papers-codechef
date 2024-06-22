@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { CldUploadWidget } from "next-cloudinary";
 import {
   type CloudinaryUploadWidgetProps,
@@ -11,7 +11,6 @@ import Image from "next/image";
 import { Trash } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-
 
 const Upload: React.FC = () => {
   const router = useRouter();
@@ -31,12 +30,29 @@ const Upload: React.FC = () => {
   useEffect(() => {
     async function makeTage() {
       const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
       if (!token) {
         console.error("Token not found in localStorage.");
         router.push("/papersadminlogin");
       }
-      const timestamp = Date.now();
-      setTag(`papers-${timestamp}`);
+      try {
+        const response = await axios.get("/api/admin/dashboard", { headers });
+        const timestamp = Date.now();
+        setTag(`papers-${timestamp}`);
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          if (status === 401) {
+            router.push("/papersadminlogin");
+          } else {
+            toast.error("An unknown error occurred");
+          }
+        } else {
+          toast.error("An unexpected error occurred");
+        }
+      }
     }
     void makeTage();
   }, []);
@@ -49,6 +65,15 @@ const Upload: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found in localStorage.");
+      router.push("/papersadminlogin");
+      return;
+    }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     if (!file) {
       setError("Please select a PDF file to upload.");
       return;
@@ -58,14 +83,19 @@ const Upload: React.FC = () => {
     formData.append("file", file);
 
     try {
-      await axios.post("/api/admin/watermark", formData);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError("Failed to watermark the PDF.");
-        console.error("Axios error:", error);
+      await axios.post("/api/admin/watermark", formData, { headers });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
+        } else {
+          toast.error("Failed to upload papers.");
+          setError("Failed to watermark PDF.");
+        }
       } else {
-        setError("An unknown error occurred.");
-        console.error("Error uploading PDF:", error);
+        toast.error("An unexpected error occurred");
+        setError("Failed to watermark PDF.");
       }
     }
   };
@@ -78,6 +108,7 @@ const Upload: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token not found in localStorage.");
+      router.push("/papersadminlogin");
       return;
     }
     const headers = {
@@ -100,17 +131,45 @@ const Upload: React.FC = () => {
         return asset?.public_id !== public_id;
       });
       setAsset(updatedAssets);
-    } catch (error) {
-      console.error("Error deleting asset:", (error as Error).message);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
+        } else {
+          toast.error("Failed to upload papers.");
+        }
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
   const handleDeletePdf = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found in localStorage.");
+      router.push("/papersadminlogin");
+      return;
+    }
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     try {
-      const response = await axios.delete("/api/admin/watermark");
-    } catch (error) {
-      setError("Failed to delete watermarked PDF.");
-      console.error("Error deleting PDF:", error);
+      const response = await axios.delete("/api/admin/watermark", { headers });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
+        } else {
+          toast.error("Failed to upload papers.");
+          setError("Failed to delete PDF.");
+        }
+      } else {
+        toast.error("An unexpected error occurred");
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -118,6 +177,7 @@ const Upload: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token not found in localStorage.");
+      router.push("/papersadminlogin");
       return;
     }
     const headers = {
@@ -144,8 +204,17 @@ const Upload: React.FC = () => {
         setPublicIds([]);
         setUrls([]);
       }
-    } catch (error) {
-      console.error("Error uploading PDF:", error);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
+        } else {
+          toast.error("Failed to upload papers.");
+        }
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   }
 

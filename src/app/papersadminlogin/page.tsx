@@ -3,6 +3,9 @@ import { useState } from "react";
 import axios, { type AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { type LoginResponse, type ErrorResponse } from "@/interface";
+import Cryptr from "cryptr";
+
+const cryptr = new Cryptr(process.env.NEXT_PUBLIC_CRYPTO_SECRET || "default_crypto_secret");
 
 const LoginPage = () => {
   const router = useRouter();
@@ -16,7 +19,12 @@ const LoginPage = () => {
         email,
         password,
       });
-      const { token } = response.data;
+
+      const { res } = response.data;
+      const decryptedToken = cryptr.decrypt(res);
+      const message = JSON.parse(decryptedToken);
+      const token = message.token;
+      console.log("Decrypted token:", token);
       localStorage.setItem("token", token);
       router.push("/");
     } catch (error) {

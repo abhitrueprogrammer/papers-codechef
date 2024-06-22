@@ -3,7 +3,6 @@ import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import { type IAdminUpload, type ConverttoPDFResponse } from "@/interface";
 import Paper from "@/db/papers";
-import { stat } from "fs";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -25,7 +24,7 @@ export async function POST(req: Request) {
     });
     if (existingPaper) {
       console.log("Paper already exists:", existingPaper);
-      NextResponse.json({ status: "error", message: "Paper already exists"})
+      NextResponse.json({message: "Paper already exists"}, {status: 409})
     }
     if (!isPdf) {
       // @ts-expect-error: cloudinary was dumb this time
@@ -67,7 +66,7 @@ export async function POST(req: Request) {
       await paper.save();
     }
 
-    return NextResponse.json({ status: "success", url: finalUrl });
+    return NextResponse.json({ status: "success", url: finalUrl }, {status: 201});
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to fetch papers", error },

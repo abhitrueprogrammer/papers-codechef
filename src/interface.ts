@@ -59,7 +59,7 @@ export interface ConverttoPDFResponse {
 }
 
 export interface LoginResponse {
-  token: string;
+  res: string;
 }
 
 export interface ErrorResponse {

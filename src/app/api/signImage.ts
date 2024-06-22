@@ -9,5 +9,5 @@ export async function POST(request: Request) {
     paramsToSign,
     process.env.CLOUDINARY_SECRET!,
   );
-  return Response.json({ signature });
+  return Response.json({ signature }, { status: 200});
 }

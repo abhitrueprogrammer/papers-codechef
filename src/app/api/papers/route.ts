@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Paper from "@/db/papers";
+import Cryptr from "cryptr";
 import { type IPaper } from "@/interface";
+
+const cryptr = new Cryptr(process.env.CRYPTO_SECRET || "default_crypto_secret");
 
 export async function GET(req: Request) {
   try {
@@ -23,7 +26,11 @@ export async function GET(req: Request) {
     const uniqueSlots = Array.from(new Set(papers.map((paper) => paper.slot)));
     const uniqueExams = Array.from(new Set(papers.map((paper) => paper.exam)));
 
-    return NextResponse.json({ papers, uniqueYears, uniqueSlots, uniqueExams });
+    const encryptedResponse = cryptr.encrypt(
+      JSON.stringify({ papers, uniqueYears, uniqueSlots, uniqueExams }),
+    );
+
+    return NextResponse.json({ res: encryptedResponse }, { status: 200 });
   } catch (error) {
     console.error("Error fetching papers by subject:", error);
     return NextResponse.json(

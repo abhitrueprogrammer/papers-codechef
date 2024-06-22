@@ -34,42 +34,50 @@ export async function POST(req: Request, res: NextApiResponse) {
     const { width, height } = pages[0]!.getSize();
 
     pages.forEach((page) => {
-        const x = width - 80;
-        const y = 50;
-        const watermarkWidth = 50;
-        const watermarkHeight = 50;
-  
-        page.drawImage(watermarkImage, {
-          x: x,
-          y: y,
-          width: watermarkWidth,
-          height: watermarkHeight,
-          opacity: 0.3,
-        });
+      const x = width - 80;
+      const y = 50;
+      const watermarkWidth = 50;
+      const watermarkHeight = 50;
+
+      page.drawImage(watermarkImage, {
+        x: x,
+        y: y,
+        width: watermarkWidth,
+        height: watermarkHeight,
+        opacity: 0.3,
       });
+    });
 
     const pdfBytes = await pdfDoc.save();
     await writeFile(
-        path.join(process.cwd(), "public/"+ "watermarked.pdf"),
-        pdfBytes
-      );
-    return NextResponse.json({ url: "/assets/watermarked.pdf" });
+      path.join(process.cwd(), "public/" + "watermarked.pdf"),
+      pdfBytes,
+    );
+    return NextResponse.json({ url: "/assets/watermarked.pdf" }, {status: 200});
   } catch (error) {
-    return NextResponse.json({ error: "Failed to process PDF" });
+    return NextResponse.json({ error: "Failed to process PDF" }, { status: 500 });
   }
 }
 
-export async function DELETE(req: Request, res: NextApiResponse){
-    const filePath = path.resolve('./public/watermarked.pdf');
-    try {
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-          return NextResponse.json({ message: 'Deleted watermarked PDF file successfully' });
-        } else {
-          return NextResponse.json({ error: 'Watermarked PDF file not found' });
-        }
-      } catch (error) {
-        console.error('Error deleting PDF file:', error);
-        return NextResponse.json({ error: 'Failed to delete watermarked PDF file' });
-      }
+export async function DELETE(req: Request, res: NextApiResponse) {
+  const filePath = path.resolve("./public/watermarked.pdf");
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return NextResponse.json(
+        { message: "Deleted watermarked PDF file successfully" },
+        { status: 200 },
+      );
+    } else {
+      return NextResponse.json(
+        { error: "Watermarked PDF file not found" },
+        { status: 400 },
+      );
+    }
+  } catch (error) {
+    console.error("Error deleting PDF file:", error);
+    return NextResponse.json({
+      error: "Failed to delete watermarked PDF file",
+    }, {status: 500});
+  }
 }
