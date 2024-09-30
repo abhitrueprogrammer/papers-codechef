@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       const response = (await cloudinary.v2.uploader.multi({
         urls: urls,
         format: "pdf",
-        density: 40,
+        density: 50,
       })) as ConverttoPDFResponse;
       console.log("Result:", response);
       finalUrl = response.url;

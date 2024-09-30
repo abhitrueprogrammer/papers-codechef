@@ -26,6 +26,9 @@ const Upload: React.FC = () => {
     useState<(CloudinaryUploadResult | string | undefined)[]>();
   const [file, setFile] = useState<File | undefined>();
   const [error, setError] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  
 
   useEffect(() => {
     async function makeTage() {
@@ -171,6 +174,64 @@ const Upload: React.FC = () => {
         setError("An unexpected error occurred.");
       }
     }
+  };
+
+  const handleFileChangeMerged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    setFiles(selectedFiles);
+  };
+
+  const handleSubmitMerged = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(files);
+    if (files.length === 0) {
+      alert('Please upload at least one file');
+      return;
+    }
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    try {
+      const response = await axios.post('/api/admin/imgtopdf', formData);
+      setPdfUrl(response.data.url);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          if (status === 401) {
+            router.push("/papersadminlogin");
+          } else {
+            toast.error("Failed to upload papers.");
+          }
+        } else {
+          toast.error("An unexpected error occurred");
+        }
+      }
+  };
+
+  const handleDeleteMerged = async () => {
+    if (!pdfUrl) return;
+
+    try {
+      const response = await axios.delete('/api/admin/imgtopdf', {
+        data: { filePath: pdfUrl },
+      });
+      alert(response.data.message);
+      setPdfUrl(null);
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          if (status === 401) {
+            router.push("/papersadminlogin");
+          } else {
+            toast.error("Failed to upload papers.");
+          }
+        } else {
+          toast.error("An unexpected error occurred");
+        }
+      }
   };
 
   async function completeUpload() {
@@ -351,6 +412,52 @@ const Upload: React.FC = () => {
                 Delete PDF
               </button>
             </div>
+          </div>
+        </div>
+        <div className="flex">
+          <div className="w-full max-w-md rounded bg-white p-8 shadow-md">
+            <h1 className="mb-6 text-2xl font-bold">
+              Upload Images to Convert to PDF
+            </h1>
+            <form onSubmit={handleSubmitMerged}>
+              <div className="mb-4">
+                <label className="mb-2 block font-semibold text-gray-700">
+                  Images:
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChangeMerged}
+                  className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600"
+              >
+                Convert to PDF
+              </button>
+            </form>
+            {pdfUrl && (
+              <div className="mt-6 text-center">
+                <h2 className="mb-2 text-xl font-semibold">PDF Created</h2>
+                <a
+                  href={pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mb-4 inline-block text-blue-500 hover:text-blue-600"
+                >
+                  Download PDF
+                </a>
+                <button
+                  onClick={handleDeleteMerged}
+                  className="w-full rounded bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600"
+                >
+                  Delete PDF
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
