@@ -26,7 +26,8 @@ export interface CloudinaryUploadResult {
 }
 
 export interface CloudinaryUploadWidgetProps {
-  info?: CloudinaryUploadResult | undefined | string;
+  info: CloudinaryUploadResult;
+  event?: string;
 }
 
 export interface PostRequestBody {

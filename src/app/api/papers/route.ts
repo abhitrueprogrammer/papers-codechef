@@ -4,7 +4,7 @@ import Paper from "@/db/papers";
 import Cryptr from "cryptr";
 import { type IPaper } from "@/interface";
 
-const cryptr = new Cryptr(process.env.CRYPTO_SECRET || "default_crypto_secret");
+const cryptr = new Cryptr(process.env.CRYPTO_SECRET ?? "default_crypto_secret");
 
 export async function GET(req: Request) {
   try {

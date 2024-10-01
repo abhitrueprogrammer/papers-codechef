@@ -12,6 +12,17 @@ import { Trash } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
+interface PostPDF {
+  url: string;
+}
+interface DeletePDF {
+  message: string;
+}
+
+interface PostPDFToCloudinary {
+  status: boolean;
+}
+
 const Upload: React.FC = () => {
   const router = useRouter();
   const [subject, setSubject] = useState<string>("");
@@ -28,7 +39,6 @@ const Upload: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  
 
   useEffect(() => {
     async function makeTage() {
@@ -177,7 +187,7 @@ const Upload: React.FC = () => {
   };
 
   const handleFileChangeMerged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || []);
+    const selectedFiles = Array.from(e.target.files ?? []);
     setFiles(selectedFiles);
   };
 
@@ -185,53 +195,56 @@ const Upload: React.FC = () => {
     e.preventDefault();
     console.log(files);
     if (files.length === 0) {
-      alert('Please upload at least one file');
+      alert("Please upload at least one file");
       return;
     }
 
     const formData = new FormData();
     files.forEach((file) => {
-      formData.append('files', file);
+      formData.append("files", file);
     });
 
     try {
-      const response = await axios.post('/api/admin/imgtopdf', formData);
+      const response = await axios.post<PostPDF>(
+        "/api/admin/imgtopdf",
+        formData,
+      );
       setPdfUrl(response.data.url);
     } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-          const status = error.response?.status;
-          if (status === 401) {
-            router.push("/papersadminlogin");
-          } else {
-            toast.error("Failed to upload papers.");
-          }
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
         } else {
-          toast.error("An unexpected error occurred");
+          toast.error("Failed to upload papers.");
         }
+      } else {
+        toast.error("An unexpected error occurred");
       }
+    }
   };
 
   const handleDeleteMerged = async () => {
     if (!pdfUrl) return;
 
     try {
-      const response = await axios.delete('/api/admin/imgtopdf', {
+      const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
         data: { filePath: pdfUrl },
       });
       alert(response.data.message);
       setPdfUrl(null);
     } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-          const status = error.response?.status;
-          if (status === 401) {
-            router.push("/papersadminlogin");
-          } else {
-            toast.error("Failed to upload papers.");
-          }
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        if (status === 401) {
+          router.push("/papersadminlogin");
         } else {
-          toast.error("An unexpected error occurred");
+          toast.error("Failed to upload papers.");
         }
+      } else {
+        toast.error("An unexpected error occurred");
       }
+    }
   };
 
   async function completeUpload() {
@@ -254,7 +267,11 @@ const Upload: React.FC = () => {
       isPdf: isPdf,
     };
     try {
-      const response = await axios.post("/api/admin", body, { headers });
+      const response = await axios.post<PostPDFToCloudinary>(
+        "/api/admin",
+        body,
+        { headers },
+      );
       if (response.data.status) {
         setUrls([]);
         setSubject("");
@@ -297,12 +314,11 @@ const Upload: React.FC = () => {
             maxFiles: 5,
             tags: [tag],
           }}
+          //@ts-expect-error - event is not used
           onSuccess={(results: CloudinaryUploadWidgetProps) => {
-            //@ts-expect-error: ts being an ass
             setUrls((prevUrls) => [...(prevUrls ?? []), results.info?.url]);
             setPublicIds((prevIds) => [
               ...(prevIds ?? []),
-              //@ts-expect-error: ts being an ass again
               results.info?.public_id,
             ]);
             setAsset((prevAssets) => [...(prevAssets ?? []), results.info]);
