@@ -7,6 +7,11 @@ import axios from "axios";
 const Page = () => {
   const [openCamera, setOpenCamera] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [slot, setSlot] = useState("");
+  const [subject, setSubject] = useState("");
+  const [exam, setExam] = useState("");
+  const [year, setYear] = useState("");
 
   const toggleOpenCamera = () => {
     setOpenCamera((prev) => !prev);
@@ -21,15 +26,16 @@ const Page = () => {
       }
       const content = await zip.generateAsync({ type: "blob" });
 
-      // Convert Blob to ArrayBuffer
       const arrayBuffer = await new Response(content).arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
 
-      // Create FormData and append the zip file
       const formData = new FormData();
       formData.append("zipFile", new Blob([uint8Array]), "files.zip");
+      formData.append("slot", slot);
+      formData.append("subject", subject);
+      formData.append("exam", exam);
+      formData.append("year", year);
 
-      // Send FormData to the server
       try {
         const response = await axios.post("/api/mail", formData, {
           headers: {
@@ -52,6 +58,44 @@ const Page = () => {
       <button onClick={toggleOpenCamera} className="bg-black/10 px-4 py-3">
         {openCamera ? "Close Camera" : "Open Camera"}
       </button>
+      <div>
+        <label>
+          Slot:
+          <input
+            type="text"
+            value={slot}
+            onChange={(e) => setSlot(e.target.value)}
+            className="border p-2 m-2"
+          />
+        </label>
+        <label>
+          Subject:
+          <input
+            type="text"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="border p-2 m-2"
+          />
+        </label>
+        <label>
+          Exam:
+          <input
+            type="text"
+            value={exam}
+            onChange={(e) => setExam(e.target.value)}
+            className="border p-2 m-2"
+          />
+        </label>
+        <label>
+          Year:
+          <input
+            type="text"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="border p-2 m-2"
+          />
+        </label>
+      </div>
       <button onClick={handlePrint} className="bg-black/10 px-4 py-3">
         Send Zip File
       </button>

@@ -47,19 +47,18 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const ip =
-      request.headers.get("x-real-ip") ??
-      request.headers.get("x-forwarded-for") ??
+      request.headers.get("x-real-ip") ?? 
+      request.headers.get("x-forwarded-for") ?? 
       request.headers.get("remote-addr");
 
     if (!ip) {
       return NextResponse.json(
-        { message: "IP address not found" },
+        { message: "IP address not found" }, 
         { status: 400 },
       );
     }
 
-    //Uncomment to enable rate-limiter
-
+    // Uncomment to enable rate-limiter
     // if (isRateLimited(ip)) {
     //   return NextResponse.json(
     //     { message: "Too many requests. Please try again later." },
@@ -77,15 +76,29 @@ export async function POST(request: Request) {
       },
     });
 
+    const zipFile = formData.get("zipFile");
+    const slot = formData.get("slot")?.toString() ?? '';
+    const subject = formData.get("subject")?.toString() ?? '';
+    const exam = formData.get("exam")?.toString() ?? '';
+    const year = formData.get("year")?.toString() ?? '';
+
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+        <h2>Attached Files</h2>
+        <p><strong>Slot:</strong> ${slot}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Exam:</strong> ${exam}</p>
+        <p><strong>Year:</strong> ${year}</p>
+      </div>
+    `;
+
     const mailOptions: MailOptions = {
       from: process.env.EMAIL_USER!,
       to: process.env.EMAIL_USER!,
-      subject: "Attached Files",
-      text: "Doc",
+      subject: subject,
+      html: htmlContent,
       attachments: [],
     };
-
-    const zipFile = formData.get("zipFile");
 
     if (zipFile instanceof Blob) {
       const buffer = await zipFile.arrayBuffer();
@@ -108,3 +121,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
