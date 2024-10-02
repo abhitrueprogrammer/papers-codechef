@@ -7,7 +7,7 @@ import { slots, courses } from "./select_options";
 import toast, { Toaster } from "react-hot-toast";
 import { handleAPIError } from "../util/error";
 import { useRouter } from "next/navigation";
-import { ApiError } from "next/dist/server/api-utils";
+import { type ApiError } from "next/dist/server/api-utils";
 
 const Page = () => {
   const router = useRouter();
@@ -102,7 +102,7 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {slots.map((slot) => {
-                  return <option value={slot}>{slot}</option>;
+                  return <option key={slot} value={slot}>{slot}</option>;
                 })}
               </select>
             </label>
@@ -131,7 +131,7 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {courses.map((course) => (
-                  <option value={course}>{course}</option>
+                  <option key={course} value={course}>{course}</option>
                 ))}
               </select>
             </label>
@@ -171,7 +171,7 @@ const Page = () => {
               ref={fileInputRef}
               className="hidden"
               onChange={(e) => {
-                const filesArray = Array.from(e.target.files || []);
+                const filesArray = Array.from(e.target.files ?? []);
                 setFiles(filesArray);
               }}
             />
