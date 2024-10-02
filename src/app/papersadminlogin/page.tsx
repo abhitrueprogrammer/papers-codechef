@@ -2,9 +2,16 @@
 import { useState } from "react";
 import axios, { type AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { type LoginResponse, type ErrorResponse, type DecryptedLoginResponse } from "@/interface";
+import {
+  type LoginResponse,
+  type ErrorResponse,
+  type DecryptedLoginResponse,
+} from "@/interface";
 import Cryptr from "cryptr";
-
+import { handleAPIError } from "@/app/util/error";
+import { totalmem } from "os";
+import toast from "react-hot-toast";
+import { ApiError } from "next/dist/server/api-utils";
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
 );
@@ -14,8 +21,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-
-  const handleLogin = async () => {
+  async function apiLogin() {
     try {
       const response = await axios.post<LoginResponse>("/api/auth/login", {
         email,
@@ -28,17 +34,33 @@ const LoginPage = () => {
         const message = JSON.parse(decryptedToken) as DecryptedLoginResponse;
         const token = message.token;
         localStorage.setItem("token", token);
-        router.push("/adminupload");
+        return response.data;
+        // router.push("/adminupload");
       } catch (error) {
-        console.error("Failed to parse decrypted token", error);
+        toast.error(`Failed to parse decrypted token${error}`);
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        setError(axiosError.response?.data.message ?? "Failed to login");
-      } else {
-        setError("Failed to login");
+      throw handleAPIError(error);
+    }
+  }
+  const handleLogin = async () => {
+    try {
+      const response = await toast.promise(
+        apiLogin(),
+
+        {
+          loading: "Logging you in...",
+          success: "Logged in!",
+          error: (err: ApiError) => err.message,
+        },
+      );
+      if (response && "res" in response) {
+        setTimeout(() => {
+          router.push("/adminupload");
+        }, 1500);
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 
