@@ -4,7 +4,8 @@ import axios, { type AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { type LoginResponse, type ErrorResponse } from "@/interface";
 import Cryptr from "cryptr";
-
+import {handleAPIError} from "@/app/util/error"
+import { totalmem } from "os";
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET || "default_crypto_secret",
 );
@@ -30,12 +31,13 @@ const LoginPage = () => {
       localStorage.setItem("token", token);
       router.push("/adminupload");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        setError(axiosError.response?.data.message ?? "Failed to login");
-      } else {
-        setError("Failed to login");
-      }
+      handleAPIError(error)
+      // if (axios.isAxiosError(error)) {
+        // const axiosError = error as AxiosError<ErrorResponse>;
+        // setError(axiosError.response?.data.message ?? "Failed to login");
+      // } else {
+      //   setError("Failed to login");
+      // }
     }
   };
 

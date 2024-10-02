@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import Toaster from "react-hot-toast";
+import {Toaster} from "react-hot-toast";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata = {
@@ -15,7 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+
+
+      <body>
+        <Toaster position="top-right" reverseOrder={false} />
+
+        {children}
+        </body>
     </html>
   );
 }

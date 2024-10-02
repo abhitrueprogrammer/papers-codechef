@@ -84,7 +84,7 @@ const Page = () => {
 
   return (
     <div className="m-5 flex flex-col items-center">
-      <Toaster position="top-right" reverseOrder={false} />
+
       {/* {openCamera && <Camera />} */}
 
       <fieldset className="mb-4 rounded-lg border-2 border-gray-300 p-4">
@@ -102,7 +102,7 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {slots.map((slot) => {
-                  return <option value={slot}>{slot}</option>;
+                  return <option key={slot} value={slot}>{slot}</option>;
                 })}
               </select>
             </label>
@@ -131,7 +131,7 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {courses.map((course) => (
-                  <option value={course}>{course}</option>
+                  <option  key={course} value={course}>{course}</option>
                 ))}
               </select>
             </label>
