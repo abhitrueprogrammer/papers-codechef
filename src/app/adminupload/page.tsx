@@ -486,21 +486,25 @@ const Upload: React.FC = () => {
                 {typeof asset !== "string" &&
                 typeof asset?.url === "string" &&
                 asset.url.toLowerCase().endsWith(".pdf") ? (
-                  <div className="relative h-full hover:brightness-50">
+                  <div className="h-full">
+                    <div
+                      className="mb-4 flex cursor-pointer gap-x-4"
+                      onClick={() =>
+                        handleDelete(asset.public_id, asset.type, asset.url)
+                      }
+                    >
+                      <Trash
+                        color="#ed333b"
+                        className="z-[100] cursor-pointer hover:brightness-200"
+                      />
+                      <span>Delete PDF</span>
+                    </div>
+
                     <iframe
                       src={asset.url}
                       className="h-full w-full"
                       title={`Uploaded PDF ${index + 1}`}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Trash
-                        color="#ed333b"
-                        className="z-[100] cursor-pointer hover:brightness-200"
-                        onClick={() =>
-                          handleDelete(asset.public_id, asset.type, asset.url)
-                        }
-                      />
-                    </div>
                   </div>
                 ) : (
                   <div className="relative h-72 w-full">
