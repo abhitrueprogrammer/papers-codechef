@@ -13,6 +13,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { handleAPIError } from "../util/error";
 import { ApiError } from "next/dist/server/api-utils";
+import { courses, slots } from "../upload/select_options";
 
 interface PostPDF {
   url: string;
@@ -246,8 +247,7 @@ const Upload: React.FC = () => {
             formData,
           );
           setPdfUrl(response.data.url);
-        }
-         catch (error: unknown) {
+        } catch (error: unknown) {
           throw handleAPIError(error);
         }
       })(),
@@ -280,9 +280,6 @@ const Upload: React.FC = () => {
     //   },
     // );
 
-
-
-    
     // try {
     //   const response = await axios.post<PostPDF>(
     //     "/api/admin/imgtopdf",
@@ -309,13 +306,15 @@ const Upload: React.FC = () => {
     toast.promise(
       (async () => {
         try {
-          const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
-            data: { filePath: pdfUrl },
-          });
+          const response = await axios.delete<DeletePDF>(
+            "/api/admin/imgtopdf",
+            {
+              data: { filePath: pdfUrl },
+            },
+          );
           // alert(response.data.message);
           setPdfUrl(null);
-        }
-         catch (error: unknown) {
+        } catch (error: unknown) {
           throw handleAPIError(error);
         }
       })(),
@@ -467,43 +466,74 @@ const Upload: React.FC = () => {
           )}
         </CldUploadWidget>
         <div className="mb-4">
-          <label className="block text-gray-700">Subject:</label>
-          <input
-            type="text"
-            className="w-full rounded border px-3 py-2"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          />
+          <label>
+            Subject:
+            <select
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="m-2 rounded-md border p-2"
+            >
+              {courses.map((course) => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Slot:</label>
-          <input
-            type="text"
-            className="w-full rounded border px-3 py-2"
-            value={slot}
-            onChange={(e) => setSlot(e.target.value)}
-          />
+          <label>
+            Slot:
+            <select
+              value={slot}
+              onChange={(e) => setSlot(e.target.value)}
+              className="m-2 rounded-md border p-2"
+            >
+              {slots.map((slot) => {
+                return (
+                  <option key={slot} value={slot}>
+                    {slot}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Year:</label>
-          <input
-            type="text"
-            className="w-full rounded border px-3 py-2"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          />
+          <label>
+            Year:
+            <select
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="m-2 rounded-md border p-2"
+            >
+              {(() => {
+                const options = [];
+                for (let i = 2011; i <= Number(new Date().getFullYear()); i++) {
+                  options.push(
+                    <option key={i} value={i}>
+                      {i}
+                    </option>,
+                  );
+                }
+                return options;
+              })()}
+            </select>
+          </label>
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Exam:</label>
-          <select
-            className="w-full rounded border bg-white px-3 py-2"
-            value={exam}
-            onChange={(e) => setExam(e.target.value)}
-          >
-            <option value="cat1">CAT1</option>
-            <option value="cat2">CAT2</option>
-            <option value="fat">FAT</option>
-          </select>
+          <label>
+            Exam:
+            <select
+              value={exam}
+              onChange={(e) => setExam(e.target.value)}
+              className="m-2 rounded-md border p-2"
+            >
+              <option value="cat1">Cat 1</option>
+              <option value="cat2">Cat 2</option>
+              <option value="fat">Fat</option>
+            </select>
+          </label>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Is PDF:</label>
