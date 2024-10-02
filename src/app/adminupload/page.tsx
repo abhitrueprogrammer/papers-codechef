@@ -11,6 +11,8 @@ import Image from "next/image";
 import { Trash } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { handleAPIError } from "../util/error";
+import { ApiError } from "next/dist/server/api-utils";
 
 interface PostPDF {
   url: string;
@@ -75,6 +77,7 @@ const Upload: React.FC = () => {
       setFile(event.target.files[0]);
     }
   };
+  //toast
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -94,24 +97,38 @@ const Upload: React.FC = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-
-    try {
-      await axios.post("/api/admin/watermark", formData, { headers });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          router.push("/papersadminlogin");
-        } else {
-          toast.error("Failed to upload papers.");
-          setError("Failed to watermark PDF.");
+    toast.promise(
+      //Won't refresh the page if error 401
+      (async () => {
+        try {
+          await axios.post("/api/admin/watermark", formData, { headers });
+        } catch (error: unknown) {
+          handleAPIError(error);
+          // if (error instanceof AxiosError) {
+          //   const status = error.response?.status;
+          //   if (status === 401) {
+          //     router.push("/papersadminlogin");
+          //   } else {
+          //     toast.error("Failed to upload papers.");
+          //     setError("Failed to watermark PDF.");
+          //   }
+          // } else {
+          //   toast.error("An unexpected error occurred");
+          //   setError("Failed to watermark PDF.");
+          // }
         }
-      } else {
-        toast.error("An unexpected error occurred");
-        setError("Failed to watermark PDF.");
-      }
-    }
+      })(),
+      {
+        loading: "Uploading papers...",
+        success: "papers uploaded",
+        error: (err: ApiError) => {
+          setError(err.message);
+          return err.message;
+        },
+      },
+    );
   };
+  //toast
 
   const handleDelete = async (
     public_id: string,
@@ -157,6 +174,7 @@ const Upload: React.FC = () => {
       }
     }
   };
+  //toast
 
   const handleDeletePdf = async () => {
     const token = localStorage.getItem("token");
@@ -168,28 +186,45 @@ const Upload: React.FC = () => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    try {
-      const response = await axios.delete("/api/admin/watermark", { headers });
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          router.push("/papersadminlogin");
-        } else {
-          toast.error("Failed to upload papers.");
-          setError("Failed to delete PDF.");
+    //won't refresh if page 401
+    toast.promise(
+      (async () => {
+        try {
+          const response = await axios.delete("/api/admin/watermark", {
+            headers,
+          });
+        } catch (error: unknown) {
+          throw handleAPIError(error);
+          // if (error instanceof AxiosError) {
+          //   const status = error.response?.status;
+          //   if (status === 401) {
+          //     router.push("/papersadminlogin");
+          //   } else {
+          //     toast.error("Failed to upload papers.");
+          //     setError("Failed to delete PDF.");
+          //   }
+          // } else {
+          //   toast.error("An unexpected error occurred");
+          //   setError("An unexpected error occurred.");
+          // }
         }
-      } else {
-        toast.error("An unexpected error occurred");
-        setError("An unexpected error occurred.");
-      }
-    }
+      })(),
+      {
+        loading: "Deleting PDF...",
+        success: "Paper deleted",
+        error: (err: ApiError) => {
+          setError(err.message);
+          return err.message;
+        },
+      },
+    );
   };
 
   const handleFileChangeMerged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files ?? []);
     setFiles(selectedFiles);
   };
+  //toast
 
   const handleSubmitMerged = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,49 +238,116 @@ const Upload: React.FC = () => {
     files.forEach((file) => {
       formData.append("files", file);
     });
-
-    try {
-      const response = await axios.post<PostPDF>(
-        "/api/admin/imgtopdf",
-        formData,
-      );
-      setPdfUrl(response.data.url);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          router.push("/papersadminlogin");
-        } else {
-          toast.error("Failed to upload papers.");
+    toast.promise(
+      (async () => {
+        try {
+          const response = await axios.post<PostPDF>(
+            "/api/admin/imgtopdf",
+            formData,
+          );
+          setPdfUrl(response.data.url);
         }
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    }
+         catch (error: unknown) {
+          throw handleAPIError(error);
+        }
+      })(),
+      {
+        loading: "Uploading papers...",
+        success: "papers uploaded",
+        error: (err: ApiError) => {
+          setError(err.message);
+          return err.message;
+        },
+      },
+    );
+
+    // try response template for easy access :D
+    // toast.promise(
+    //   (async () => {
+    //     try {
+    //       //put your api request here
+    //     } catch (error: unknown) {
+    //       throw handleAPIError(error);
+    //     }
+    //   })(),
+    //   {
+    //     loading: "Uploading papers...",
+    //     success: "papers uploaded",
+    //     error: (err: ApiError) => {
+    //       setError(err.message);
+    //       return err.message;
+    //     },
+    //   },
+    // );
+
+
+
+    
+    // try {
+    //   const response = await axios.post<PostPDF>(
+    //     "/api/admin/imgtopdf",
+    //     formData,
+    //   );
+    //   setPdfUrl(response.data.url);
+    // } catch (error: unknown) {
+    //   if (error instanceof AxiosError) {
+    //     const status = error.response?.status;
+    //     if (status === 401) {
+    //       router.push("/papersadminlogin");
+    //     } else {
+    //       toast.error("Failed to upload papers.");
+    //     }
+    //   } else {
+    //     toast.error("An unexpected error occurred");
+    //   }
+    // }
   };
+  //toast
 
   const handleDeleteMerged = async () => {
     if (!pdfUrl) return;
-
-    try {
-      const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
-        data: { filePath: pdfUrl },
-      });
-      alert(response.data.message);
-      setPdfUrl(null);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          router.push("/papersadminlogin");
-        } else {
-          toast.error("Failed to upload papers.");
+    toast.promise(
+      (async () => {
+        try {
+          const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
+            data: { filePath: pdfUrl },
+          });
+          // alert(response.data.message);
+          setPdfUrl(null);
         }
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    }
+         catch (error: unknown) {
+          throw handleAPIError(error);
+        }
+      })(),
+      {
+        loading: "Deleting Paper...",
+        success: "Paper deleted",
+        error: (err: ApiError) => {
+          setError(err.message);
+          return err.message;
+        },
+      },
+    );
+    // try {
+    //   const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
+    //     data: { filePath: pdfUrl },
+    //   });
+    //   alert(response.data.message);
+    //   setPdfUrl(null);
+    // } catch (error: unknown) {
+    //   if (error instanceof AxiosError) {
+    //     const status = error.response?.status;
+    //     if (status === 401) {
+    //       router.push("/papersadminlogin");
+    //     } else {
+    //       toast.error("Failed to upload papers.");
+    //     }
+    //   } else {
+    //     toast.error("An unexpected error occurred");
+    //   }
+    // }
   };
+  //toast
 
   async function completeUpload() {
     const token = localStorage.getItem("token");
@@ -266,34 +368,65 @@ const Upload: React.FC = () => {
       exam: exam,
       isPdf: isPdf,
     };
-    try {
-      const response = await axios.post<PostPDFToCloudinary>(
-        "/api/admin",
-        body,
-        { headers },
-      );
-      if (response.data.status) {
-        setUrls([]);
-        setSubject("");
-        setSlot("");
-        setYear("");
-        setExam("cat1");
-        setAsset([]);
-        setPublicIds([]);
-        setUrls([]);
-      }
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 401) {
-          router.push("/papersadminlogin");
-        } else {
-          toast.error("Failed to upload papers.");
+    toast.promise(
+      (async () => {
+        try {
+          const response = await axios.post<PostPDFToCloudinary>(
+            "/api/admin",
+            body,
+            { headers },
+          );
+          if (response.data.status) {
+            setUrls([]);
+            setSubject("");
+            setSlot("");
+            setYear("");
+            setExam("cat1");
+            setAsset([]);
+            setPublicIds([]);
+            setUrls([]);
+          }
+        } catch (error: unknown) {
+          throw handleAPIError(error);
         }
-      } else {
-        toast.error("An unexpected error occurred");
-      }
-    }
+      })(),
+      {
+        loading: "Uploading papers...",
+        success: "papers uploaded",
+        error: (err: ApiError) => {
+          setError(err.message);
+          return err.message;
+        },
+      },
+    );
+    // try {
+    //   const response = await axios.post<PostPDFToCloudinary>(
+    //     "/api/admin",
+    //     body,
+    //     { headers },
+    //   );
+    //   if (response.data.status) {
+    //     setUrls([]);
+    //     setSubject("");
+    //     setSlot("");
+    //     setYear("");
+    //     setExam("cat1");
+    //     setAsset([]);
+    //     setPublicIds([]);
+    //     setUrls([]);
+    //   }
+    // } catch (error: unknown) {
+    //   if (error instanceof AxiosError) {
+    //     const status = error.response?.status;
+    //     if (status === 401) {
+    //       router.push("/papersadminlogin");
+    //     } else {
+    //       toast.error("Failed to upload papers.");
+    //     }
+    //   } else {
+    //     toast.error("An unexpected error occurred");
+    //   }
+    // }
   }
 
   if (!tag) {

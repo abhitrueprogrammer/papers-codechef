@@ -8,8 +8,10 @@ export function handleAPIError(err: unknown): ApiError {
     const response = error.response;
     const data = response?.data;
     if (data) {
-      const msg = (data as { error: string })?.error;
+      const msg = (data as { message: string })?.message;
+
       if (msg) {
+
         return new ApiError(response.status, toSentenceCase(msg));
       }
     }

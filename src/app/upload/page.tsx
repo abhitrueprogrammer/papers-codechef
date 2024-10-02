@@ -42,49 +42,56 @@ const Page = () => {
     }
     const zip = new JSZip();
     const formData = new FormData();
-    
+
     for (const file of files) {
       zip.file(file.name, file);
       const content = await zip.generateAsync({ type: "blob" });
-      
+
       const arrayBuffer = await new Response(content).arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
-      
+
       formData.append("zipFile", new Blob([uint8Array]), "files.zip");
       formData.append("slot", slot);
       formData.append("subject", subject);
       formData.append("exam", exam);
       formData.append("year", year);
     }
-    const result = await toast.promise(
-      (async () => {
-        try {
-          const response = await axios.post<{ message: string }>("/api/mail", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          return response.data;
-        } catch (error) {
-          handleAPIError(error);
-        }
-      })(),
-      {
-        loading: "Sending zip",
-        success: "zip successfully sent",
-        error: (err: ApiError) => err.message,
-      },
-    );
-    if(result?.message === "Email sent successfully!")
-    {
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);    }
+    try {
+      const result = await toast.promise(
+        (async () => {
+          try {
+            const response = await axios.post<{ message: string }>(
+              "/api/mail",
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              },
+            );
+            return response.data;
+          } catch (error) {
+            handleAPIError(error);
+          }
+        })(),
+        {
+          loading: "Sending zip",
+          success: "zip successfully sent",
+          error: (err: ApiError) => err.message,
+        },
+      );
+      if (result?.message === "Email sent successfully!") {
+        setTimeout(() => {
+          router.push("/");
+        }, 1500);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
     <div className="m-5 flex flex-col items-center">
-
       {/* {openCamera && <Camera />} */}
 
       <fieldset className="mb-4 rounded-lg border-2 border-gray-300 p-4">
@@ -102,7 +109,11 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {slots.map((slot) => {
-                  return <option key={slot} value={slot}>{slot}</option>;
+                  return (
+                    <option key={slot} value={slot}>
+                      {slot}
+                    </option>
+                  );
                 })}
               </select>
             </label>
@@ -131,7 +142,9 @@ const Page = () => {
                 className="m-2 rounded-md border p-2"
               >
                 {courses.map((course) => (
-                  <option key={course} value={course}>{course}</option>
+                  <option key={course} value={course}>
+                    {course}
+                  </option>
                 ))}
               </select>
             </label>
@@ -195,7 +208,10 @@ const Page = () => {
           </div>
         </div>
       </fieldset>
-      <button onClick={handlePrint} className="text-lg font-bold w-fit rounded-md  bg-black/10 px-4 py-3">
+      <button
+        onClick={handlePrint}
+        className="w-fit rounded-md bg-black/10 px-4  py-3 text-lg font-bold"
+      >
         Send Zip File
       </button>
     </div>
