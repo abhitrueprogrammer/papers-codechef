@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Search } from "lucide-react";
 import Cryptr from "cryptr";
 import debounce from 'debounce';
@@ -53,7 +53,8 @@ const SearchBar = () => {
   const handleSelectSuggestion = async (suggestion: string) => {
     setSearchText(suggestion);
     setSuggestions([]);
-    router.push(`/catalogue?subject=${encodeURIComponent(suggestion)}`);
+    // console.log(encodeURI(suggestion))
+    router.push(`/catalogue?subject=${encodeURIComponent(suggestion).replace(/%20/g, '+').replace(/%5B/g, '[').replace(/%5D/g, ']')}`);
   };
 
   return (
