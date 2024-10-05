@@ -20,15 +20,16 @@ interface Paper {
   _id: string;
   exam: string;
   finalUrl: string;
+  thumbnailUrl: string;
   slot: string;
   subject: string;
   year: string;
 }
-interface Filters{
+interface Filters {
   paper: Paper;
-  uniqueExams: string [];
-  uniqueSlots: string [];
-  uniqueYears: string []
+  uniqueExams: string[];
+  uniqueSlots: string[];
+  uniqueYears: string[];
 }
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
@@ -41,7 +42,7 @@ const CatalogueContent = () => {
   const [papers, setPapers] = useState<Paper[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [filterOptions, setFilterOptions] = useState<Filters []>([]);
+  const [filterOptions, setFilterOptions] = useState<Filters[]>([]);
   useEffect(() => {
     if (subject) {
       const fetchPapers = async () => {
@@ -83,28 +84,26 @@ const CatalogueContent = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-
       <button
         onClick={() => router.push("/")}
         className="mb-4 rounded-md bg-blue-500 px-4 py-2 text-white"
-        >
+      >
         Back to Search
       </button>
-        <Dialog>
-          <DialogTrigger  className=" rounded-lg bg-[#7480FF] px-8 py-3 text-white">Filter</DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Choose your filters</DialogTitle>
-              <DialogDescription>
-                {}
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+      <Dialog>
+        <DialogTrigger className=" rounded-lg bg-[#7480FF] px-8 py-3 text-white">
+          Filter
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Choose your filters</DialogTitle>
+            <DialogDescription>{}</DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
 
       {/* <h1 className="mb-4 text-2xl font-bold">Papers for {subject}</h1> */}
       {error && <p className="text-red-500">{error}</p>}
-
 
       {loading ? (
         <p>Loading papers...</p>
@@ -142,7 +141,7 @@ function Card({ paper }: { paper: Paper }) {
       className={`space-y-1 rounded-md border border-black border-opacity-50  ${checked ? "bg-[#EEF2FF]" : "bg-white"}  p-4 `}
     >
       <Image
-        src={paper.finalUrl}
+        src={paper.thumbnailUrl}
         alt={paper.subject}
         // layout="responsive"
         width={320} // Adjust width to maintain aspect ratio if needed
@@ -171,13 +170,15 @@ function Card({ paper }: { paper: Paper }) {
           <p className="text-sm">Select</p>
         </div>
         <div className="flex gap-2">
-          <Eye />
           <a
             href={paper.finalUrl}
             target="_blank"
             rel="noopener noreferrer"
             // className="text-blue-500 hover:underline"
           >
+            <Eye />
+          </a>
+          <a href={paper.finalUrl} download>
             <Download />
           </a>
         </div>

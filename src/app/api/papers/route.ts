@@ -1,18 +1,24 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Paper from "@/db/papers";
 import Cryptr from "cryptr";
 import { type IPaper } from "@/interface";
 
+
 const cryptr = new Cryptr(process.env.CRYPTO_SECRET ?? "default_crypto_secret");
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
-    const url = new URL(req.url);
-    const subject = url.searchParams.get("subject");
+    const url = req.nextUrl.searchParams;
+    const subject = url.get("subject");
+    console.log("Subject:", subject);
+    const escapeRegExp = (text: string) => {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    };
+    const escapedSubject = escapeRegExp(subject!);
 
     if (!subject) {
       return NextResponse.json(
@@ -22,8 +28,9 @@ export async function GET(req: Request) {
     }
 
     const papers: IPaper[] = await Paper.find({
-      subject: { $regex: new RegExp(`^${subject}$`, "i") },
+      subject: { $regex: new RegExp(`${escapedSubject}`, "i") },
     });
+    console.log("Papers:", papers);
 
     if (papers.length === 0) {
       return NextResponse.json(
