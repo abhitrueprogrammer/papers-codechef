@@ -22,7 +22,7 @@ const SearchBar = () => {
 
     if (text.length > 1) {
       try {
-        const searchResponse = await axios.get("http://localhost:3000/api/search", {
+        const searchResponse = await axios.get("/api/search", {
           params: { text },
         });
 

@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const body = (await req.json()) as IAdminUpload;
     const { urls, slot, subject, exam, year, isPdf, publicIds } = body;
     let finalUrl: string | undefined = "";
+    let thumbnailUrl: string | undefined = "";
     const existingPaper = await Paper.findOne({
       subject,
       slot,
@@ -56,8 +57,15 @@ export async function POST(req: Request) {
       );
     } else {
       finalUrl = urls[0];
+      const thumbnailResponse = cloudinary.v2.url(finalUrl!, {
+        format: "jpg",
+        page: 1,
+        transformation: [{ width: 300, height: 400, crop: "fit" }],
+      });
+      thumbnailUrl = thumbnailResponse;
       const paper = new Paper({
         finalUrl,
+        thumbnailUrl,
         subject,
         slot,
         year,

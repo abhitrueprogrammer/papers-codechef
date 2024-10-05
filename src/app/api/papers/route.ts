@@ -6,6 +6,8 @@ import { type IPaper } from "@/interface";
 
 const cryptr = new Cryptr(process.env.CRYPTO_SECRET ?? "default_crypto_secret");
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   try {
     await connectToDatabase();

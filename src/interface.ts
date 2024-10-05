@@ -36,6 +36,7 @@ export interface PostRequestBody {
 
 export interface IPaper{
   finalUrl: string;
+  thumbnailUrl: string;
   subject: string;
   slot: string;
   year: string;

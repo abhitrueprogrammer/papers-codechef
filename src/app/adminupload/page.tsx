@@ -98,7 +98,7 @@ const Upload: React.FC = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    toast.promise(
+    void toast.promise(
       //Won't refresh the page if error 401
       (async () => {
         try {
@@ -188,7 +188,7 @@ const Upload: React.FC = () => {
       Authorization: `Bearer ${token}`,
     };
     //won't refresh if page 401
-    toast.promise(
+    void toast.promise(
       (async () => {
         try {
           const response = await axios.delete("/api/admin/watermark", {
@@ -239,7 +239,7 @@ const Upload: React.FC = () => {
     files.forEach((file) => {
       formData.append("files", file);
     });
-    toast.promise(
+    void toast.promise(
       (async () => {
         try {
           const response = await axios.post<PostPDF>(
@@ -303,7 +303,7 @@ const Upload: React.FC = () => {
 
   const handleDeleteMerged = async () => {
     if (!pdfUrl) return;
-    toast.promise(
+    void toast.promise(
       (async () => {
         try {
           const response = await axios.delete<DeletePDF>(
@@ -367,7 +367,7 @@ const Upload: React.FC = () => {
       exam: exam,
       isPdf: isPdf,
     };
-    toast.promise(
+    void toast.promise(
       (async () => {
         try {
           const response = await axios.post<PostPDFToCloudinary>(
