@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import { Search } from "lucide-react";
 import Cryptr from "cryptr";
+import debounce from 'debounce';
 import { useRouter } from "next/navigation";  
 
 const cryptr = new Cryptr(
@@ -16,29 +17,39 @@ const SearchBar = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+ 
+  const debouncedSearch = useCallback(
+    debounce(async (text: string) => {
+      if (text.length > 1) {
+
+        try {
+          const searchResponse = await axios.get("http://localhost:3000/api/search", {
+            params: { text },
+          });
+
+          const { res: encryptedSearchResponse } = searchResponse.data;
+          const decryptedSearchResponse = cryptr.decrypt(encryptedSearchResponse);
+          // console.log("Decrypted Search Response:", decryptedSearchResponse);
+
+          const { subjects } = JSON.parse(decryptedSearchResponse);
+          const suggestionList = subjects.map((subjectObj: { subject: string }) => subjectObj.subject);
+          setSuggestions(suggestionList);
+        } catch (error) {
+          setError("Error fetching suggestions");
+
+        }
+      } else {
+        setSuggestions([]);
+      }
+    }, 1000), 
+    []
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     setSearchText(text);
-
-    if (text.length > 1) {
-      try {
-        const searchResponse = await axios.get("/api/search", {
-          params: { text },
-        });
-
-        const { res: encryptedSearchResponse } = searchResponse.data;
-        const decryptedSearchResponse = cryptr.decrypt(encryptedSearchResponse);
-        // console.log("Decrypted Search Response:", decryptedSearchResponse);
-
-        const { subjects } = JSON.parse(decryptedSearchResponse);
-        const suggestionList = subjects.map((subjectObj: { subject: string }) => subjectObj.subject);
-        setSuggestions(suggestionList);
-      } catch (error) {
-        setError("Error fetching suggestions");
-      }
-    } else {
-      setSuggestions([]);
-    }
+    debouncedSearch(text); 
   };
 
   const handleSelectSuggestion = async (suggestion: string) => {
