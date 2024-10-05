@@ -57,12 +57,12 @@ export async function POST(req: Request) {
       );
     } else {
       finalUrl = urls[0];
-      const thumbnailResponse = cloudinary.v2.url(finalUrl!, {
-        format: "jpg",
-        page: 1,
-        transformation: [{ width: 300, height: 400, crop: "fit" }],
-      });
-      thumbnailUrl = thumbnailResponse;
+      const thumbnailResponse = cloudinary.v2.image(finalUrl!, {format: "jpg"});
+      thumbnailUrl = thumbnailResponse
+        .replace("pdf", "jpg")
+        .replace("upload", "upload/w_400,h_400,c_fill")
+        .replace(/<img src='|'\s*\/>/g, '');
+      
       const paper = new Paper({
         finalUrl,
         thumbnailUrl,
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { status: "success", url: finalUrl },
+      { status: "success", url: finalUrl, thumbnailUrl: thumbnailUrl },
       { status: 201 },
     );
   } catch (error) {
