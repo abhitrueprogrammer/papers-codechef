@@ -28,14 +28,14 @@ interface PostPDFToCloudinary {
 
 const Upload: React.FC = () => {
   const router = useRouter();
-  const [subject, setSubject] = useState<string>("");
-  const [slot, setSlot] = useState<string>("");
-  const [year, setYear] = useState<string>("");
+  const [subject, setSubject] = useState<string>("Digital Logic and Microprocessors[BITE202L]");
+  const [slot, setSlot] = useState<string>("A1");
+  const [year, setYear] = useState<string>("2011");
   const [exam, setExam] = useState<string>("cat1");
   const [tag, setTag] = useState<string>();
   const [urls, setUrls] = useState<string[]>();
   const [publicIds, setPublicIds] = useState<string[]>();
-  const [isPdf, setIsPdf] = useState<boolean>(false);
+  const [isPdf, setIsPdf] = useState<boolean>(true);
   const [asset, setAsset] =
     useState<(CloudinaryUploadResult | string | undefined)[]>();
   const [file, setFile] = useState<File | undefined>();
@@ -398,34 +398,7 @@ const Upload: React.FC = () => {
         },
       },
     );
-    // try {
-    //   const response = await axios.post<PostPDFToCloudinary>(
-    //     "/api/admin",
-    //     body,
-    //     { headers },
-    //   );
-    //   if (response.data.status) {
-    //     setUrls([]);
-    //     setSubject("");
-    //     setSlot("");
-    //     setYear("");
-    //     setExam("cat1");
-    //     setAsset([]);
-    //     setPublicIds([]);
-    //     setUrls([]);
-    //   }
-    // } catch (error: unknown) {
-    //   if (error instanceof AxiosError) {
-    //     const status = error.response?.status;
-    //     if (status === 401) {
-    //       router.push("/papersadminlogin");
-    //     } else {
-    //       toast.error("Failed to upload papers.");
-    //     }
-    //   } else {
-    //     toast.error("An unexpected error occurred");
-    //   }
-    // }
+
   }
 
   if (!tag) {
@@ -529,9 +502,9 @@ const Upload: React.FC = () => {
               onChange={(e) => setExam(e.target.value)}
               className="m-2 rounded-md border p-2"
             >
-              <option value="cat1">Cat 1</option>
-              <option value="cat2">Cat 2</option>
-              <option value="fat">Fat</option>
+              <option value="CAT-1">Cat 1</option>
+              <option value="CAT-2">Cat 2</option>
+              <option value="FAT">Fat</option>
             </select>
           </label>
         </div>
