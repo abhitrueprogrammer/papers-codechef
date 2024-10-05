@@ -22,28 +22,26 @@ const SearchBar = () => {
   const debouncedSearch = useCallback(
     debounce(async (text: string) => {
       if (text.length > 1) {
-
         try {
-          const searchResponse = await axios.get("http://localhost:3000/api/search", {
+          const searchResponse = await axios.get("/api/search", {
             params: { text },
           });
-
+  
           const { res: encryptedSearchResponse } = searchResponse.data;
           const decryptedSearchResponse = cryptr.decrypt(encryptedSearchResponse);
-          // console.log("Decrypted Search Response:", decryptedSearchResponse);
-
           const { subjects } = JSON.parse(decryptedSearchResponse);
           const suggestionList = subjects.map((subjectObj: { subject: string }) => subjectObj.subject);
           setSuggestions(suggestionList);
         } catch (error) {
-          setError("Error fetching suggestions");
-
+          const typedError = error as AxiosError<{ message?: string }>;
+          const errorMessage = typedError.response?.data?.message ?? "Error fetching suggestions";
+          setError(errorMessage);
         }
       } else {
         setSuggestions([]);
       }
-    }, 1000), 
-    []
+    }, 1000),
+    [cryptr, axios]
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
