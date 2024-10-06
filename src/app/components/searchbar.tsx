@@ -54,7 +54,7 @@ const SearchBar = () => {
     setSearchText(suggestion);
     setSuggestions([]);
     // console.log(encodeURI(suggestion))
-    router.push(`/catalogue?subject=${encodeURIComponent(suggestion).replace(/%20/g, '+').replace(/%5B/g, '[').replace(/%5D/g, ']')}`);
+    router.push(`/catalogue?subject=${encodeURIComponent(suggestion)}`);
   };
 
   return (
