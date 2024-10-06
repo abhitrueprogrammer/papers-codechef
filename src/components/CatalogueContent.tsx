@@ -130,7 +130,7 @@ const CatalogueContent = () => {
           });
 
           setPapers(
-            papersDataWithFilters.length > 0
+            papersDataWithFilters.length >= 0
               ? papersDataWithFilters
               : papersData,
           );
