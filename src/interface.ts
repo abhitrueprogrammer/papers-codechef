@@ -40,7 +40,7 @@ export interface IPaper{
   subject: string;
   slot: string;
   year: string;
-  exam: "cat1" | "cat2" | "fat";
+  exam: "CAT-1" | "CAT-2" | "FAT";
 }
 export interface IAdminUpload{
   urls: Array<string>;
@@ -48,7 +48,7 @@ export interface IAdminUpload{
   subject: string;
   slot: string;
   year: string;
-  exam: "cat1" | "cat2" | "fat";
+  exam: "CAT-1" | "CAT-2" | "FAT";
   isPdf: boolean;
 }
 
