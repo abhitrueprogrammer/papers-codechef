@@ -8,7 +8,7 @@ import {
   type DecryptedLoginResponse,
 } from "@/interface";
 import Cryptr from "cryptr";
-import { handleAPIError } from "@/app/util/error";
+import { handleAPIError } from "@/util/error";
 import { totalmem } from "os";
 import toast from "react-hot-toast";
 import { ApiError } from "next/dist/server/api-utils";

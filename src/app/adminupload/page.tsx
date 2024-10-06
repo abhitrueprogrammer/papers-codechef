@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Trash } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { handleAPIError } from "../util/error";
+import { handleAPIError } from "../../util/error";
 import { ApiError } from "next/dist/server/api-utils";
 import { courses, slots } from "../upload/select_options";
 

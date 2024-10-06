@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import axios from "axios";
 import { slots, courses } from "./select_options";
 import toast, { Toaster } from "react-hot-toast";
-import { handleAPIError } from "../util/error";
+import { handleAPIError } from "../../util/error";
 import { useRouter } from "next/navigation";
 import { type ApiError } from "next/dist/server/api-utils";
 

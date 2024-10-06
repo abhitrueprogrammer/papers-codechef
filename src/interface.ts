@@ -80,3 +80,20 @@ export interface DecryptedLoginResponse{
     id: string;
   }
 }
+
+export interface Paper {
+  _id: string;
+  exam: string;
+  finalUrl: string;
+  thumbnailUrl: string;
+  slot: string;
+  subject: string;
+  year: string;
+}
+
+export interface Filters {
+  paper: Paper;
+  uniqueExams: string[];
+  uniqueSlots: string[];
+  uniqueYears: string[];
+}
