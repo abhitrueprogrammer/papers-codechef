@@ -7,7 +7,7 @@ const paperSchema = new Schema<IPaper>({
   subject: { type: String, required: true },
   slot: { type: String, required: true },
   year: { type: String, required: true },
-  exam: { type: String, enum: ["cat1", "cat2", "fat"], required: true },
+  exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT"], required: true },
 });
 
 const Paper: Model<IPaper> =

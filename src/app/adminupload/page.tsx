@@ -31,7 +31,7 @@ const Upload: React.FC = () => {
   const [subject, setSubject] = useState<string>("Digital Logic and Microprocessors[BITE202L]");
   const [slot, setSlot] = useState<string>("A1");
   const [year, setYear] = useState<string>("2011");
-  const [exam, setExam] = useState<string>("cat1");
+  const [exam, setExam] = useState<string>("CAT-1");
   const [tag, setTag] = useState<string>();
   const [urls, setUrls] = useState<string[]>();
   const [publicIds, setPublicIds] = useState<string[]>();
@@ -380,7 +380,7 @@ const Upload: React.FC = () => {
             setSubject("");
             setSlot("");
             setYear("");
-            setExam("cat1");
+            setExam("CAT-1");
             setAsset([]);
             setPublicIds([]);
             setUrls([]);

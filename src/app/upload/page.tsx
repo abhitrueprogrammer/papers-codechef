@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import Camera from "../components/camera";
+import Camera from "@/components/camera";
 import JSZip from "jszip";
 import axios from "axios";
 import { slots, courses } from "./select_options";
