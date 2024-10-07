@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Separator } from "./ui/separator";
 import ccLogo from "../assets/codechef_logo.svg";
 import Image from "next/image";
@@ -9,13 +9,20 @@ import meta_icon_dark from "../assets/meta_icon_dark.svg";
 import x_twitter_icon_dark from "../assets/x_twitter_icon_dark.svg";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Footer() {
   const { theme, setTheme } = useTheme();
-  const isDarkMode = theme === "dark";
+  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(true);
+
+  useEffect(() => {
+    if (theme) {
+      setIsDarkMode(theme === "dark");
+    }
+  }, [theme]);
 
   return (
-    <div className="mx-auto flex flex-col items-center justify-between lg:justify-around gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:px-12">
+    <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:justify-around lg:px-12">
       <div className="flex items-center">
         <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl font-bold text-transparent lg:text-5xl">
           Papers
@@ -45,7 +52,7 @@ export default function Footer() {
         </Link>
         <Link href="https://www.facebook.com/codechefvit/">
           <Image
-            src={isDarkMode ? meta_icon : meta_icon_dark}
+            src={isDarkMode ? meta_icon_dark : meta_icon}
             alt="meta-icon"
             height={24}
             width={24}
@@ -53,7 +60,7 @@ export default function Footer() {
         </Link>
         <Link href="https://x.com/codechefvit">
           <Image
-            src={isDarkMode ? x_twitter_icon : x_twitter_icon_dark}
+            src={isDarkMode ? x_twitter_icon_dark : x_twitter_icon}
             alt="x_twitter_icon"
             height={24}
             width={24}

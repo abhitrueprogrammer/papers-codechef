@@ -103,7 +103,7 @@ const Page = () => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen flex flex-col justify-between">
       <div>
         <Navbar />
       </div>
