@@ -1,3 +1,4 @@
+"use client"
 import { Separator } from "./ui/separator";
 import ccLogo from "../assets/codechef_logo.svg";
 import Image from "next/image";
@@ -7,10 +8,14 @@ import x_twitter_icon from "../assets/x_twitter_icon.svg";
 import meta_icon_dark from "../assets/meta_icon_dark.svg";
 import x_twitter_icon_dark from "../assets/x_twitter_icon_dark.svg";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export default function Footer() {
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === "dark";
+
   return (
-    <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 lg:w-full lg:flex-row lg:px-12">
+    <div className="mx-auto flex flex-col items-center justify-between lg:justify-around gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:px-12">
       <div className="flex items-center">
         <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl font-bold text-transparent lg:text-5xl">
           Papers
@@ -40,38 +45,16 @@ export default function Footer() {
         </Link>
         <Link href="https://www.facebook.com/codechefvit/">
           <Image
-            src={meta_icon}
+            src={isDarkMode ? meta_icon : meta_icon_dark}
             alt="meta-icon"
-            height={24}
-            width={24}
-            className="dark:hidden"
-          />
-        </Link>
-
-        <Link href="https://www.facebook.com/codechefvit/">
-          <Image
-            src={meta_icon_dark}
-            alt="meta-icon"
-            className="hidden dark:block"
             height={24}
             width={24}
           />
         </Link>
         <Link href="https://x.com/codechefvit">
           <Image
-            src={x_twitter_icon}
+            src={isDarkMode ? x_twitter_icon : x_twitter_icon_dark}
             alt="x_twitter_icon"
-            className="dark:hidden"
-            height={24}
-            width={24}
-          />
-        </Link>
-
-        <Link href="https://x.com/codechefvit">
-          <Image
-            src={x_twitter_icon_dark}
-            alt="x_twitter_icon"
-            className="mb-2 hidden dark:block"
             height={24}
             width={24}
           />
