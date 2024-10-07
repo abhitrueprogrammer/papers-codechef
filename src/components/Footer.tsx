@@ -22,7 +22,7 @@ export default function Footer() {
   }, [theme]);
 
   return (
-    <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:justify-around lg:px-12">
+    <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:justify-around lg:px-12 mb-4">
       <div className="flex items-center">
         <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl font-bold text-transparent lg:text-5xl">
           Papers

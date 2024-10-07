@@ -18,6 +18,14 @@ import {
   SelectLabel,
   SelectItem,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandItem,
+  CommandEmpty,
+  CommandGroup,
+} from "@/components/ui/command";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -31,6 +39,7 @@ const Page = () => {
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
   // const toggleOpenCamera = () => {
   //   setOpenCamera((prev) => !prev);
   // };
@@ -102,8 +111,13 @@ const Page = () => {
     }
   };
 
+  const handleSubjectSelect = (value: string) => {
+    setSubject(value);
+    setIsSubjectCommandOpen(false);
+  };
+
   return (
-    <div className="h-screen flex flex-col justify-between">
+    <div className="flex h-screen flex-col justify-between">
       <div>
         <Navbar />
       </div>
@@ -153,21 +167,47 @@ const Page = () => {
             {/* Subject Selection */}
             <div>
               <label>Subject:</label>
-              <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select subject" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Subjects</SelectLabel>
+              {/* <div className="relative">
+                <Button
+                  type="button"
+                  onClick={() => setIsSubjectCommandOpen((prev) => !prev)}
+                  className="m-2 rounded-md border p-2"
+                >
+                  {subject || "Select subject"}
+                </Button>
+                {isSubjectCommandOpen && (
+                  <Command className="absolute z-10 mt-2 w-full rounded-lg border shadow-md">
+                    <CommandInput placeholder="Search subject..." />
+                    <CommandList>
+                      <CommandEmpty>No subjects found.</CommandEmpty>
+                      <CommandGroup heading="Subjects">
+                        {courses.map((course) => (
+                          <CommandItem key={course} onSelect={() => handleSubjectSelect(course)}>
+                            <span>{course}</span>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                )}
+              </div> */}
+              <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+                <CommandInput placeholder="Type a subject or search..." />
+                <CommandList className="h-[100px]">
+                  <CommandEmpty>No results found.</CommandEmpty>
+
+                  <CommandGroup heading="Subjects">
                     {courses.map((course) => (
-                      <SelectItem key={course} value={course}>
-                        {course}
-                      </SelectItem>
+                      <CommandItem
+                        key={course}
+                        onSelect={() => handleSubjectSelect(course)}
+                      >
+                        <span>{course}</span>
+                      </CommandItem>
                     ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
             </div>
 
             {/* Year Selection */}
@@ -232,7 +272,7 @@ const Page = () => {
         </fieldset>
         <Button
           onClick={handlePrint}
-          className="w-fit rounded-md px-4 py-3 text-lg font-bold"
+          className="w-fit rounded-md px-4 py-3"
         >
           Upload Papers
         </Button>
