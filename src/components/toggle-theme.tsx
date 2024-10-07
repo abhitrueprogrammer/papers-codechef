@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function ModeToggle() {
   const { theme, setTheme } = useTheme();
-  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(true);
 
   const toggleTheme = () => {
     const newTheme = isDarkMode ? "light" : "dark";
