@@ -9,6 +9,8 @@ import Card from "./Card";
 import { extractBracketContent } from "@/util/utils";
 import { useRouter } from "next/navigation";
 import SearchBar from "./searchbar";
+import { RiLoader2Fill } from "react-icons/ri";
+import Loader from "./ui/loader";
 
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
@@ -168,7 +170,7 @@ const CatalogueContent = () => {
 
   return (
     <div className="min-h-screen px-2 md:p-8">
-      <div className="mb-4 flex flex-row w-full items-center md:justify-center md:gap-10">
+      <div className="mb-4 flex w-full flex-row items-center md:justify-center md:gap-10">
         <div className="w-[120%] md:w-[576px]">
           <SearchBar />
         </div>
@@ -187,10 +189,11 @@ const CatalogueContent = () => {
 
       {error && <p className="text-red-500">{error}</p>}
       {loading ? (
-        <p>Loading papers...</p>
+           <Loader />
+
       ) : papers.length > 0 ? (
         <>
-          <div className="mb-4 2xl:mr-4 flex justify-center md:justify-end gap-2">
+          <div className="mb-4 flex justify-center gap-2 md:justify-end 2xl:mr-4">
             <Button variant="outline" onClick={handleSelectAll}>
               Select All
             </Button>
@@ -205,7 +208,7 @@ const CatalogueContent = () => {
               Download All ({selectedPapers.length})
             </Button>
           </div>
-          <div className="flex flex-col items-center justify-center md:justify-normal md:flex-row flex-wrap mx-auto gap-10">
+          <div className="mx-auto flex flex-col flex-wrap items-center justify-center gap-10 md:flex-row md:justify-normal">
             {papers.map((paper) => (
               <Card
                 key={paper._id}

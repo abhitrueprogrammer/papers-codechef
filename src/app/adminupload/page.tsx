@@ -402,7 +402,7 @@ function Upload() {
   }
 
   if (!tag) {
-    return <div>Loading...</div>;
+    return <div>.</div>;
   }
 
   return (

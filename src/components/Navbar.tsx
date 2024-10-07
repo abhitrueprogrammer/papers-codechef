@@ -9,7 +9,7 @@ function Navbar() {
   return (
     <div className="flex items-center justify-between px-4 py-6 md:px-12">
       <div className="hiddaen w-[20%] md:block">
-        <a href="https://www.codechefvit.com/">
+        <a href="https://www.codechefvit.com/" className="inline-block">
           <Image
             src={ccLogo as HTMLImageElement}
             alt="codechef-logo"
@@ -18,9 +18,11 @@ function Navbar() {
           />
         </a>
       </div>
-      <Link href="/" className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-5xl font-bold text-transparent md:w-[60%] md:text-6xl">
-        Papers
-      </Link>
+      <div>
+        <Link href="/"  className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-5xl font-bold text-transparent md:w-[60%] md:text-6xl">
+          Papers
+        </Link>
+      </div>
       <div className="flex items-center justify-end gap-x-2 md:w-[20%]">
         <div className="hidden md:block">
           <ModeToggle />
