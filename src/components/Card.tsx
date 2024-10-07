@@ -27,6 +27,12 @@ const Card = ({
     setChecked(isSelected);
   }, [isSelected]);
 
+  const handleDownload = async (paper: Paper) => {
+      const extension = paper.finalUrl.split(".").pop();
+      const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
+      await downloadFile(paper.finalUrl, fileName);
+  };
+
   function handleCheckboxChange() {
     setChecked(!checked);
     onSelect(paper, !checked);
@@ -92,9 +98,9 @@ const Card = ({
           <p className="text-sm">Select</p>
         </div>
         <div className="flex gap-2" onClick={handleOpen}>
-          <Eye size={20} />
+          <Eye size={20} className="cursor-pointer" />
           <button
-            onClick={() => downloadFile(paper.finalUrl, `${paper.subject}.jpg`)}
+            onClick={() => handleDownload(paper)}
           >
             <Download size={20} />
           </button>

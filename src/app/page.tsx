@@ -6,13 +6,13 @@ import Footer from "@/components/Footer";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <div>
         <Navbar />
       </div>
-      <div className="mt-2 flex flex-col items-center justify-center gap-y-6">
+      <div className="mt-2 flex flex-col items-center justify-center gap-y-6 flex-grow">
         <div className="w-full max-w-2xl space-y-6 text-center">
-          <h1 className="phonk text-2xl md:text-3xl font-bold tracking-wider">
+          <h1 className="phonk text-2xl font-bold tracking-wider md:text-3xl">
             Built by students for students
           </h1>
           <p className="text-base font-semibold">

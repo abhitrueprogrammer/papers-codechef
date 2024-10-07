@@ -57,8 +57,8 @@ const CatalogueContent = () => {
 
   async function downloadFile(url: string, filename: string) {
     try {
-      const response = await fetch(url, { method: "GET" });
-      const blob = await response.blob();
+      const response = await axios.get(url, { responseType: "blob" });
+      const blob = new Blob([response.data]);
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = filename;

@@ -9,7 +9,7 @@ import x_twitter_icon_dark from "../assets/x_twitter_icon_dark.svg";
 
 export default function Footer() {
   return (
-    <div className="flex md:flex-row flex-col gap-y-12 max-w-7xl mx-auto items-center justify-between pt-12">
+    <div className="flex md:flex-row flex-col gap-y-12 md:w-full md:px-12 mx-auto items-center justify-between pt-12">
       <div className="flex items-center">
         <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl md:text-5xl font-bold text-transparent">
           Papers
