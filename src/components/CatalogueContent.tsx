@@ -167,9 +167,9 @@ const CatalogueContent = () => {
   }, [subject, searchParams]);
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="mb-4 flex flex-col md:flex-row w-full items-center justify-center gap-10">
-        <div className="w-full md:w-[576px]">
+    <div className="min-h-screen px-2 md:p-8">
+      <div className="mb-4 flex flex-row w-full items-center md:justify-center md:gap-10">
+        <div className="w-[120%] md:w-[576px]">
           <SearchBar />
         </div>
         {subject && filterOptions && (
@@ -190,7 +190,7 @@ const CatalogueContent = () => {
         <p>Loading papers...</p>
       ) : papers.length > 0 ? (
         <>
-          <div className="mb-4 md:mr-4 flex justify-center md:justify-end gap-2">
+          <div className="mb-4 2xl:mr-4 flex justify-center md:justify-end gap-2">
             <Button variant="outline" onClick={handleSelectAll}>
               Select All
             </Button>

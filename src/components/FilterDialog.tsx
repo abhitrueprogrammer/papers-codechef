@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { type Filters } from "@/interface";
 import { useEffect, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 
 export const FilterDialog = ({
   subject,
@@ -72,7 +73,12 @@ export const FilterDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Filters</Button>
+        <Button variant="outline" className="py-6 rounded-xl">
+          <span className="hidden md:block">Filters</span>
+          <span className="block md:hidden">
+            <SlidersHorizontal />
+          </span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[650px] overflow-y-hidden">
         <DialogHeader>
