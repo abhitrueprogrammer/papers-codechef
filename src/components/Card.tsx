@@ -53,13 +53,15 @@ const Card = ({
 
   function handleOpen() {
     window.open(paper.finalUrl, "_blank");
-    const storedPapers = JSON.parse(
-      localStorage.getItem("clickedPapers") ?? "[]",
-    );
-    const updatedPapers = [paper, ...storedPapers];
-    const lastThreePapers = updatedPapers.slice(0, 4);
-    localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
-  }
+    const storedPapers = JSON.parse(localStorage.getItem("clickedPapers") ?? "[]");
+    const paperExists = storedPapers.some((storedPaper: Paper) => storedPaper._id === paper._id);
+    if (!paperExists) {
+        const updatedPapers = [paper, ...storedPapers];
+        const lastThreePapers = updatedPapers.slice(0, 4);
+        localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
+    }
+}
+
 
   return (
     <div
