@@ -205,7 +205,7 @@ const CatalogueContent = () => {
               Download All ({selectedPapers.length})
             </Button>
           </div>
-          <div className="flex flex-col items-center justify-center md:flex-row flex-wrap mx-auto gap-10">
+          <div className="flex flex-col items-center justify-center md:justify-normal md:flex-row flex-wrap mx-auto gap-10">
             {papers.map((paper) => (
               <Card
                 key={paper._id}

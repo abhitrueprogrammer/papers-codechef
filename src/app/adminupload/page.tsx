@@ -410,7 +410,7 @@ function Upload() {
       <div className="md:w-[35%]">
         <h1 className="mb-6 text-2xl font-bold">Upload Papers</h1>
         <CldUploadWidget
-          uploadPreset="papers-unsigned"
+          uploadPreset="papers-unsigned-prod"
           options={{
             sources: ["camera", "local"],
             multiple: false,
@@ -421,7 +421,7 @@ function Upload() {
           }}
           //@ts-expect-error - event is not used
           onSuccess={(results: CloudinaryUploadWidgetProps) => {
-            setUrls((prevUrls) => [...(prevUrls ?? []), results.info?.url]);
+            setUrls((prevUrls) => [...(prevUrls ?? []), results.info?.secure_url]);
             setPublicIds((prevIds) => [
               ...(prevIds ?? []),
               results.info?.public_id,
@@ -567,7 +567,7 @@ function Upload() {
           </div>
         </div>
         <div className="flex">
-          <div className="w-full max-w-md rounded bg-white p-8 shadow-md">
+          <div className="w-full max-w-md rounded p-8 shadow-md">
             <h1 className="mb-6 text-2xl font-bold">
               Upload Images to Convert to PDF
             </h1>

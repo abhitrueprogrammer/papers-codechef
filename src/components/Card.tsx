@@ -59,7 +59,7 @@ const Card = ({
   return (
     <div
       key={paper._id}
-      className={`w-56 space-y-1 rounded-md border border-black dark:border-[#7480FF] border-opacity-50  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
+      className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
       <Image
         src={paper.thumbnailUrl}

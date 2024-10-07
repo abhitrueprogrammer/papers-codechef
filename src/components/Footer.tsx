@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <div className="flex md:flex-row flex-col gap-y-12 max-w-7xl mx-auto items-center justify-between pt-12">
       <div className="flex items-center">
-        <h1 className="jost bg-gradient-to-r from-purple-600 to-blue-400 bg-clip-text text-center text-3xl md:text-5xl font-bold text-transparent">
+        <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl md:text-5xl font-bold text-transparent">
           Papers
         </h1>
         <Separator orientation="vertical" className="min-h-20 h-full mx-3" />

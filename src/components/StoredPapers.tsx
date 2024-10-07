@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import PreviewCard from "@/components/PreviewCard";
 import { type Paper } from "@/interface";
@@ -7,20 +7,27 @@ function StoredPapers() {
   const [papers, setPapers] = useState<Paper[]>([]);
 
   useEffect(() => {
-    const storedPapers = JSON.parse(localStorage.getItem("clickedPapers") || "[]");
+    const storedPapers = JSON.parse(
+      localStorage.getItem("clickedPapers") ?? "[]"
+    );
 
     setPapers(storedPapers);
   }, []);
 
+  if (papers.length === 0) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-wrap gap-4 justify-center">
-      {papers.length > 0 ? (
-        papers.map((paper: Paper) => <PreviewCard key={paper._id} paper={paper} />)
-      ) : (
-        <p>No Previously visited papers.</p>
-      )}
-    </div>
+    <>
+      <p className="mb-4 text-center font-semibold">Recently Viewed Papers</p>
+      <div className="flex flex-wrap justify-center gap-4">
+        {papers.map((paper: Paper) => (
+          <PreviewCard key={paper._id} paper={paper} />
+        ))}
+      </div>
+    </>
   );
-};
+}
 
 export default StoredPapers;

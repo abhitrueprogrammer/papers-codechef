@@ -46,9 +46,6 @@ const HomePage = () => {
           <SearchBar />
         </div>
         <div className="max-3xl w-full">
-          <p className="mb-4 text-center font-semibold">
-            Recently Viewed Papers
-          </p>
           <StoredPapers />
         </div>
       </div>

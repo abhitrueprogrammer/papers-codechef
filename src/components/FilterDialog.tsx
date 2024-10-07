@@ -74,8 +74,7 @@ export const FilterDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="py-6 rounded-xl">
-          <span className="hidden md:block">Filters</span>
-          <span className="block md:hidden">
+          <span>
             <SlidersHorizontal />
           </span>
         </Button>

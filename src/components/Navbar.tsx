@@ -16,7 +16,7 @@ function Navbar() {
           width={70}
         />
       </div>
-      <Link href="/" className="jost bg-gradient-to-r from-purple-600 to-blue-400 bg-clip-text text-center text-5xl font-bold text-transparent md:w-[60%] md:text-6xl">
+      <Link href="/" className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-5xl font-bold text-transparent md:w-[60%] md:text-6xl">
         Papers
       </Link>
       <div className="flex items-center justify-end gap-x-2 md:w-[20%]">
