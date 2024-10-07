@@ -8,6 +8,8 @@ import {
 } from "@/util/utils";
 import { capsule } from "@/util/utils";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Card = ({
   paper,
@@ -18,6 +20,7 @@ const Card = ({
   onSelect: (paper: Paper, isSelected: boolean) => void;
   isSelected: boolean;
 }) => {
+  const router = useRouter();
   const [checked, setChecked] = useState<boolean>(false);
 
   useEffect(() => {
@@ -43,30 +46,42 @@ const Card = ({
     }
   }
 
+  function handleOpen() {
+    window.open(paper.finalUrl, "_blank");
+    const storedPapers = JSON.parse(
+      localStorage.getItem("clickedPapers") ?? "[]",
+    );
+    const updatedPapers = [paper, ...storedPapers];
+    const lastThreePapers = updatedPapers.slice(0, 4);
+    localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
+  }
+
   return (
     <div
       key={paper._id}
-      className={`w-56 space-y-1 rounded-md border border-black border-opacity-50  ${checked ? "bg-[#EEF2FF]" : "bg-white"}  p-4 `}
+      className={`w-56 space-y-1 rounded-md border border-black dark:border-[#7480FF] border-opacity-50  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
       <Image
         src={paper.thumbnailUrl}
         alt={paper.subject}
         width={320}
         height={180}
-        className="mb-2 h-[180px] w-full object-cover"
+        onClick={handleOpen}
+        className="mb-2 h-[180px] w-full cursor-pointer object-cover"
       />
+
       <div className="text-sm font-medium">
         {extractBracketContent(paper.subject)}
       </div>
       <div className="text-md font-medium">
         {extractWithoutBracketContent(paper.subject)}
       </div>
-      <div className="mb-2 flex gap-2 ">
+      <div className="py-2 flex gap-2">
         {capsule(paper.exam)}
         {capsule(paper.slot)}
         {capsule(paper.year)}
       </div>
-      <div className="mt-5 flex items-center justify-between gap-2 ">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1">
           <input
             checked={checked}
@@ -76,14 +91,12 @@ const Card = ({
           />
           <p className="text-sm">Select</p>
         </div>
-        <div className="flex gap-2">
-          <a href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
-            <Eye />
-          </a>
+        <div className="flex gap-2" onClick={handleOpen}>
+          <Eye size={20} />
           <button
             onClick={() => downloadFile(paper.finalUrl, `${paper.subject}.jpg`)}
           >
-            <Download />
+            <Download size={20} />
           </button>
         </div>
       </div>

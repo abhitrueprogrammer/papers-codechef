@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useState } from "react";
-import Camera from "@/components/camera";
 import JSZip from "jszip";
 import axios from "axios";
 import { slots, courses } from "./select_options";
@@ -8,10 +7,23 @@ import toast, { Toaster } from "react-hot-toast";
 import { handleAPIError } from "../../util/error";
 import { useRouter } from "next/navigation";
 import { type ApiError } from "next/dist/server/api-utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Page = () => {
   const router = useRouter();
-  const [openCamera, setOpenCamera] = useState(false);
+  // const [openCamera, setOpenCamera] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [slot, setSlot] = useState("");
@@ -19,12 +31,12 @@ const Page = () => {
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const toggleOpenCamera = () => {
-    setOpenCamera((prev) => !prev);
-  };
+  // const toggleOpenCamera = () => {
+  //   setOpenCamera((prev) => !prev);
+  // };
 
   const handlePrint = async () => {
-    //file validation
+    // file validation
     const maxFileSize = 5 * 1024 * 1024;
     const files = fileInputRef.current?.files as FileList | null;
     if (!files || files.length == 0) {
@@ -91,129 +103,143 @@ const Page = () => {
   };
 
   return (
-    <div className="m-5 flex flex-col items-center">
-      {/* {openCamera && <Camera />} */}
+    <div className="h-screen">
+      <div>
+        <Navbar />
+      </div>
+      <div className="2xl:my-12 flex flex-col items-center">
+        <fieldset className="mb-4 w-[350px] rounded-lg border-2 border-gray-300 p-4 pr-8">
+          <legend className="text-lg font-bold">Select paper parameters</legend>
 
-      <fieldset className="mb-4 rounded-lg border-2 border-gray-300 p-4">
-        <legend className="text-lg font-bold text-gray-700">
-          {" "}
-          Select paper parameters
-        </legend>
-        <div>
-          <div>
-            <label>
-              Slot:
-              <select
-                value={slot}
-                onChange={(e) => setSlot(e.target.value)}
-                className="m-2 rounded-md border p-2"
-              >
-                {slots.map((slot) => {
-                  return (
-                    <option key={slot} value={slot}>
-                      {slot}
-                    </option>
-                  );
-                })}
-              </select>
-            </label>
-          </div>
-          <div>
-            <label>
-              Exam:
-              <select
-                value={exam}
-                onChange={(e) => setExam(e.target.value)}
-                className="m-2 rounded-md border p-2"
-              >
-                <option value="cat1">Cat 1</option>
-                <option value="cat2">Cat 2</option>
-                <option value="fat">Fat</option>
-              </select>
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Subject:
-              <select
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                className="m-2 rounded-md border p-2"
-              >
-                {courses.map((course) => (
-                  <option key={course} value={course}>
-                    {course}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div>
-            <label>
-              Year:
-              <select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="m-2 rounded-md border p-2"
-              >
-                {(() => {
-                  const options = [];
-                  for (
-                    let i = 2011;
-                    i <= Number(new Date().getFullYear());
-                    i++
-                  ) {
-                    options.push(
-                      <option key={i} value={i}>
-                        {i}
-                      </option>,
-                    );
-                  }
-                  return options;
-                })()}
-              </select>
-            </label>
-          </div>
-          <div className="m-4 flex items-center">
-            <input
-              required
-              type="file"
-              accept="image/*,.pdf"
-              multiple
-              ref={fileInputRef}
-              className="hidden"
-              onChange={(e) => {
-                const filesArray = Array.from(e.target.files ?? []);
-                setFiles(filesArray);
-              }}
-            />
+          <div className="flex w-full flex-col 2xl:gap-y-4">
+            {/* Slot Selection */}
             <div>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()} // Trigger file input on button click
-                className="rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
-              >
-                Choose files
-              </button>
-              <div
-                className={`ml-2 mt-1  text-xs ${files.length === 0 ? "text-red-500" : "text-black"}`}
-              >
-                {files.length} files selected
+              <label>Slot:</label>
+              <Select value={slot} onValueChange={setSlot}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select slot" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Slots</SelectLabel>
+                    {slots.map((slot) => (
+                      <SelectItem key={slot} value={slot}>
+                        {slot}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Exam Selection */}
+            <div>
+              <label>Exam:</label>
+              <Select value={exam} onValueChange={setExam}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select exam" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Exams</SelectLabel>
+                    <SelectItem value="cat1">Cat 1</SelectItem>
+                    <SelectItem value="cat2">Cat 2</SelectItem>
+                    <SelectItem value="fat">Fat</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Subject Selection */}
+            <div>
+              <label>Subject:</label>
+              <Select value={subject} onValueChange={setSubject}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Subjects</SelectLabel>
+                    {courses.map((course) => (
+                      <SelectItem key={course} value={course}>
+                        {course}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Selection */}
+            <div>
+              <label>Year:</label>
+              <Select value={year} onValueChange={setYear}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Years</SelectLabel>
+                    {(() => {
+                      const options = [];
+                      for (
+                        let i = 2011;
+                        i <= Number(new Date().getFullYear());
+                        i++
+                      ) {
+                        options.push(
+                          <SelectItem key={i} value={String(i)}>
+                            {i}
+                          </SelectItem>,
+                        );
+                      }
+                      return options;
+                    })()}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="m-4 flex items-center">
+              <Input
+                required
+                type="file"
+                accept="image/*,.pdf"
+                multiple
+                ref={fileInputRef}
+                className="hidden"
+                onChange={(e) => {
+                  const filesArray = Array.from(e.target.files ?? []);
+                  setFiles(filesArray);
+                }}
+              />
+              <div>
+                <Button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()} // Trigger file input on button click
+                  className="rounded-md px-4 py-2 transition"
+                >
+                  Choose files
+                </Button>
+                <div
+                  className={`ml-2 mt-1 text-xs ${files.length === 0 ? "text-red-500" : ""}`}
+                >
+                  {files.length} files selected
+                </div>
               </div>
             </div>
-            {/* <button onClick={toggleOpenCamera} className="bg-black/10 px-4 py-3">
-            {openCamera ? "Close Camera" : "Open Camera"}
-          </button> */}
           </div>
-        </div>
-      </fieldset>
-      <button
-        onClick={handlePrint}
-        className="w-fit rounded-md bg-black/10 px-4  py-3 text-lg font-bold"
-      >
-        Send Zip File
-      </button>
+        </fieldset>
+        <Button
+          onClick={handlePrint}
+          className="w-fit rounded-md px-4 py-3 text-lg font-bold"
+        >
+          Upload Papers
+        </Button>
+      </div>
+      <div className="">
+        <Footer />
+      </div>
     </div>
   );
 };

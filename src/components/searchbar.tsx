@@ -6,12 +6,13 @@ import { Search } from "lucide-react";
 import Cryptr from "cryptr";
 import debounce from 'debounce';
 import { useRouter } from "next/navigation";  
+import { Input } from "@/components/ui/input"
 
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret"
 );
 
-const SearchBar = () => {
+function SearchBar () {
   const router = useRouter();  
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -63,32 +64,32 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 flex-col">
-      <form className="w-full max-w-md">
+    <div className="mx-4 md:mx-0">
+      <form className="w-full max-w-xl">
         <div className="relative">
-          <input 
+          <Input
             type="text" 
             value={searchText} 
             onChange={handleSearchChange}
             placeholder="Search..." 
-            className={`w-full rounded-md border border-gray-300 px-4 py-2 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${loading ? 'opacity-50' : ''}`}
+            className={`w-full rounded-xl border px-4 py-6 pr-10 bg-[#7480FF] placeholder:text-white text-white opacity-50 shadow-sm focus:outline-none focus:ring-2 ${loading ? 'opacity-70' : ''}`}
           />
           <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3" disabled={loading}>
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-white opacity-50" />
           </button>
         </div>
         {loading && (
-          <div className="absolute z-10 w-full max-w-md bg-white border border-gray-300 rounded-md mt-2 p-2 text-center text-gray-500">
+          <div className="absolute z-20 w-full max-w-xl border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2 p-2 text-center">
             Loading suggestions...
           </div>
         )}
         {suggestions.length > 0 && !loading && (
-          <ul className="absolute w-full text-center max-w-md z-10 bg-white border border-gray-300 rounded-md mt-2">
+          <ul className="absolute mx-0.5 md:mx-0 md:w-full text-center max-w-xl z-20 border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2">
             {suggestions.map((suggestion, index) => (
               <li 
                 key={index} 
                 onClick={() => handleSelectSuggestion(suggestion)} 
-                className="cursor-pointer p-2 hover:bg-gray-100 truncate"
+                className="cursor-pointer p-2 truncate hover:opacity-50"
                 style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
               >
                 {suggestion}

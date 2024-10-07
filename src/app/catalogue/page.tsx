@@ -2,12 +2,16 @@
 
 import CatalogueContent from "@/components/CatalogueContent";
 import { Suspense } from "react";
+import Navbar from "@/components/Navbar";
 
 const Catalogue = () => {
   return (
-    <Suspense fallback={<div>Loading catalogue...</div>}>
-      <CatalogueContent />
-    </Suspense>
+    <>
+      <Navbar />
+      <Suspense fallback={<div>Loading catalogue...</div>}>
+        <CatalogueContent />
+      </Suspense>
+    </>
   );
 };
 

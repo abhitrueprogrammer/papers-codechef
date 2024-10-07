@@ -26,7 +26,7 @@ interface PostPDFToCloudinary {
   status: boolean;
 }
 
-const Upload: React.FC = () => {
+function Upload() {
   const router = useRouter();
   const [subject, setSubject] = useState<string>("Digital Logic and Microprocessors[BITE202L]");
   const [slot, setSlot] = useState<string>("A1");

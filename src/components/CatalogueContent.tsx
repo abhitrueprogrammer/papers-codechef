@@ -8,6 +8,7 @@ import { FilterDialog } from "@/components/FilterDialog";
 import Card from "./Card";
 import { extractBracketContent } from "@/util/utils";
 import { useRouter } from "next/navigation";
+import SearchBar from "./searchbar";
 
 const cryptr = new Cryptr(
   process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
@@ -20,9 +21,15 @@ const CatalogueContent = () => {
   const exams = searchParams.get("exams")?.split(",");
   const slots = searchParams.get("slots")?.split(",");
   const years = searchParams.get("years")?.split(",");
-  const [selectedExams, setSelectedExams] = useState<string[] | undefined>(exams);
-  const [selectedSlots, setSelectedSlots] = useState<string[] | undefined>(slots);
-  const [selectedYears, setSelectedYears] = useState<string[] | undefined>(years);
+  const [selectedExams, setSelectedExams] = useState<string[] | undefined>(
+    exams,
+  );
+  const [selectedSlots, setSelectedSlots] = useState<string[] | undefined>(
+    slots,
+  );
+  const [selectedYears, setSelectedYears] = useState<string[] | undefined>(
+    years,
+  );
 
   const handleResetFilters = () => {
     setSelectedExams([]);
@@ -69,28 +76,35 @@ const CatalogueContent = () => {
       setSelectedPapers((prev) => prev.filter((p) => p._id !== paper._id));
     }
   };
-  const handleApplyFilters = (exams: string[], slots: string[], years: string[]) => {
+  const handleApplyFilters = (
+    exams: string[],
+    slots: string[],
+    years: string[],
+  ) => {
     if (subject) {
-        let pushContent = "/catalogue"
-        if(subject)
-        {
-          pushContent = pushContent.concat(`?subject=${encodeURIComponent(subject)}`)
-        }
-        if(exams !== undefined && exams.length > 0)
-        {
-          pushContent = pushContent.concat(`&exams=${encodeURIComponent(exams.join(','))}`)
-        }
-        if(slots !== undefined && slots.length > 0)
-        {
-          pushContent= pushContent.concat(`&slots=${encodeURIComponent(slots.join(','))}`)
-        }
-        if(years !== undefined && years.length > 0)
-        {
-          pushContent = pushContent.concat(`&years=${encodeURIComponent(years.join(','))}`)
-  
-        }
-        router.push(pushContent);
+      let pushContent = "/catalogue";
+      if (subject) {
+        pushContent = pushContent.concat(
+          `?subject=${encodeURIComponent(subject)}`,
+        );
       }
+      if (exams !== undefined && exams.length > 0) {
+        pushContent = pushContent.concat(
+          `&exams=${encodeURIComponent(exams.join(","))}`,
+        );
+      }
+      if (slots !== undefined && slots.length > 0) {
+        pushContent = pushContent.concat(
+          `&slots=${encodeURIComponent(slots.join(","))}`,
+        );
+      }
+      if (years !== undefined && years.length > 0) {
+        pushContent = pushContent.concat(
+          `&years=${encodeURIComponent(years.join(","))}`,
+        );
+      }
+      router.push(pushContent);
+    }
     setSelectedExams(exams);
     setSelectedSlots(slots);
     setSelectedYears(years);
@@ -153,8 +167,11 @@ const CatalogueContent = () => {
   }, [subject, searchParams]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-40 mb-4 flex items-center justify-center gap-10">
+    <div className="min-h-screen p-8">
+      <div className="mb-4 flex flex-col md:flex-row w-full items-center justify-center gap-10">
+        <div className="w-full md:w-[576px]">
+          <SearchBar />
+        </div>
         {subject && filterOptions && (
           <FilterDialog
             subject={subject}
@@ -173,7 +190,7 @@ const CatalogueContent = () => {
         <p>Loading papers...</p>
       ) : papers.length > 0 ? (
         <>
-          <div className="mb-4 flex justify-end gap-2">
+          <div className="mb-4 md:mr-4 flex justify-center md:justify-end gap-2">
             <Button variant="outline" onClick={handleSelectAll}>
               Select All
             </Button>
@@ -188,7 +205,7 @@ const CatalogueContent = () => {
               Download All ({selectedPapers.length})
             </Button>
           </div>
-          <div className="flex flex-wrap gap-10">
+          <div className="flex flex-col items-center justify-center md:flex-row flex-wrap mx-auto gap-10">
             {papers.map((paper) => (
               <Card
                 key={paper._id}
