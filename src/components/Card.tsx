@@ -9,7 +9,6 @@ import {
 import { capsule } from "@/util/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const Card = ({
   paper,

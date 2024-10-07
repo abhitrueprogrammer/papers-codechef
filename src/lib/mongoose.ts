@@ -13,7 +13,7 @@ export const connectToDatabase = async () => {
     return;
   }
 
-  if (mongoose.connection.readyState >= mongoose.ConnectionStates.connected) {
+  if (mongoose.connection.readyState === mongoose.ConnectionStates.connected) {
     isConnected = true;
     return;
   }

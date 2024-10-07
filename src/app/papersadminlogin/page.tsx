@@ -5,22 +5,17 @@ import { useRouter } from "next/navigation";
 import {
   type LoginResponse,
   type ErrorResponse,
-  type DecryptedLoginResponse,
 } from "@/interface";
-import Cryptr from "cryptr";
 import { handleAPIError } from "@/util/error";
-import { totalmem } from "os";
 import toast from "react-hot-toast";
 import { ApiError } from "next/dist/server/api-utils";
-const cryptr = new Cryptr(
-  process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
-);
 
 const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+
   async function apiLogin() {
     try {
       const response = await axios.post<LoginResponse>("/api/auth/login", {
@@ -28,33 +23,25 @@ const LoginPage = () => {
         password,
       });
 
-      const { res } = response.data;
-      const decryptedToken = cryptr.decrypt(res);
-      try {
-        const message = JSON.parse(decryptedToken) as DecryptedLoginResponse;
-        const token = message.token;
-        localStorage.setItem("token", token);
-        return response.data;
-        // router.push("/adminupload");
-      } catch (error) {
-        toast.error(`Failed to parse decrypted token${error}`);
-      }
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+      return response.data;
     } catch (error) {
       throw handleAPIError(error);
     }
   }
+
   const handleLogin = async () => {
     try {
       const response = await toast.promise(
         apiLogin(),
-
         {
           loading: "Logging you in...",
           success: "Logged in!",
           error: (err: ApiError) => err.message,
         },
       );
-      if (response && "res" in response) {
+      if (response) {
         setTimeout(() => {
           router.push("/adminupload");
         }, 1500);

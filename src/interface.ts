@@ -61,7 +61,7 @@ export interface ConverttoPDFResponse {
 }
 
 export interface LoginResponse {
-  res: string;
+  token: string;
 }
 
 export interface ErrorResponse {

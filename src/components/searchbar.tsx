@@ -3,14 +3,9 @@
 import { useState, useCallback } from "react";
 import axios, { AxiosError } from "axios";
 import { Search } from "lucide-react";
-import Cryptr from "cryptr";
 import debounce from 'debounce';
 import { useRouter } from "next/navigation";  
-import { Input } from "@/components/ui/input"
-
-const cryptr = new Cryptr(
-  process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret"
-);
+import { Input } from "@/components/ui/input";
 
 function SearchBar () {
   const router = useRouter();  
@@ -28,9 +23,7 @@ function SearchBar () {
             params: { text },
           });
 
-          const { res: encryptedSearchResponse } = searchResponse.data;
-          const decryptedSearchResponse = cryptr.decrypt(encryptedSearchResponse);
-          const { subjects } = JSON.parse(decryptedSearchResponse);
+          const { subjects } = searchResponse.data;
           const suggestionList = subjects.map((subjectObj: { subject: string }) => subjectObj.subject);
           setSuggestions(suggestionList);
           setError(null);
@@ -45,7 +38,7 @@ function SearchBar () {
         setSuggestions([]);
       }
     }, 500),
-    [cryptr]
+    []
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
