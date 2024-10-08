@@ -81,17 +81,16 @@ function SearchBar () {
             placeholder="Search..." 
             className={`w-full rounded-xl border px-4 py-6 pr-10 bg-[#7480FF] placeholder:text-white text-white opacity-50 shadow-sm focus:outline-none focus:ring-2 ${loading ? 'opacity-70' : ''}`}
           />
-          <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3" disabled={loading}>
+          <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3" disabled>  {/* disabled={loading} */}
             <Search className="h-5 w-5 text-white opacity-50" />
           </button>
-        </div>
         {loading && (
           <div className="absolute z-20 w-full max-w-xl border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2 p-2 text-center">
             Loading suggestions...
           </div>
         )}
         {(suggestions.length > 0 || error) && !loading && (
-          <ul ref={suggestionsRef} className="absolute mx-0.5 md:mx-0 md:w-full text-center max-w-xl z-20 border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2">
+          <ul ref={suggestionsRef} className="absolute mx-0.5 md:mx-0 w-full text-center max-w-xl z-20 border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2">
             {error ? (
               <li className="p-2 text-red">{error}</li>
             ) : (
@@ -108,6 +107,7 @@ function SearchBar () {
             )}
           </ul>
         )}
+        </div>
       </form>
     </div>
   );
