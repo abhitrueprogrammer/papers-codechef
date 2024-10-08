@@ -1,7 +1,6 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios, { type AxiosError } from "axios";
-import Cryptr from "cryptr";
 import { Button } from "@/components/ui/button";
 import { type Paper, type Filters } from "@/interface";
 import { FilterDialog } from "@/components/FilterDialog";
@@ -9,12 +8,7 @@ import Card from "./Card";
 import { extractBracketContent } from "@/util/utils";
 import { useRouter } from "next/navigation";
 import SearchBar from "./searchbar";
-import { RiLoader2Fill } from "react-icons/ri";
 import Loader from "./ui/loader";
-
-const cryptr = new Cryptr(
-  process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret",
-);
 
 const CatalogueContent = () => {
   const searchParams = useSearchParams();
@@ -121,14 +115,9 @@ const CatalogueContent = () => {
           const papersResponse = await axios.get("/api/papers", {
             params: { subject },
           });
-          const { res: encryptedPapersResponse } = papersResponse.data;
-          const decryptedPapersResponse = cryptr.decrypt(
-            encryptedPapersResponse,
-          );
-          const papersData: Paper[] = JSON.parse(
-            decryptedPapersResponse,
-          ).papers;
-          const filters: Filters = JSON.parse(decryptedPapersResponse);
+          const papersData: Paper[] = papersResponse.data.papers;
+          const filters: Filters = papersResponse.data;
+
           setFilterOptions(filters);
 
           const papersDataWithFilters = papersData.filter((paper) => {
@@ -189,8 +178,7 @@ const CatalogueContent = () => {
 
       {error && <p className="text-red-500">{error}</p>}
       {loading ? (
-           <Loader />
-
+        <Loader />
       ) : papers.length > 0 ? (
         <>
           <div className="mb-4 flex justify-center gap-2 md:justify-end 2xl:mr-4">

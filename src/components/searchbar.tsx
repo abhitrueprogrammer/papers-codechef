@@ -1,16 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { Search } from "lucide-react";
-import Cryptr from "cryptr";
 import debounce from 'debounce';
 import { useRouter } from "next/navigation";  
-import { Input } from "@/components/ui/input"
-
-const cryptr = new Cryptr(
-  process.env.NEXT_PUBLIC_CRYPTO_SECRET ?? "default_crypto_secret"
-);
+import { Input } from "@/components/ui/input";
 
 function SearchBar () {
   const router = useRouter();  
@@ -18,6 +13,7 @@ function SearchBar () {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const suggestionsRef = useRef<HTMLUListElement | null>(null);
 
   const debouncedSearch = useCallback(
     debounce(async (text: string) => {
@@ -28,9 +24,7 @@ function SearchBar () {
             params: { text },
           });
 
-          const { res: encryptedSearchResponse } = searchResponse.data;
-          const decryptedSearchResponse = cryptr.decrypt(encryptedSearchResponse);
-          const { subjects } = JSON.parse(decryptedSearchResponse);
+          const { subjects } = searchResponse.data;
           const suggestionList = subjects.map((subjectObj: { subject: string }) => subjectObj.subject);
           setSuggestions(suggestionList);
           setError(null);
@@ -45,7 +39,7 @@ function SearchBar () {
         setSuggestions([]);
       }
     }, 500),
-    [cryptr]
+    []
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +56,19 @@ function SearchBar () {
     setSuggestions([]);
     router.push(`/catalogue?subject=${encodeURIComponent(suggestion)}`);
   };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+      setSuggestions([]);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="mx-4 md:mx-0">
@@ -83,24 +90,27 @@ function SearchBar () {
             Loading suggestions...
           </div>
         )}
-        {suggestions.length > 0 && !loading && (
-          <ul className="absolute mx-0.5 md:mx-0 md:w-full text-center max-w-xl z-20 border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2">
-            {suggestions.map((suggestion, index) => (
-              <li 
-                key={index} 
-                onClick={() => handleSelectSuggestion(suggestion)} 
-                className="cursor-pointer p-2 truncate hover:opacity-50"
-                style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-              >
-                {suggestion}
-              </li>
-            ))}
+        {(suggestions.length > 0 || error) && !loading && (
+          <ul ref={suggestionsRef} className="absolute mx-0.5 md:mx-0 md:w-full text-center max-w-xl z-20 border bg-white border-[#7480FF] dark:bg-[#030712] rounded-md mt-2">
+            {error ? (
+              <li className="p-2 text-red">{error}</li>
+            ) : (
+              suggestions.map((suggestion, index) => (
+                <li 
+                  key={index} 
+                  onClick={() => handleSelectSuggestion(suggestion)} 
+                  className="cursor-pointer p-2 truncate hover:opacity-50"
+                  style={{ width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                >
+                  {suggestion}
+                </li>
+              ))
+            )}
           </ul>
         )}
       </form>
-      {error && <p className="mt-4 text-red">{error}</p>}
     </div>
   );
-};
+}
 
 export default SearchBar;

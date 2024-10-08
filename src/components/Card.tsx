@@ -9,7 +9,6 @@ import {
 import { capsule } from "@/util/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const Card = ({
   paper,
@@ -28,9 +27,9 @@ const Card = ({
   }, [isSelected]);
 
   const handleDownload = async (paper: Paper) => {
-      const extension = paper.finalUrl.split(".").pop();
-      const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
-      await downloadFile(paper.finalUrl, fileName);
+    const extension = paper.finalUrl.split(".").pop();
+    const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
+    await downloadFile(paper.finalUrl, fileName);
   };
 
   function handleCheckboxChange() {
@@ -53,13 +52,23 @@ const Card = ({
   }
 
   function handleOpen() {
-    window.open(paper.finalUrl, "_blank");
     const storedPapers = JSON.parse(
       localStorage.getItem("clickedPapers") ?? "[]",
     );
-    const updatedPapers = [paper, ...storedPapers];
-    const lastThreePapers = updatedPapers.slice(0, 4);
-    localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
+    const paperExists = storedPapers.some(
+      (storedPaper: Paper) => storedPaper._id === paper._id,
+    );
+    if (!paperExists) {
+      const updatedPapers = [paper, ...storedPapers];
+      const lastThreePapers = updatedPapers.slice(0, 4);
+      localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
+    }
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      router.push(paper.finalUrl);
+    } else {
+      window.open(paper.finalUrl, "_blank");
+    }
   }
 
   return (
@@ -82,7 +91,7 @@ const Card = ({
       <div className="text-md font-medium">
         {extractWithoutBracketContent(paper.subject)}
       </div>
-      <div className="py-2 flex gap-2">
+      <div className="flex gap-2 py-2">
         {capsule(paper.exam)}
         {capsule(paper.slot)}
         {capsule(paper.year)}
@@ -97,11 +106,9 @@ const Card = ({
           />
           <p className="text-sm">Select</p>
         </div>
-        <div className="flex gap-2" onClick={handleOpen}>
-          <Eye size={20} className="cursor-pointer" />
-          <button
-            onClick={() => handleDownload(paper)}
-          >
+        <div className="flex gap-2">
+          <Eye size={20} className="cursor-pointer" onClick={handleOpen} />
+          <button onClick={() => handleDownload(paper)}>
             <Download size={20} />
           </button>
         </div>

@@ -1,15 +1,11 @@
 import { connectToDatabase } from "@/lib/mongoose";
 import bcrypt from "bcrypt";
-import Cryptr from "cryptr";
 import User, { type IUser } from "@/db/user";
 import { generateToken } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { type LoginRequest } from "@/interface";
 
-const cryptr = new Cryptr(process.env.CRYPTO_SECRET || "default_crypto_secret");
-
 export async function POST(req: Request) {
-  console.log(process.env.CRYPTO_SECRET);
   await connectToDatabase();
 
   const body = (await req.json()) as LoginRequest;
@@ -29,12 +25,10 @@ export async function POST(req: Request) {
 
     console.log("User logged in:", token);
 
-    const encryptedResponse = cryptr.encrypt(JSON.stringify({
+    return NextResponse.json({
       token,
       user: { id: user._id, email: user.email },
-    }));
-
-    return NextResponse.json({res: encryptedResponse}, { status: 200 });
+    }, { status: 200 });
   } catch (error) {
     console.error("Error logging in:", error);
     return NextResponse.json({ message: "Failed to login", error }, { status: 500 });

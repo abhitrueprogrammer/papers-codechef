@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://papers.codechefvit.com/"),
   title: "Papers",
   description: "Made with ♡ by CodeChef-VIT",
-  icons: [{ rel: "icon", url: "/chefshat.svg" }],
+  icons: [{ rel: "icon", url: "/codechef_logo.svg" }],
   openGraph: {
     title: "Papers",
-    images: [{ url: "/cookoff.png" }],
+    images: [{ url: "/papers.png" }],
     url: "https://papers.codechefvit.com/",
     type: "website",
     description: "Made with ♡ by CodeChef-VIT",
@@ -39,7 +39,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >

@@ -7,8 +7,8 @@ import Link from "next/link";
 
 function Navbar() {
   return (
-    <div className="flex items-center justify-between px-4 py-6 md:px-12">
-      <div className="hiddaen w-[20%] md:block">
+    <div className="flex items-center justify-between px-2 gap-x-3 py-6 md:px-12">
+      <div className="hidden w-[20%] md:block">
         <a href="https://www.codechefvit.com/" className="inline-block">
           <Image
             src={ccLogo as HTMLImageElement}
@@ -31,7 +31,7 @@ function Navbar() {
         <Link href="/upload">
           <Button
             variant="outline"
-            className="rounded-full px-6 py-4 text-xs md:text-sm"
+            className="rounded-full px-6 py-4 text-xs md:text-sm mt-2 md:mt-0"
           >
             <ArrowUpToLine />
             <span>UPLOAD PAPERS</span>
