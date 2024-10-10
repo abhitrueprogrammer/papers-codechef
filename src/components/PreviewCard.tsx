@@ -8,12 +8,23 @@ import { capsule } from "@/util/utils";
 import Link from "next/link";
 
 const PreviewCard = ({ paper }: { paper: Paper }) => {
+
+  function handleOpen(event: React.MouseEvent) {
+    event.stopPropagation();
+    const link = document.createElement("a");
+    link.href = paper.finalUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   return (
     <div
       key={paper._id}
       className="w-56 space-y-1 rounded-xl border border-black border-opacity-50 p-4 dark:border-[#7480FF]/25"
     >
-      <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+      <button onClick={handleOpen} className="w-full">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
@@ -21,7 +32,7 @@ const PreviewCard = ({ paper }: { paper: Paper }) => {
           height={180}
           className="mb-2 h-[150px] w-full object-cover"
         />
-      </Link>
+      </button>
       <div className="text-sm font-medium">
         {extractBracketContent(paper.subject)}
       </div>
