@@ -1,15 +1,30 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
+import { cookies } from "next/headers"; // For session tracking
 
 const upload = multer({ dest: "uploads/" });
-
 const uploadMiddleware = promisify(upload.array("files"));
+
+const COOKIE_NAME = 'session_id'; // Name of the session cookie
+
+function getSessionId(req: Request): string {
+  const sessionId = cookies().get(COOKIE_NAME)?.value;
+  
+  if (!sessionId) {
+    const newSessionId = uuidv4();
+    cookies().set(COOKIE_NAME, newSessionId);
+    return newSessionId;
+  }
+
+  return sessionId;
+}
 
 export async function POST(req: Request, res: NextApiResponse) {
   await uploadMiddleware(req as any, res as any);
@@ -23,9 +38,9 @@ export async function POST(req: Request, res: NextApiResponse) {
 
   try {
     const pdfDoc = await PDFDocument.create();
+    const sessionId = getSessionId(req);
 
     for (const file of files) {
-      console.log(file);
       const fileBlob = new Blob([file]);
       const imgBytes = Buffer.from(await fileBlob.arrayBuffer());
       let img;
@@ -35,7 +50,7 @@ export async function POST(req: Request, res: NextApiResponse) {
         } else if (file.type === "image/jpeg" || file.type === "image/jpg") {
           img = await pdfDoc.embedJpg(imgBytes);
         } else {
-          continue; // Skip unsupported file types
+          continue;
         }
         const page = pdfDoc.addPage([img.width, img.height]);
         page.drawImage(img, {
@@ -47,27 +62,32 @@ export async function POST(req: Request, res: NextApiResponse) {
       }
     }
 
-    const pdfBytes = await pdfDoc.save();
-    const pdfPath = path.join(process.cwd(), "public", "merged.pdf");
-    await writeFile(pdfPath, pdfBytes);
+    const mergedPdfBytes = await pdfDoc.save();
+    const mergedPdfPath = path.join(process.cwd(), "public", `merged_${sessionId}.pdf`);
+    await writeFile(mergedPdfPath, mergedPdfBytes);
 
-    return NextResponse.json(
-      { url: `/${path.basename(pdfPath)}` },
-      { status: 200 },
-    );
+    const watermarkedPdfPath = path.join(process.cwd(), "public", `watermarked_${sessionId}.pdf`);
+    await applyWatermark(mergedPdfBytes, watermarkedPdfPath);
+
+    await unlink(mergedPdfPath); // Optionally delete the merged file
+
+    return NextResponse.json({ url: `/${path.basename(watermarkedPdfPath)}` }, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to process PDF" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to process PDF" }, { status: 500 });
   }
 }
 
 export async function DELETE(req: Request, res: NextApiResponse) {
-  const filePath = path.resolve("./public/merged.pdf");
   try {
+    const sessionId = cookies().get(COOKIE_NAME)?.value;
+    if (!sessionId) {
+      return NextResponse.json({ error: "Session not found" }, { status: 400 });
+    }
+
+    const filePath = path.resolve(`./public/watermarked_${sessionId}.pdf`);
+
     if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+      await unlink(filePath); // Delete the watermarked PDF file
       return NextResponse.json(
         { message: "Deleted watermarked PDF file successfully" },
         { status: 200 },
@@ -80,11 +100,34 @@ export async function DELETE(req: Request, res: NextApiResponse) {
     }
   } catch (error) {
     console.error("Error deleting PDF file:", error);
-    return NextResponse.json(
-      {
-        error: "Failed to delete watermarked PDF file",
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      error: "Failed to delete watermarked PDF file",
+    }, { status: 500 });
   }
+}
+
+async function applyWatermark(pdfBytes: Uint8Array, outputPath: string) {
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+
+  const watermarkImage = await pdfDoc.embedJpg(fs.readFileSync(path.resolve("./public/watermark.jpg")));
+  const pages = pdfDoc.getPages();
+  const { width, height } = pages[0]!.getSize();
+
+  pages.forEach((page) => {
+    const x = width - 80;
+    const y = 50;
+    const watermarkWidth = 50;
+    const watermarkHeight = 50;
+
+    page.drawImage(watermarkImage, {
+      x: x,
+      y: y,
+      width: watermarkWidth,
+      height: watermarkHeight,
+      opacity: 0.3,
+    });
+  });
+
+  const watermarkedPdfBytes = await pdfDoc.save();
+  await writeFile(outputPath, watermarkedPdfBytes);
 }

@@ -1,22 +1,38 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
 import { NextResponse } from "next/server";
 import { writeFile } from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
+import { cookies } from "next/headers";
 
 const upload = multer({ dest: "uploads/" });
-
 const uploadMiddleware = promisify(upload.single("file"));
+
+const COOKIE_NAME = "session_id";
+
+function getSessionId(req: Request): string {
+  const sessionId = cookies().get(COOKIE_NAME)?.value;
+  
+  if (!sessionId) {
+    const newSessionId = uuidv4();
+    cookies().set(COOKIE_NAME, newSessionId);
+    return newSessionId;
+  }
+
+  return sessionId;
+}
 
 export async function POST(req: Request, res: NextApiResponse) {
   await uploadMiddleware(req as any, res as any);
 
+  const sessionId = getSessionId(req);
   const formData = await req.formData();
-
   const file = formData.get("file");
+
   if (!file) {
     return NextResponse.json({ error: "No files received." }, { status: 400 });
   }
@@ -24,7 +40,6 @@ export async function POST(req: Request, res: NextApiResponse) {
   try {
     const fileBlob = new Blob([file]);
     const buffer = Buffer.from(await fileBlob.arrayBuffer());
-
     const pdfDoc = await PDFDocument.load(buffer);
 
     const watermarkImage = await pdfDoc.embedJpg(
@@ -49,21 +64,23 @@ export async function POST(req: Request, res: NextApiResponse) {
     });
 
     const pdfBytes = await pdfDoc.save();
-    await writeFile(
-      path.join(process.cwd(), "public/" + "watermarked.pdf"),
-      pdfBytes,
-    );
-    return NextResponse.json({ url: "/assets/watermarked.pdf" }, {status: 200});
+    const pdfPath = path.join(process.cwd(), `public/watermarked-${sessionId}.pdf`);
+    
+    await writeFile(pdfPath, pdfBytes);
+
+    return NextResponse.json({ url: `/public/watermarked-${sessionId}.pdf` }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to process PDF" }, { status: 500 });
   }
 }
 
 export async function DELETE(req: Request, res: NextApiResponse) {
-  const filePath = path.resolve("./public/watermarked.pdf");
+  const sessionId = getSessionId(req);
+  const filePath = path.resolve(`./public/watermarked-${sessionId}.pdf`);
+
   try {
     if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+      await fs.promises.unlink(filePath);
       return NextResponse.json(
         { message: "Deleted watermarked PDF file successfully" },
         { status: 200 },
@@ -78,6 +95,6 @@ export async function DELETE(req: Request, res: NextApiResponse) {
     console.error("Error deleting PDF file:", error);
     return NextResponse.json({
       error: "Failed to delete watermarked PDF file",
-    }, {status: 500});
+    }, { status: 500 });
   }
 }
