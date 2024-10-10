@@ -99,3 +99,32 @@
 .phonk{
   font-family: "phonk";
 }
+.dark ::-webkit-scrollbar {
+  width: 0.4rem;
+  background: #535253;
+}
+
+/* Track */
+.dark ::-webkit-scrollbar-track {
+  background: #0c0c0c;
+  border-radius: 0.6rem;
+  z-index: -99;
+}
+/* Handle */
+.dark ::-webkit-scrollbar-thumb {
+  background: #5c5957;
+  border-radius: 1rem;
+}
+::-webkit-scrollbar {
+  width: 0.4rem;
+  background: #535253;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 0.6rem;
+  z-index: -99;
+}
+::-webkit-scrollbar-thumb {
+  background: #929292;
+  border-radius: 1rem;
+}

@@ -28,6 +28,8 @@ const Card = ({
   }, [isSelected]);
 
   const handleDownload = async (paper: Paper) => {
+    paper.finalUrl = paper.finalUrl.replace(/^http:\/\//i, 'https://');
+
     const extension = paper.finalUrl.split(".").pop();
     const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
     await downloadFile(paper.finalUrl, fileName);
