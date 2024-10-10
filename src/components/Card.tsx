@@ -74,7 +74,8 @@ const Card = ({
     >
       <Link
         href={paper.finalUrl}
-        target="_blank"
+        target={paper.finalUrl.endsWith('.pdf') ? '_self' : '_blank'}
+
         rel="noopener noreferrer"
       >
         <Image
