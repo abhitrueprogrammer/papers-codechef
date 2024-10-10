@@ -117,6 +117,5 @@ const Card = ({
     </div>
   );
 };
-export const dynamic = 'force-dynamic'
 
 export default Card;
