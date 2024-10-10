@@ -28,7 +28,6 @@ const Card = ({
   }, [isSelected]);
 
   const handleDownload = async (paper: Paper) => {
-    
     const extension = paper.finalUrl.split(".").pop();
     const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
     await downloadFile(paper.finalUrl, fileName);
@@ -40,23 +39,16 @@ const Card = ({
   }
 
   async function downloadFile(url: string, filename: string) {
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-      window.location.href = url;
-    } else {
-      try {
-        const response = await axios.get(url, { responseType: "blob" });
-        const blob = new Blob([response.data]);
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = filename;
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(link.href);
-      } catch (error) {
-        console.error("Error downloading file:", error);
-      }
+    try {
+      const response = await axios.get(url, { responseType: "blob" });
+      const blob = new Blob([response.data]);
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      window.URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error("Error downloading file:", error);
     }
   }
 
