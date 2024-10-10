@@ -72,18 +72,16 @@ const Card = ({
       key={paper._id}
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link
-        href={paper.finalUrl}
-        onClick={(e) => {
-          e.preventDefault();
-          handleOpen();
-        }}
-      >
+      <Link href={paper.finalUrl}>
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
           width={320}
           height={180}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents any parent link click from being triggered
+            handleOpen();
+          }}
           className="mb-2 h-[180px] w-full cursor-pointer object-cover"
         />
       </Link>
