@@ -90,10 +90,9 @@ function SearchBar() {
           <button
             type="submit"
             className="absolute inset-y-0 right-0 flex items-center pr-3"
-            disabled={loading}
+            disabled
           >
             {" "}
-            {/* disabled={loading} replace with disabled */} 
             <Search className="h-5 w-5 text-white opacity-50" />
           </button>
           {loading && (

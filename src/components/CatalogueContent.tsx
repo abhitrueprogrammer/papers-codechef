@@ -104,6 +104,7 @@ const CatalogueContent = () => {
     setSelectedExams(exams);
     setSelectedSlots(slots);
     setSelectedYears(years);
+    handleDeselectAll();
   };
 
   useEffect(() => {
