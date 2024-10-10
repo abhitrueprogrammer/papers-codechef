@@ -72,7 +72,12 @@ const Card = ({
       key={paper._id}
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link href={paper.finalUrl}>
+      <Link
+        className="hidden md:block"
+        href={paper.finalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
@@ -82,6 +87,19 @@ const Card = ({
           className="mb-2 h-[180px] w-full cursor-pointer object-cover"
         />
       </Link>
+
+      <div
+        className="block md:hidden"
+        onClick={() => handleDownload(paper)}
+      >
+        <Image
+          src={paper.thumbnailUrl}
+          alt={paper.subject}
+          width={320}
+          height={180}
+          className="mb-2 h-[180px] w-full cursor-pointer object-cover"
+        />
+      </div>
 
       <div className="text-sm font-medium">
         {extractBracketContent(paper.subject)}
@@ -94,7 +112,7 @@ const Card = ({
         {capsule(paper.slot)}
         {capsule(paper.year)}
       </div>
-      <div className="hidden md:flex items-center justify-between gap-2">
+      <div className="hidden items-center justify-between gap-2 md:flex">
         <div className="flex items-center gap-1">
           <input
             checked={checked}
