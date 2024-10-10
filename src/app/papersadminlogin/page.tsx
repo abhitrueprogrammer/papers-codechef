@@ -9,6 +9,8 @@ import {
 import { handleAPIError } from "@/util/error";
 import toast from "react-hot-toast";
 import { ApiError } from "next/dist/server/api-utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -52,8 +54,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md rounded-md bg-white p-8 shadow-md">
+    <div className="flex min-h-screen items-center justify-center ">
+      <div className="w-full max-w-md rounded-md bg-blue-800 p-8 shadow-md">
         <h1 className="mb-4 text-2xl font-bold">Login</h1>
         {error && <p className="mb-4 text-red-500">{error}</p>}
         <form
@@ -65,41 +67,42 @@ const LoginPage = () => {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium"
             >
               Email:
             </label>
-            <input
+            <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm"
             />
           </div>
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium"
             >
               Password:
             </label>
-            <input
+            <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border px-3 py-2 shadow-sm sm:text-sm"
             />
           </div>
-          <button
+          <Button
             type="submit"
-            className="w-full rounded-md bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            variant="outline"
+            className="w-full"
           >
             Login
-          </button>
+          </Button>
         </form>
       </div>
     </div>

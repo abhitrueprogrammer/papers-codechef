@@ -181,7 +181,7 @@ const CatalogueContent = () => {
         <Loader />
       ) : papers.length > 0 ? (
         <>
-          <div className="mb-4 flex justify-center gap-2 md:justify-end 2xl:mr-4">
+          <div className="mb-4 hidden md:flex justify-center gap-2 md:justify-end 2xl:mr-4">
             <Button variant="outline" onClick={handleSelectAll}>
               Select All
             </Button>

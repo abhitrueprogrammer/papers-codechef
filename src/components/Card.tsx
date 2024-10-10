@@ -9,6 +9,7 @@ import {
 import { capsule } from "@/util/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Card = ({
   paper,
@@ -63,12 +64,7 @@ const Card = ({
       const lastThreePapers = updatedPapers.slice(0, 4);
       localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
     }
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      router.push(paper.finalUrl);
-    } else {
-      window.open(paper.finalUrl, "_blank");
-    }
+    window.open(paper.finalUrl, "_blank");
   }
 
   return (
@@ -76,14 +72,16 @@ const Card = ({
       key={paper._id}
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Image
-        src={paper.thumbnailUrl}
-        alt={paper.subject}
-        width={320}
-        height={180}
-        onClick={handleOpen}
-        className="mb-2 h-[180px] w-full cursor-pointer object-cover"
-      />
+      <Link href={paper.finalUrl}>
+        <Image
+          src={paper.thumbnailUrl}
+          alt={paper.subject}
+          width={320}
+          height={180}
+          onClick={handleOpen}
+          className="mb-2 h-[180px] w-full cursor-pointer object-cover"
+        />
+      </Link>
 
       <div className="text-sm font-medium">
         {extractBracketContent(paper.subject)}
@@ -96,7 +94,7 @@ const Card = ({
         {capsule(paper.slot)}
         {capsule(paper.year)}
       </div>
-      <div className="flex items-center justify-between gap-2">
+      <div className="hidden md:flex items-center justify-between gap-2">
         <div className="flex items-center gap-1">
           <input
             checked={checked}
