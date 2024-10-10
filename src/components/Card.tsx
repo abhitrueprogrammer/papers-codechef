@@ -52,31 +52,34 @@ const Card = ({
     }
   }
 
-  function handleOpen() {
-    const storedPapers = JSON.parse(
-      localStorage.getItem("clickedPapers") ?? "[]",
-    );
-    const paperExists = storedPapers.some(
-      (storedPaper: Paper) => storedPaper._id === paper._id,
-    );
+  function handleOpen(event: React.MouseEvent) {
+    event.stopPropagation();
+    
+    const storedPapers = JSON.parse(localStorage.getItem("clickedPapers") ?? "[]");
+    const paperExists = storedPapers.some((storedPaper: Paper) => storedPaper._id === paper._id);
+    
     if (!paperExists) {
       const updatedPapers = [paper, ...storedPapers];
       const lastThreePapers = updatedPapers.slice(0, 4);
       localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
     }
-    window.open(paper.finalUrl, "_blank");
+  
+    const link = document.createElement("a");
+    link.href = paper.finalUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
+  
 
   return (
     <div
       key={paper._id}
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link
-        href={paper.finalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <button onClick={handleOpen} className="w-full">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
@@ -84,7 +87,7 @@ const Card = ({
           height={180}
           className="mb-2 h-[180px] w-full cursor-pointer object-cover"
         />
-      </Link>
+      </button>
 
       <div className="text-sm font-medium">
         {extractBracketContent(paper.subject)}
