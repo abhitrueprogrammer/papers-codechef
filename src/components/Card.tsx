@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { type Paper } from "@/interface";
 import Image from "next/image";
-import { Eye, Download } from "lucide-react";
+import { Eye } from "lucide-react";
 import {
   extractBracketContent,
   extractWithoutBracketContent,
 } from "@/util/utils";
 import { capsule } from "@/util/utils";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -27,29 +26,9 @@ const Card = ({
     setChecked(isSelected);
   }, [isSelected]);
 
-  const handleDownload = async (paper: Paper) => {
-    const extension = paper.finalUrl.split(".").pop();
-    const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
-    await downloadFile(paper.finalUrl, fileName);
-  };
-
   function handleCheckboxChange() {
     setChecked(!checked);
     onSelect(paper, !checked);
-  }
-
-  async function downloadFile(url: string, filename: string) {
-    try {
-      const response = await axios.get(url, { responseType: "blob" });
-      const blob = new Blob([response.data]);
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      window.URL.revokeObjectURL(link.href);
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    }
   }
 
   function handleOpen() {
@@ -106,8 +85,18 @@ const Card = ({
         </div>
         <div className="flex gap-2">
           <Eye size={20} className="cursor-pointer" onClick={handleOpen} />
-          <button onClick={() => handleDownload(paper)}>
-            <Download size={20} />
+          <button
+            onClick={() => {
+              const iframe = document.createElement("iframe");
+              iframe.style.display = "none";
+              iframe.src = paper.finalUrl;
+              document.body.appendChild(iframe);
+              setTimeout(() => {
+                document.body.removeChild(iframe);
+              }, 1000);
+            }}
+          >
+            Download
           </button>
         </div>
       </div>
