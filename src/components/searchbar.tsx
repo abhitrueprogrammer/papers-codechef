@@ -85,7 +85,7 @@ function SearchBar() {
             value={searchText}
             onChange={handleSearchChange}
             placeholder="Search..."
-            className={`w-full rounded-xl border bg-[#7480FF] px-4 py-6 pr-10 text-white opacity-50 shadow-sm placeholder:text-white focus:outline-none focus:ring-2 ${loading ? "opacity-70" : ""}`}
+            className={`w-full rounded-xl border bg-[#7480FF] px-4 py-6 pr-10 text-white shadow-sm placeholder:text-white focus:outline-none focus:ring-2 ${loading ? "opacity-70" : ""}`}
           />
           <button
             type="submit"
@@ -93,7 +93,7 @@ function SearchBar() {
             disabled
           >
             {" "}
-            <Search className="h-5 w-5 text-white opacity-50" />
+            <Search className="h-5 w-5 text-white " />
           </button>
           {loading && (
             <div className="absolute z-20 mt-2 w-full max-w-xl rounded-md border border-[#7480FF] bg-white p-2 text-center dark:bg-[#030712]">
