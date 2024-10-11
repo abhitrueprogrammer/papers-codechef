@@ -8,6 +8,9 @@ import { capsule } from "@/util/utils";
 import Link from "next/link";
 
 const PreviewCard = ({ paper }: { paper: Paper }) => {
+  if (paper.finalUrl.startsWith("http://")) {
+    paper.finalUrl = paper.finalUrl.replace("http://", "https://");
+  }
   return (
     <div
       key={paper._id}
