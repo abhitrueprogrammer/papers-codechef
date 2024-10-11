@@ -10,16 +10,16 @@ const HomePage = () => {
       <div>
         <Navbar />
       </div>
-      <div className="mt-2 flex flex-col items-center justify-center gap-y-6 flex-grow">
+      <div className="mt-2 flex flex-grow flex-col items-center justify-center gap-y-6">
         <div className="w-full max-w-2xl space-y-6 text-center">
           <h1 className="phonk text-2xl font-bold tracking-wider md:text-3xl">
             Built by students for students
           </h1>
           <p className="text-base font-semibold">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat
-            praesentium maxime sit dolorem corrupti perspiciatis corporis
-            cupiditate earum recusandae voluptates nostrum at iusto aliquam
-            facilis id, pariatur reprehenderit eos esse?
+            Get access to past papers for CAT-1, CAT-2, and FAT right here. With
+            CodeChef-VIT's papers, you're all set to study smarter, practice
+            better, and ace your exams with confidence. Dive in and start
+            preparing today!
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
