@@ -52,7 +52,6 @@ function Upload() {
         Authorization: `Bearer ${token}`,
       };
       if (!token) {
-        console.error("Token not found in localStorage.");
         router.push("/papersadminlogin");
       }
       try {
@@ -86,7 +85,6 @@ function Upload() {
     event.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token not found in localStorage.");
       router.push("/papersadminlogin");
       return;
     }
@@ -145,7 +143,6 @@ function Upload() {
   ) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token not found in localStorage.");
       router.push("/papersadminlogin");
       return;
     }
@@ -187,7 +184,6 @@ function Upload() {
   const handleDeletePdf = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token not found in localStorage.");
       router.push("/papersadminlogin");
       return;
     }
@@ -236,7 +232,6 @@ function Upload() {
 
   const handleSubmitMerged = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(files);
     if (files.length === 0) {
       alert("Please upload at least one file");
       return;
@@ -358,7 +353,6 @@ function Upload() {
   async function completeUpload() {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token not found in localStorage.");
       router.push("/papersadminlogin");
       return;
     }

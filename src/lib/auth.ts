@@ -8,22 +8,18 @@ export async function generateToken(payload: object): Promise<string> {
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('1d')
     .sign(secret);
-  console.log("Generated token:", token);
   return token;
 }
 
 export async function verifyToken(token: string | undefined): Promise<boolean> {
   try {
     if (!token) {
-      console.error("Token is undefined or null");
       return false;
     }
 
     const { payload } = await jwtVerify(token, secret);
-    console.log("Decoded token:", payload);
     return true;
   } catch (error) {
-    console.error("Token verification failed:", error);
     return false;
   }
 }

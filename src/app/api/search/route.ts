@@ -32,7 +32,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ subjects }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching subjects:", error);
     return NextResponse.json(
       { message: "Failed to fetch subjects", error },
       { status: 500 }

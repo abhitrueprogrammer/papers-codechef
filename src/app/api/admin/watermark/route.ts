@@ -92,7 +92,6 @@ export async function DELETE(req: Request, res: NextApiResponse) {
       );
     }
   } catch (error) {
-    console.error("Error deleting PDF file:", error);
     return NextResponse.json({
       error: "Failed to delete watermarked PDF file",
     }, { status: 500 });

@@ -24,7 +24,6 @@ export async function POST(req: Request) {
       exam,
     });
     if (existingPaper) {
-      console.log("Paper already exists:", existingPaper);
       NextResponse.json({ message: "Paper already exists" }, { status: 409 });
     }
     if (!isPdf) {
@@ -34,7 +33,6 @@ export async function POST(req: Request) {
         format: "pdf",
         density: 50,
       })) as ConverttoPDFResponse;
-      console.log("Result:", response);
       finalUrl = response.url;
       const paper = new Paper({
         finalUrl,
@@ -44,15 +42,11 @@ export async function POST(req: Request) {
         exam,
       });
       await paper.save();
-      console.log("Paper saved:", publicIds);
       await Promise.all(
         publicIds.map(async (public_id) => {
           const deletionResult =
             await cloudinary.v2.uploader.destroy(public_id);
-          console.log(
-            `Deleted asset with public_id ${public_id}`,
-            deletionResult,
-          );
+ 
         }),
       );
     } else {
@@ -103,10 +97,8 @@ export async function DELETE(req: Request) {
       type: type,
     });
 
-    console.log("Deletion result:", deletionResult);
     return NextResponse.json({ message: "Asset deleted successfully" });
   } catch (error) {
-    console.error("Error deleting asset:", error);
     return NextResponse.json(
       { message: "Failed to delete asset", error },
       { status: 500 },

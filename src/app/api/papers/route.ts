@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
     const papers: IPaper[] = await Paper.find({
       subject: { $regex: new RegExp(`${escapedSubject}`, "i") },
     });
-    console.log("Papers:", papers);
 
     if (papers.length === 0) {
       return NextResponse.json(
@@ -43,7 +42,6 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching papers by subject:", error);
     return NextResponse.json(
       { message: "Failed to fetch papers", error },
       { status: 500 }

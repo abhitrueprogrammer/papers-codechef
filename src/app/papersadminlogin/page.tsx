@@ -49,7 +49,6 @@ const LoginPage = () => {
         }, 1500);
       }
     } catch (e) {
-      console.log(e);
     }
   };
 

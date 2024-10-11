@@ -30,7 +30,6 @@ export async function POST(req: Request) {
       user: { id: newUser._id, email: newUser.email },
     }, { status: 201 });
   } catch (error) {
-    console.error("Error signing up:", error);
     return NextResponse.json({ message: "Failed to sign up", error }, { status: 500 });
   }
 }

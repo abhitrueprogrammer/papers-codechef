@@ -23,14 +23,12 @@ export async function POST(req: Request) {
 
     const token = await generateToken({ userId: user._id });
 
-    console.log("User logged in:", token);
 
     return NextResponse.json({
       token,
       user: { id: user._id, email: user.email },
     }, { status: 200 });
   } catch (error) {
-    console.error("Error logging in:", error);
     return NextResponse.json({ message: "Failed to login", error }, { status: 500 });
   }
 }

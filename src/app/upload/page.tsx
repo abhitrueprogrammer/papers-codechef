@@ -107,7 +107,6 @@ const Page = () => {
         }, 1500);
       }
     } catch (e) {
-      console.log(e);
     }
   };
 
