@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiResponse } from "next";
 import { PDFDocument } from "pdf-lib";
 import multer from "multer";
 import fs from "fs";
@@ -7,12 +7,12 @@ import { promisify } from "util";
 import { NextResponse } from "next/server";
 import { writeFile, unlink } from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
-import { cookies } from "next/headers"; // For session tracking
+import { cookies } from "next/headers";
 
 const upload = multer({ dest: "uploads/" });
 const uploadMiddleware = promisify(upload.array("files"));
 
-const COOKIE_NAME = 'session_id'; // Name of the session cookie
+const COOKIE_NAME = 'session_id';
 
 function getSessionId(req: Request): string {
   const sessionId = cookies().get(COOKIE_NAME)?.value;
@@ -30,9 +30,9 @@ export async function POST(req: Request, res: NextApiResponse) {
   await uploadMiddleware(req as any, res as any);
 
   const formData = await req.formData();
-  const files = formData.getAll("files");
+  const files: File[] = formData.getAll("files") as File[];
 
-  if (!files) {
+  if (!files || files.length === 0) {
     return NextResponse.json({ error: "No files received." }, { status: 400 });
   }
 
@@ -40,7 +40,11 @@ export async function POST(req: Request, res: NextApiResponse) {
     const pdfDoc = await PDFDocument.create();
     const sessionId = getSessionId(req);
 
-    for (const file of files) {
+    const orderedFiles = Array.from(files).sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+
+    for (const file of orderedFiles) {
       const fileBlob = new Blob([file]);
       const imgBytes = Buffer.from(await fileBlob.arrayBuffer());
       let img;
@@ -76,6 +80,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     return NextResponse.json({ error: "Failed to process PDF" }, { status: 500 });
   }
 }
+
 
 export async function DELETE(req: Request, res: NextApiResponse) {
   try {
