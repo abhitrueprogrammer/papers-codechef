@@ -68,7 +68,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     
     await writeFile(pdfPath, pdfBytes);
 
-    return NextResponse.json({ url: `/public/watermarked-${sessionId}.pdf` }, { status: 200 });
+    return NextResponse.json({ url: `/watermarked-${sessionId}.pdf` }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to process PDF" }, { status: 500 });
   }

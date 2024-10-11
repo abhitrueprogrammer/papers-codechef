@@ -28,7 +28,9 @@ interface PostPDFToCloudinary {
 
 function Upload() {
   const router = useRouter();
-  const [subject, setSubject] = useState<string>("Digital Logic and Microprocessors[BITE202L]");
+  const [subject, setSubject] = useState<string>(
+    "Digital Logic and Microprocessors[BITE202L]",
+  );
   const [slot, setSlot] = useState<string>("A1");
   const [year, setYear] = useState<string>("2011");
   const [exam, setExam] = useState<string>("CAT-1");
@@ -102,7 +104,12 @@ function Upload() {
       //Won't refresh the page if error 401
       (async () => {
         try {
-          await axios.post("/api/admin/watermark", formData, { headers });
+          const response = await axios.post<PostPDF>(
+            "/api/admin/watermark",
+            formData,
+            { headers },
+          );
+          setPdfUrl(response.data.url);
         } catch (error: unknown) {
           handleAPIError(error);
           // if (error instanceof AxiosError) {
@@ -398,7 +405,6 @@ function Upload() {
         },
       },
     );
-
   }
 
   if (!tag) {
@@ -421,7 +427,10 @@ function Upload() {
           }}
           //@ts-expect-error - event is not used
           onSuccess={(results: CloudinaryUploadWidgetProps) => {
-            setUrls((prevUrls) => [...(prevUrls ?? []), results.info?.secure_url]);
+            setUrls((prevUrls) => [
+              ...(prevUrls ?? []),
+              results.info?.secure_url,
+            ]);
             setPublicIds((prevIds) => [
               ...(prevIds ?? []),
               results.info?.public_id,
@@ -550,13 +559,16 @@ function Upload() {
               </button>
             </form>
             <div className="mt-4">
-              <Link
-                href="/watermarked.pdf"
-                target="_blank"
-                className="block text-blue-500 hover:underline"
-              >
-                View Papers
-              </Link>
+              {pdfUrl && (
+                <Link
+                  href={pdfUrl}
+                  target="_blank"
+                  className="block text-blue-500 hover:underline"
+                >
+                  View Papers
+                </Link>
+              )}
+
               <button
                 onClick={handleDeletePdf}
                 className="mt-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
@@ -682,6 +694,6 @@ function Upload() {
       </div>
     </div>
   );
-};
+}
 
 export default Upload;

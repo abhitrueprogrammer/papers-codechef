@@ -1,4 +1,4 @@
- const courses = [
+const courses = [
   "Digital Logic and Microprocessors [BITE202L]",
   "Structured and Object-Oriented Programming Lab [BCSE102P]",
   "Calculus [BMAT101L]",
@@ -180,12 +180,33 @@
   "Big Data Analytic Applications to Electrical Systems [BECS403L]",
   "Big Data Analytic Applications to Electrical Systems Lab [BECS403P]",
   "Cyber Security [BCSE410L]",
-  "Introduction to The Art of Hunting Cryptically [CRY2024]"
+  "Introduction to The Art of Hunting Cryptically [CRY2024]",
+  "Analog Circuits [BECE206L]",
+  "Analog Communication Systems [BECE304L]",
+  "Antenna and Microwave Engineering [BECE305L]",
+  "AWS for Cloud Computing [BECE355L]",
+  "Digital System Design [BECE102L]",
+  "Sensors technology [BECE409E]",
+  "Robotics and Automation [BECE312L]",
+  "Random Processes [BECE207L]",
+  "VLSI System Design [BECE303L]",
 ];
 
 const slots: string[] = [
-  "A1", "B1", "C1", "D1", "E1", "F1", "G1",
-  "A2", "B2", "C2", "D2", "E2", "F2", "G2"
+  "A1",
+  "B1",
+  "C1",
+  "D1",
+  "E1",
+  "F1",
+  "G1",
+  "A2",
+  "B2",
+  "C2",
+  "D2",
+  "E2",
+  "F2",
+  "G2",
 ];
 
-export {slots, courses};
+export { slots, courses };
