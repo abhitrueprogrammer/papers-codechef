@@ -73,7 +73,7 @@ const Card = ({
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
       <Link
-        href={paper.finalUrl}
+        href={"https://mag.wcoomd.org/uploads/2018/05/blank.pdf"}
         rel="noopener noreferrer"
       >
         <Image
