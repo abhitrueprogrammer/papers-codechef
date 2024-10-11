@@ -16,10 +16,11 @@ const HomePage = () => {
             Built by students for students
           </h1>
           <p className="text-base font-semibold">
-            Get access to past papers for CAT-1, CAT-2, and FAT right here. With
-            CodeChef-VIT's papers, you're all set to study smarter, practice
-            better, and ace your exams with confidence. Dive in and start
-            preparing today!
+            Prepare to excel in your CATs and FATs with CodeChef-VIT&apos;s dedicated
+            repository of past exam papers. Access key resources to review
+            concepts, tackle challenging questions, and familiarize yourself
+            with exam patterns. Boost your confidence, sharpen your strategy,
+            and get ready to ace your exams
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
