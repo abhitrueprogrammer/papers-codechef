@@ -60,8 +60,7 @@ const CatalogueContent = () => {
       link.download = filename;
       link.click();
       window.URL.revokeObjectURL(link.href);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   const handleSelectPaper = (paper: Paper, isSelected: boolean) => {
@@ -159,29 +158,23 @@ const CatalogueContent = () => {
 
   return (
     <div className="min-h-screen px-2 md:p-8">
-      <div className="mb-4 flex w-full flex-row items-center md:justify-center md:gap-10">
-        <div className="w-[120%] md:w-[576px]">
+      <div className="mb-10 flex w-full flex-row items-center md:justify-between  md:gap-10">
+        <div className=" w-[120%] md:w-[576px]">
           <SearchBar />
         </div>
-        {subject && filterOptions && (
-          <FilterDialog
-            subject={subject}
-            filterOptions={filterOptions}
-            initialExams={exams}
-            initialSlots={slots}
-            initialYears={years}
-            onReset={handleResetFilters}
-            onApplyFilters={handleApplyFilters}
-          />
-        )}{" "}
-      </div>
-
-      {error && <p className="text-red-500">{error}</p>}
-      {loading ? (
-        <Loader />
-      ) : papers.length > 0 ? (
-        <>
-          <div className="mb-4 hidden md:flex justify-center gap-2 md:justify-end 2xl:mr-4">
+        <div className="flex gap-8">
+          {subject && filterOptions && (
+            <FilterDialog
+              subject={subject}
+              filterOptions={filterOptions}
+              initialExams={exams}
+              initialSlots={slots}
+              initialYears={years}
+              onReset={handleResetFilters}
+              onApplyFilters={handleApplyFilters}
+            />
+          )}{" "}
+          <div className=" hidden items-center justify-center gap-2 md:flex md:justify-end 2xl:mr-4">
             <Button variant="outline" onClick={handleSelectAll}>
               Select All
             </Button>
@@ -196,6 +189,14 @@ const CatalogueContent = () => {
               Download All ({selectedPapers.length})
             </Button>
           </div>
+        </div>
+      </div>
+
+      {error && <p className="text-red-500">{error}</p>}
+      {loading ? (
+        <Loader />
+      ) : papers.length > 0 ? (
+        <>
           <div className="mx-auto flex flex-col flex-wrap items-center justify-center gap-10 md:flex-row md:justify-normal">
             {papers.map((paper) => (
               <Card

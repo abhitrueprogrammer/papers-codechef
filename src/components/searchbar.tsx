@@ -84,7 +84,7 @@ function SearchBar() {
             type="text"
             value={searchText}
             onChange={handleSearchChange}
-            placeholder="Search..."
+            placeholder="Search by subject..."
             className={`w-full rounded-xl border bg-[#7480FF] px-4 py-6 pr-10 text-white shadow-sm placeholder:text-white focus:outline-none focus:ring-2 ${loading ? "opacity-70" : ""}`}
           />
           <button
