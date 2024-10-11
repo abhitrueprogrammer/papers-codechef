@@ -410,7 +410,7 @@ function Upload() {
       <div className="md:w-[35%]">
         <h1 className="mb-6 text-2xl font-bold">Upload Papers</h1>
         <CldUploadWidget
-          uploadPreset="papers-unsigned-prod"
+          uploadPreset="papers-unsigned"
           options={{
             sources: ["camera", "local"],
             multiple: false,
