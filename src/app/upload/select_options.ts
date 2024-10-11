@@ -190,6 +190,7 @@ const courses = [
   "Robotics and Automation [BECE312L]",
   "Random Processes [BECE207L]",
   "VLSI System Design [BECE303L]",
+  "Digital Communication System [BECE306L]",
 ];
 
 const slots: string[] = [

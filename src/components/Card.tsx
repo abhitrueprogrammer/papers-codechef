@@ -47,24 +47,9 @@ const Card = ({
       link.download = filename;
       link.click();
       window.URL.revokeObjectURL(link.href);
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
-  function handleOpen() {
-    const storedPapers = JSON.parse(
-      localStorage.getItem("clickedPapers") ?? "[]",
-    );
-    const paperExists = storedPapers.some(
-      (storedPaper: Paper) => storedPaper._id === paper._id,
-    );
-    if (!paperExists) {
-      const updatedPapers = [paper, ...storedPapers];
-      const lastThreePapers = updatedPapers.slice(0, 4);
-      localStorage.setItem("clickedPapers", JSON.stringify(lastThreePapers));
-    }
-    window.open(paper.finalUrl, "_blank");
-  }
   if (paper.finalUrl.startsWith("http://")) {
     paper.finalUrl = paper.finalUrl.replace("http://", "https://");
   }
@@ -105,7 +90,9 @@ const Card = ({
           <p className="text-sm">Select</p>
         </div>
         <div className="flex gap-2">
-          <Eye size={20} className="cursor-pointer" onClick={handleOpen} />
+          <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+            <Eye size={20} />
+          </Link>
           <button onClick={() => handleDownload(paper)}>
             <Download size={20} />
           </button>
