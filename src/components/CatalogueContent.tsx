@@ -61,7 +61,6 @@ const CatalogueContent = () => {
       link.click();
       window.URL.revokeObjectURL(link.href);
     } catch (error) {
-      console.error("Error downloading file:", error);
     }
   }
 

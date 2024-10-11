@@ -48,7 +48,6 @@ const Card = ({
       link.click();
       window.URL.revokeObjectURL(link.href);
     } catch (error) {
-      console.error("Error downloading file:", error);
     }
   }
 
@@ -69,7 +68,6 @@ const Card = ({
   if (paper.finalUrl.startsWith("http://")) {
     paper.finalUrl = paper.finalUrl.replace("http://", "https://");
   }
-  console.log(paper.finalUrl);
   return (
     <div
       key={paper._id}
