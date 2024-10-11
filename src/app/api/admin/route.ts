@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       exam,
     });
     if (existingPaper) {
-      NextResponse.json({ message: "Paper already exists" }, { status: 409 });
+      return NextResponse.json({ message: "Paper already exists" }, { status: 409 });
     }
     if (!isPdf) {
       // @ts-expect-error: cloudinary was dumb this time
@@ -73,8 +73,10 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { message: "Failed to fetch papers", error },
+
       { status: 500 },
     );
   }

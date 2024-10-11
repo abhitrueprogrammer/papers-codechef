@@ -24,6 +24,7 @@ const courses = [
   "Discrete Mathematics and Graph Theory [BMAT205L]",
   "Database Systems [BITE302L]",
   "Operating Systems [BITE303L]",
+  "Operating Systems [BCSE303L]",
   "Data Structures and Algorithms Lab [BITE201P]",
   "Technical English Communication [BENG101L]",
   "Quantitative Skills Practice I [BSTS101P]",
@@ -42,6 +43,7 @@ const courses = [
   "Big Data Analytics [BITE411L]",
   "Embedded Systems and IoT [BITE403L]",
   "Data Structures and Algorithms [BITE201L]",
+  "Data Structures and Algorithms [BCSE202L]",
   "Software Engineering Lab [BITE307P]",
   "Computer Graphics [BITE313L]",
   "Multimedia Systems [BITE314L]",
@@ -49,6 +51,7 @@ const courses = [
   "Control Systems [BECE302L]",
   "Embedded Systems and IoT Lab [BITE403P]",
   "Artificial Intelligence [BITE308L]",
+  "Artificial Intelligence [BCSE306L]",
   "Human Computer Interaction [BITE311L]",
   "Laboratory Project [BITE393J]",
   "Technical Answers to Real Problems Project [BITE391J]",
@@ -67,6 +70,7 @@ const courses = [
   "Network Management [BITE408L]",
   "Cyber Security [BITE413L]",
   "Soft Computing [BITE405L]",
+  "Essentials Of Data Analytics [BCSE352E]",
   "Blockchain Technology [BITE414L]",
   "Quantum Computing [BITE407L]",
   "Engineering Optimization [BITE415L]",
@@ -191,6 +195,9 @@ const courses = [
   "Random Processes [BECE207L]",
   "VLSI System Design [BECE303L]",
   "Digital Communication System [BECE306L]",
+  "Computer Networks [BCSE308L]",
+  "Foundations of Data Analytics [BCSE351E]",
+  "Embedded Systems DEsign [BECE403E]"
 ];
 
 const slots: string[] = [
