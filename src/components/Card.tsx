@@ -66,18 +66,16 @@ const Card = ({
     }
     window.open(paper.finalUrl, "_blank");
   }
-
+  if (paper.finalUrl.startsWith("http://")) {
+    paper.finalUrl = paper.finalUrl.replace("http://", "https://");
+  }
+  console.log(paper.finalUrl);
   return (
     <div
       key={paper._id}
       className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link
-        href={paper.finalUrl}
-        target={paper.finalUrl.endsWith('.pdf') ? '_self' : '_blank'}
-
-        rel="noopener noreferrer"
-      >
+      <Link href={paper.finalUrl} rel="noopeIner noreferrer">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
