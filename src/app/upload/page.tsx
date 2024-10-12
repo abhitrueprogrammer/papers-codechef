@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useState } from "react";
-import JSZip from "jszip";
 import axios from "axios";
 import { slots, courses } from "./select_options";
 import toast, { Toaster } from "react-hot-toast";
@@ -61,22 +60,16 @@ const Page = () => {
         return;
       }
     }
-    const zip = new JSZip();
+  
     const formData = new FormData();
-
     for (const file of files) {
-      zip.file(file.name, file);
-      const content = await zip.generateAsync({ type: "blob" });
-
-      const arrayBuffer = await new Response(content).arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      formData.append("zipFile", new Blob([uint8Array]), "files.zip");
-      formData.append("slot", slot);
-      formData.append("subject", subject);
-      formData.append("exam", exam);
-      formData.append("year", year);
+      formData.append("files", file);  // append each file
     }
+    formData.append("slot", slot);
+    formData.append("subject", subject);
+    formData.append("exam", exam);
+    formData.append("year", year);
+  
     try {
       const result = await toast.promise(
         (async () => {
@@ -88,7 +81,7 @@ const Page = () => {
                 headers: {
                   "Content-Type": "multipart/form-data",
                 },
-              },
+              }
             );
             return response.data;
           } catch (error) {
@@ -99,16 +92,16 @@ const Page = () => {
           loading: "Sending papers",
           success: "Papers successfully sent",
           error: (err: ApiError) => err.message,
-        },
+        }
       );
       if (result?.message === "Email sent successfully!") {
-        setTimeout(() => {
-          router.push("/");
-        }, 1500);
+        // setTimeout(() => {
+        //   router.push("/");
+        // }, 1500);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   };
+  
 
   const handleSubjectSelect = (value: string) => {
     setSubject(value);
