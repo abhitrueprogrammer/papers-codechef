@@ -47,7 +47,7 @@ const Page = () => {
 
   const handlePrint = async () => {
     const maxFileSize = 5 * 1024 * 1024;
-    // const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
+    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
     const files = fileInputRef.current?.files as FileList | null;
   
     if (!files || files.length === 0) {
@@ -64,10 +64,10 @@ const Page = () => {
         return;
       }
   
-      // if (!allowedFileTypes.includes(file.type)) {
-      //   toast.error(`File type of ${file.name} is not allowed. Only PDFs and images are accepted.`);
-      //   return;
-      // }
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(`File type of ${file.name} is not allowed. Only PDFs and images are accepted.`);
+        return;
+      }
     }
   
     const formData = new FormData();
