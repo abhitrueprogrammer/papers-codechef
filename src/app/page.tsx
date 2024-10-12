@@ -20,7 +20,7 @@ const HomePage = () => {
             repository of past exam papers. Access key resources to review
             concepts, tackle challenging questions, and familiarize yourself
             with exam patterns. Boost your confidence, sharpen your strategy,
-            and get ready to ace your exams
+            and get ready to ace your exams!
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
