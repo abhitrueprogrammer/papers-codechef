@@ -38,7 +38,6 @@ const Page = () => {
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [inputValue, setInputValue] = useState('')
-  
   const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -129,6 +128,7 @@ const Page = () => {
   
   const handleSubjectSelect = (value: string) => {
     setSubject(value);
+    setInputValue(value)
     setIsSubjectCommandOpen(false);
   };
 
