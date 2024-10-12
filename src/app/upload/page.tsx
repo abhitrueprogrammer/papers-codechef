@@ -44,26 +44,33 @@ const Page = () => {
   // };
 
   const handlePrint = async () => {
-    // file validation
     const maxFileSize = 5 * 1024 * 1024;
+    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
     const files = fileInputRef.current?.files as FileList | null;
-    if (!files || files.length == 0) {
+  
+    if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
     } else if (files.length > 5) {
       toast.error("More than 5 files selected");
       return;
     }
+  
     for (const file of files) {
       if (file.size > maxFileSize) {
         toast.error(`File ${file.name} is more than 5MB`);
+        return;
+      }
+  
+      if (!allowedFileTypes.includes(file.type)) {
+        toast.error(`File type of ${file.name} is not allowed. Only PDFs and images are accepted.`);
         return;
       }
     }
   
     const formData = new FormData();
     for (const file of files) {
-      formData.append("files", file);  // append each file
+      formData.append("files", file); // append each file
     }
     formData.append("slot", slot);
     formData.append("subject", subject);
@@ -94,6 +101,7 @@ const Page = () => {
           error: (err: ApiError) => err.message,
         }
       );
+  
       if (result?.message === "Email sent successfully!") {
         // setTimeout(() => {
         //   router.push("/");
@@ -101,6 +109,7 @@ const Page = () => {
       }
     } catch (e) {}
   };
+  
   
 
   const handleSubjectSelect = (value: string) => {
