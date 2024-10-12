@@ -58,7 +58,7 @@ export default function Footer() {
             width={24}
           />
         </Link>
-        <Link href="https://x.com/codechefvit">
+        <Link href="https://x.com/codechefvit" className="pb-1.5">
           <Image
             src={isDarkMode ? x_twitter_icon_dark : x_twitter_icon}
             alt="x_twitter_icon"

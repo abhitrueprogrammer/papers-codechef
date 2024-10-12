@@ -30,7 +30,6 @@ import Footer from "@/components/Footer";
 
 const Page = () => {
   const router = useRouter();
-  // const [openCamera, setOpenCamera] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [slot, setSlot] = useState("");
@@ -41,15 +40,29 @@ const Page = () => {
   const [inputValue, setInputValue] = useState('')
   
   const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
-  // const toggleOpenCamera = () => {
-  //   setOpenCamera((prev) => !prev);
-  // };
+  const [isUploading, setIsUploading] = useState(false);
 
   const handlePrint = async () => {
     const maxFileSize = 5 * 1024 * 1024;
     const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
     const files = fileInputRef.current?.files as FileList | null;
   
+    if (!slot) {
+      toast.error("Slot is required");
+      return;
+    }
+    if (!subject) {
+      toast.error("Subject is required");
+      return;
+    }
+    if (!exam) {
+      toast.error("Exam is required");
+      return;
+    }
+    if (!year) {
+      toast.error("Year is required");
+      return;
+    }
     if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
@@ -72,13 +85,15 @@ const Page = () => {
   
     const formData = new FormData();
     for (const file of files) {
-      formData.append("files", file); // append each file
+      formData.append("files", file);
     }
     formData.append("slot", slot);
     formData.append("subject", subject);
     formData.append("exam", exam);
     formData.append("year", year);
   
+    setIsUploading(true); // Set uploading to true
+
     try {
       const result = await toast.promise(
         (async () => {
@@ -103,17 +118,15 @@ const Page = () => {
           error: (err: ApiError) => err.message,
         }
       );
-  
+
       if (result?.message === "Email sent successfully!") {
-        // setTimeout(() => {
-        //   router.push("/");
-        // }, 1500);
       }
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setIsUploading(false);
+    }
   };
   
-  
-
   const handleSubjectSelect = (value: string) => {
     setSubject(value);
     setIsSubjectCommandOpen(false);
@@ -170,30 +183,6 @@ const Page = () => {
             {/* Subject Selection */}
             <div>
               <label>Subject:</label>
-              {/* <div className="relative">
-                <Button
-                  type="button"
-                  onClick={() => setIsSubjectCommandOpen((prev) => !prev)}
-                  className="m-2 rounded-md border p-2"
-                >
-                  {subject || "Select subject"}
-                </Button>
-                {isSubjectCommandOpen && (
-                  <Command className="absolute z-10 mt-2 w-full rounded-lg border shadow-md">
-                    <CommandInput placeholder="Search subject..." />
-                    <CommandList>
-                      <CommandEmpty>No subjects found.</CommandEmpty>
-                      <CommandGroup heading="Subjects">
-                        {courses.map((course) => (
-                          <CommandItem key={course} onSelect={() => handleSubjectSelect(course)}>
-                            <span>{course}</span>
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                )}
-              </div> */}
               <Command className="rounded-lg border shadow-md md:min-w-[450px]">
                 <CommandInput 
                 value={inputValue} 
@@ -250,7 +239,7 @@ const Page = () => {
               <Input
                 required
                 type="file"
-                accept="image/*,.pdf"
+                // accept="image/*,.pdf"
                 multiple
                 ref={fileInputRef}
                 className="hidden"
@@ -262,7 +251,7 @@ const Page = () => {
               <div>
                 <Button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()} // Trigger file input on button click
+                  onClick={() => fileInputRef.current?.click()}
                   className="rounded-md px-4 py-2 transition"
                 >
                   Choose files
@@ -278,9 +267,10 @@ const Page = () => {
         </fieldset>
         <Button
           onClick={handlePrint}
-          className="w-fit rounded-md px-4 py-3"
+          disabled={isUploading}
+          className={`w-fit rounded-md px-4 py-3 ${isUploading ? "bg-gray-300" : ""}`}
         >
-          Upload Papers
+          {isUploading ? "Uploading..." : "Upload Papers"}
         </Button>
       </div>
       <div className="">
