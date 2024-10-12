@@ -23,6 +23,7 @@ const courses = [
   "Probability and Statistics Lab [BMAT202P]",
   "Discrete Mathematics and Graph Theory [BMAT205L]",
   "Database Systems [BITE302L]",
+  "Database Systems [BCSE302L]",
   "Operating Systems [BITE303L]",
   "Operating Systems [BCSE303L]",
   "Data Structures and Algorithms Lab [BITE201P]",
