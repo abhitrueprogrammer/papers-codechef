@@ -66,6 +66,9 @@ export async function POST(req: Request) {
           status: "success",
           url: url,
           thumbnailUrl: thumbnailUrl,
+          subject,
+          slot,
+          year,
         });
       }),
     );
