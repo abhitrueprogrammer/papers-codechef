@@ -38,6 +38,8 @@ const Page = () => {
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [inputValue, setInputValue] = useState('')
+  
   const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
   // const toggleOpenCamera = () => {
   //   setOpenCamera((prev) => !prev);
@@ -92,7 +94,7 @@ const Page = () => {
             );
             return response.data;
           } catch (error) {
-            handleAPIError(error);
+            throw handleAPIError(error);
           }
         })(),
         {
@@ -193,7 +195,10 @@ const Page = () => {
                 )}
               </div> */}
               <Command className="rounded-lg border shadow-md md:min-w-[450px]">
-                <CommandInput placeholder="Type a subject or search..." />
+                <CommandInput 
+                value={inputValue} 
+                onChangeCapture={(e) => setInputValue((e.target as HTMLInputElement).value)} 
+                placeholder="Type a subject or search..." />
                 <CommandList className="h-[100px]">
                   <CommandEmpty>No results found.</CommandEmpty>
 
