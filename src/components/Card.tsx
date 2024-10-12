@@ -56,7 +56,7 @@ const Card = ({
   return (
     <div
       key={paper._id}
-      className={`w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
+      className={`flex flex-col justify-between w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
       <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
         <Image
