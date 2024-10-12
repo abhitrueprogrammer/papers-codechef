@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import path from "path";
 
 type MailOptions = {
   from: string;
@@ -15,8 +16,14 @@ type MailOptions = {
 };
 
 // Allowed MIME types for PDF and image files
-const ALLOWED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
+const ALLOWED_MIME_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+];
 const MAX_FILE_SIZE_MB = 5; // Limit file size to 5 MB
+const ALLOWED_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".png", ".gif"]; // Allowed file extensions
 
 export async function POST(request: Request) {
   try {
@@ -66,9 +73,11 @@ export async function POST(request: Request) {
     for (const file of files) {
       if (file instanceof Blob) {
         const fileType = file.type;
+        const fileName = (file as any).name;
+        const fileExtension = path.extname(fileName).toLowerCase();
         const fileSizeMB = file.size / (1024 * 1024); // Convert size to MB
 
-        if (!ALLOWED_MIME_TYPES.includes(fileType)) {
+        if (!ALLOWED_MIME_TYPES.includes(fileType) || !ALLOWED_EXTENSIONS.includes(fileExtension)) {
           return NextResponse.json(
             { message: `File type not allowed: ${fileType}` },
             { status: 400 }
@@ -77,14 +86,14 @@ export async function POST(request: Request) {
 
         if (fileSizeMB > MAX_FILE_SIZE_MB) {
           return NextResponse.json(
-            { message: `File ${file.name} exceeds the 5MB size limit` },
+            { message: `File ${fileName} exceeds the 5MB size limit` },
             { status: 400 }
           );
         }
 
         const buffer = await file.arrayBuffer();
         attachments.push({
-          filename: (file as any).name,
+          filename: fileName,
           content: Buffer.from(buffer),
         });
       }
