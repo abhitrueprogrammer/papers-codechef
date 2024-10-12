@@ -239,7 +239,7 @@ const Page = () => {
               <Input
                 required
                 type="file"
-                // accept="image/*,.pdf"
+                accept="image/*,.pdf"
                 multiple
                 ref={fileInputRef}
                 className="hidden"
