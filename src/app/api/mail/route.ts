@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import path from "path";
 
 type MailOptions = {
   from: string;
@@ -14,57 +15,30 @@ type MailOptions = {
   }[];
 };
 
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 3;
-
-const rateLimitStore: Record<string, { count: number; lastRequest: number }> =
-  {};
-function isRateLimited(ip: string) {
-  const currentTime = Date.now();
-  const record = rateLimitStore[ip];
-
-  if (record) {
-    if (currentTime - record.lastRequest > RATE_LIMIT_WINDOW_MS) {
-      rateLimitStore[ip] = { count: 1, lastRequest: currentTime };
-      return false;
-    } else {
-      if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
-        return true;
-      } else {
-        record.count++;
-        record.lastRequest = currentTime;
-        return false;
-      }
-    }
-  } else {
-    rateLimitStore[ip] = { count: 1, lastRequest: currentTime };
-    return false;
-  }
-}
+const ALLOWED_MIME_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+];
+const MAX_FILE_SIZE_MB = 5;
+const ALLOWED_EXTENSIONS = [".pdf", ".jpg", ".jpeg", ".png", ".gif"];
 
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
     const ip =
-      request.headers.get("x-real-ip") ?? 
-      request.headers.get("x-forwarded-for") ?? 
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for") ??
       request.headers.get("remote-addr");
 
     if (!ip) {
       return NextResponse.json(
-        { message: "IP address not found" }, 
-        { status: 400 },
+        { message: "IP address not found" },
+        { status: 400 }
       );
     }
-
-    // Uncomment to enable rate-limiter
-    // if (isRateLimited(ip)) {
-    //   return NextResponse.json(
-    //     { message: "Too many requests. Please try again later." },
-    //     { status: 429 },
-    //   );
-    // }
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -76,11 +50,10 @@ export async function POST(request: Request) {
       },
     });
 
-    const zipFile = formData.get("zipFile");
-    const slot = formData.get("slot")?.toString() ?? '';
-    const subject = formData.get("subject")?.toString() ?? '';
-    const exam = formData.get("exam")?.toString() ?? '';
-    const year = formData.get("year")?.toString() ?? '';
+    const slot = formData.get("slot")?.toString() ?? "";
+    const subject = formData.get("subject")?.toString() ?? "";
+    const exam = formData.get("exam")?.toString() ?? "";
+    const year = formData.get("year")?.toString() ?? "";
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; line-height: 1.5;">
@@ -92,23 +65,45 @@ export async function POST(request: Request) {
       </div>
     `;
 
+    const attachments: { filename: string; content: Buffer }[] = [];
+    const files = formData.getAll("files");
+
+    for (const file of files) {
+      if (file instanceof Blob) {
+        const fileType = file.type;
+        const fileName = (file as any).name;
+        const fileExtension = path.extname(fileName).toLowerCase();
+        const fileSizeMB = file.size / (1024 * 1024);
+
+        if (!ALLOWED_MIME_TYPES.includes(fileType) || !ALLOWED_EXTENSIONS.includes(fileExtension)) {
+          return NextResponse.json(
+            { message: `File type not allowed: ${fileType}` },
+            { status: 400 }
+          );
+        }
+
+        if (fileSizeMB > MAX_FILE_SIZE_MB) {
+          return NextResponse.json(
+            { message: `File ${fileName} exceeds the 5MB size limit` },
+            { status: 400 }
+          );
+        }
+
+        const buffer = await file.arrayBuffer();
+        attachments.push({
+          filename: fileName,
+          content: Buffer.from(buffer),
+        });
+      }
+    }
+
     const mailOptions: MailOptions = {
       from: process.env.EMAIL_USER!,
       to: process.env.EMAIL_USER!,
       subject: subject,
       html: htmlContent,
-      attachments: [],
+      attachments,
     };
-
-    if (zipFile instanceof Blob) {
-      const buffer = await zipFile.arrayBuffer();
-      const content = Buffer.from(buffer);
-
-      mailOptions.attachments!.push({
-        filename: "files.zip",
-        content: content,
-      });
-    }
 
     await transporter.sendMail(mailOptions);
 
@@ -116,8 +111,7 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json(
       { message: "Error sending email", error: error },
-      { status: 422 },
+      { status: 422 }
     );
   }
 }
-
