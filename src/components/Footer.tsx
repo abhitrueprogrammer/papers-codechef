@@ -24,22 +24,25 @@ export default function Footer() {
   return (
     <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:justify-around lg:px-12 mb-4">
       <div className="flex items-center">
-        <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-3xl font-bold text-transparent lg:text-5xl">
+        <Link
+          href="/"
+          className="jost bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-3xl font-bold text-transparent dark:from-[#562EE7] dark:to-[#FFC6E8] md:w-[60%] md:text-6xl"
+        >
           Papers
-        </h1>
+        </Link>
         <Separator orientation="vertical" className="mx-3 h-full min-h-20" />
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <Image
             src={ccLogo as HTMLImageElement}
             alt="codechef-logo"
             height={70}
             width={70}
           />
-          <p className="jost text-2xl font-bold lg:text-4xl">CodeChef-VIT</p>
+          <p className="jost text-2xl font-bold lg:text-4xl whitespace-nowrap">CodeChef-VIT</p>
         </div>
       </div>
 
-      <p className="hidden text-xl lg:block">Made with Love By Codechef-VIT</p>
+      <p className="hidden text-xl lg:block">Made with 💜 By Codechef-VIT</p>
       <div className="flex items-center gap-x-8">
         <Link href="https://www.instagram.com/codechefvit/">
           <Instagram />
@@ -67,7 +70,7 @@ export default function Footer() {
           />
         </Link>
       </div>
-      <p className="block text-xl lg:hidden">Made with Love By Codechef-VIT</p>
+      <p className="block text-xl lg:hidden">Made with 💜 By Codechef-VIT</p>
     </div>
   );
 }
