@@ -13,6 +13,7 @@ const courses = [
   "Basic Electrical and Electronics Engineering Lab [BEEE102P]",
   "Complex Variables and Linear Algebra [BMAT201L]",
   "Computer Programming: Java [BCSE103E]",
+  "Java Programming [CSE1007]",
   "Digital Logic and Microprocessors Lab [BITE202P]",
   "Differential Equations and Transforms [BMAT102L]",
   "Engineering Chemistry [BCHY101L]",
@@ -210,7 +211,8 @@ const courses = [
   "Digital Communication System [BECE306L]",
   "Computer Networks [BCSE308L]",
   "Foundations of Data Analytics [BCSE351E]",
-  "Embedded Systems DEsign [BECE403E]"
+  "Embedded Systems Design [BECE403E]",
+  "Electronic Devices and Circuits [BECE205L]",
 ];
 
 const slots: string[] = [
