@@ -2,14 +2,15 @@ import { type Paper } from "@/interface";
 
 const papers: Paper[] = [
   {
-    _id: "67097ff03ec3fdad83b2d20e",
+    _id: "670b609bde724ffb4b8e856b",
+
     finalUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728675814/papers/ceisoyzmh2xf4jgusu9g.pdf",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728798789/papers/rzm07n5w4fx3znhyr7mt.pdf",
     thumbnailUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728675814/papers/ceisoyzmh2xf4jgusu9g.jpg",
-    subject: "Database Systems [BCSE302L]",
-    slot: "F2",
-    year: "2023",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728798789/papers/rzm07n5w4fx3znhyr7mt.jpg",
+    subject: "Complex Variables and Linear Algebra [BMAT201L]",
+    slot: "A2",
+    year: "2024",
     exam: "CAT-2",
   },
 
@@ -26,14 +27,14 @@ const papers: Paper[] = [
     exam: "CAT-2",
   },
   {
-    _id: "670a109f6272bcf9da4e2365",
+    _id: "670b5bea2086cb39b9a51480",
     finalUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728712856/papers/tvqgpngsxdxs9ne093co.pdf",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728797650/papers/ssnshkfhfx2ar8h7o53b.pdf",
     thumbnailUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728712856/papers/tvqgpngsxdxs9ne093co.jpg",
-    subject: "Complex Variables and Linear Algebra [BMAT201L]",
-    slot: "B2",
-    year: "2023",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728797650/papers/ssnshkfhfx2ar8h7o53b.jpg",
+    subject: "Database Systems [BCSE302L]",
+    slot: "A2",
+    year: "2024",
     exam: "CAT-2",
   },
   {
