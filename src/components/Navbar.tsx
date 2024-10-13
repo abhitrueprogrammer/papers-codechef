@@ -7,7 +7,7 @@ import Link from "next/link";
 
 function Navbar() {
   return (
-    <div className="flex items-center justify-between px-2 gap-x-3 py-6 md:px-12">
+    <div className="flex items-center justify-between gap-x-3 px-2 py-6 md:px-12">
       <div className="hidden w-[20%] md:block">
         <a href="https://www.codechefvit.com/" className="inline-block">
           <Image
@@ -19,7 +19,10 @@ function Navbar() {
         </a>
       </div>
       <div>
-        <Link href="/"  className="jost bg-gradient-to-r from-[#562EE7] to-[#FFC6E8] bg-clip-text text-center text-5xl font-bold text-transparent md:w-[60%] md:text-6xl">
+        <Link
+          href="/"
+          className="jost bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-5xl font-bold text-transparent dark:from-[#562EE7] dark:to-[#FFC6E8] md:w-[60%] md:text-6xl"
+        >
           Papers
         </Link>
       </div>
@@ -31,7 +34,7 @@ function Navbar() {
         <Link href="/upload">
           <Button
             variant="outline"
-            className="rounded-full px-6 py-4 text-xs md:text-sm mt-2 md:mt-0"
+            className="mt-2 rounded-full px-6 py-4 text-xs md:mt-0 md:text-sm"
           >
             <ArrowUpToLine />
             <span>UPLOAD PAPERS</span>
