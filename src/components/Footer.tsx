@@ -2,7 +2,7 @@
 import { Separator } from "./ui/separator";
 import ccLogo from "../assets/codechef_logo.svg";
 import Image from "next/image";
-import { Instagram, Linkedin, Youtube } from "lucide-react";
+import { Instagram, Linkedin, Youtube, Github } from "lucide-react";
 import meta_icon from "../assets/meta_icon.svg";
 import x_twitter_icon from "../assets/x_twitter_icon.svg";
 import meta_icon_dark from "../assets/meta_icon_dark.svg";
@@ -24,21 +24,18 @@ export default function Footer() {
   return (
     <div className="mx-auto flex flex-col items-center justify-between gap-y-12 pt-12 md:pt-8 lg:w-full lg:flex-row lg:justify-around lg:px-12 mb-4">
       <div className="flex items-center">
-        <Link
-          href="/"
-          className="jost bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-3xl font-bold text-transparent dark:from-[#562EE7] dark:to-[#FFC6E8] md:w-[60%] md:text-6xl"
-        >
+        <h1 className="jost bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-3xl font-bold text-transparent lg:text-5xl 2xl:text-6xl dark:from-[#562EE7] dark:to-[#FFC6E8]">
           Papers
-        </Link>
+        </h1>
         <Separator orientation="vertical" className="mx-3 h-full min-h-20" />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <Image
             src={ccLogo as HTMLImageElement}
             alt="codechef-logo"
             height={70}
             width={70}
           />
-          <p className="jost text-2xl font-bold lg:text-4xl whitespace-nowrap">CodeChef-VIT</p>
+          <p className="jost text-2xl font-bold lg:text-4xl">CodeChef-VIT</p>
         </div>
       </div>
 
@@ -52,6 +49,9 @@ export default function Footer() {
         </Link>
         <Link href="https://www.youtube.com/@CodeChefVIT">
           <Youtube />
+        </Link>
+        <Link href="https://github.com/CodeChefVIT">
+          <Github />
         </Link>
         <Link href="https://www.facebook.com/codechefvit/">
           <Image
