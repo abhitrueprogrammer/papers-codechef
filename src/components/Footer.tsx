@@ -10,6 +10,7 @@ import x_twitter_icon_dark from "../assets/x_twitter_icon_dark.svg";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 export default function Footer() {
   const { theme, setTheme } = useTheme();
@@ -38,37 +39,60 @@ export default function Footer() {
           <p className="jost text-2xl font-bold lg:text-4xl">CodeChef-VIT</p>
         </div>
       </div>
-
-      <p className="hidden text-xl lg:block">Made with 💜 By Codechef-VIT</p>
-      <div className="flex items-center gap-x-8">
-        <Link href="https://www.instagram.com/codechefvit/">
-          <Instagram />
-        </Link>
-        <Link href="https://www.linkedin.com/company/codechefvit/">
-          <Linkedin />
-        </Link>
-        <Link href="https://www.youtube.com/@CodeChefVIT">
-          <Youtube />
-        </Link>
-        <Link href="https://github.com/CodeChefVIT">
-          <Github />
-        </Link>
-        <Link href="https://www.facebook.com/codechefvit/">
-          <Image
-            src={isDarkMode ? meta_icon_dark : meta_icon}
-            alt="meta-icon"
-            height={24}
-            width={24}
-          />
-        </Link>
-        <Link href="https://x.com/codechefvit" className="pb-1.5">
-          <Image
-            src={isDarkMode ? x_twitter_icon_dark : x_twitter_icon}
-            alt="x_twitter_icon"
-            height={24}
-            width={24}
-          />
-        </Link>
+      <div>
+        <div className="flex items-center gap-x-8">
+          <Link href="https://www.instagram.com/codechefvit/">
+            <Button variant="ghost" size="icon">
+              <Instagram />
+            </Button>
+          </Link>
+          <Link href="https://www.linkedin.com/company/codechefvit/">
+            <Button variant="ghost" size="icon">
+              <Linkedin />
+            </Button>
+          </Link>
+          <Link href="https://www.youtube.com/@CodeChefVIT">
+            <Button variant="ghost" size="icon">
+              <Youtube />
+            </Button>
+          </Link>
+          <Link href="https://github.com/CodeChefVIT">
+            <Button variant="ghost" size="icon">
+              <Github />
+            </Button>
+          </Link>
+          <Link href="https://www.facebook.com/codechefvit/">
+            <Button variant="ghost" size="icon">
+              <Image
+                src={
+                  isDarkMode
+                    ? (meta_icon_dark as HTMLInputElement)
+                    : (meta_icon as HTMLInputElement)
+                }
+                alt="meta-icon"
+                height={24}
+                width={24}
+              />
+            </Button>
+          </Link>
+          <Link href="https://x.com/codechefvit" className="pb-1.5">
+            <Button variant="ghost" size="icon">
+              <Image
+                src={
+                  isDarkMode
+                    ? (x_twitter_icon_dark as HTMLInputElement)
+                    : (x_twitter_icon as HTMLInputElement)
+                }
+                alt="x_twitter_icon"
+                height={24}
+                width={24}
+              />
+            </Button>
+          </Link>
+        </div>
+        <p className="hidden text-center text-xl lg:block">
+          Made with 💜 By Codechef-VIT
+        </p>
       </div>
       <p className="block text-xl lg:hidden">Made with 💜 By Codechef-VIT</p>
     </div>
