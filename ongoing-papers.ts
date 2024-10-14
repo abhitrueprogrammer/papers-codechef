@@ -2,17 +2,16 @@ import { type Paper } from "@/interface";
 
 const papers: Paper[] = [
   {
-    _id: "670903eb02a75017a4f087b0",
+    _id: "6708fd8002a75017a4f08759",
     finalUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728642885/papers/aukdvlikf09cscx6hzgt.pdf",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728642405/papers/orbppimhujcijj2ywhvm.pdf",
     thumbnailUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728642885/papers/aukdvlikf09cscx6hzgt.jpg",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728642405/papers/orbppimhujcijj2ywhvm.jpg",
     subject: "Discrete Mathematics and Graph Theory [BMAT205L]",
-    slot: "D2",
+    slot: "A2",
     year: "2023",
     exam: "CAT-2",
   },
-
   {
     _id: "670980523ec3fdad83b2d211",
     finalUrl:
