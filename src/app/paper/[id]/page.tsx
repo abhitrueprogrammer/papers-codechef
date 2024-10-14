@@ -90,8 +90,6 @@ export default function PaperPage({ params }: Params) {
   return (
     <div>
       <Navbar />
-      {/* <embed src={paper.finalUrl}></embed> */}
-
       <div className="flex flex-col items-center justify-center">
         <h1 className="jost mb-4 text-center text-2xl font-semibold md:mb-10 md:text-3xl">
           {paper.subject} {paper.exam} {paper.slot} {paper.year}
