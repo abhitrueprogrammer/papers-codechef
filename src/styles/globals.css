@@ -101,6 +101,7 @@
 }
 .dark ::-webkit-scrollbar {
   width: 0.4rem;
+  height: 0.4rem;
   background: #535253;
 }
 
@@ -117,6 +118,7 @@
 }
 ::-webkit-scrollbar {
   width: 0.4rem;
+  height: 0.4rem;
   background: #535253;
 }
 ::-webkit-scrollbar-track {
@@ -127,4 +129,8 @@
 ::-webkit-scrollbar-thumb {
   background: #929292;
   border-radius: 1rem;
+}
+
+.rpv-full-screen__overlay {
+  display: none !important;
 }
