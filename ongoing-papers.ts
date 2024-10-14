@@ -2,26 +2,26 @@ import { type Paper } from "@/interface";
 
 const papers: Paper[] = [
   {
-    _id: "670989963ec3fdad83b2d23b",
+    _id: "670903eb02a75017a4f087b0",
     finalUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728678280/papers/rfzqpi8pf0tczozllynz.pdf",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728642885/papers/aukdvlikf09cscx6hzgt.pdf",
     thumbnailUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728678280/papers/rfzqpi8pf0tczozllynz.jpg",
-    subject: "Data Structures and Algorithms [BCSE202L]",
-    slot: "A1",
-    year: "2022",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728642885/papers/aukdvlikf09cscx6hzgt.jpg",
+    subject: "Discrete Mathematics and Graph Theory [BMAT205L]",
+    slot: "D2",
+    year: "2023",
     exam: "CAT-2",
   },
 
   {
-    _id: "670985673ec3fdad83b2d220",
+    _id: "670980523ec3fdad83b2d211",
     finalUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728677214/papers/ssw52yz7fpbjdeyp9bha.pdf",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/v1728675912/papers/lvtypsfdtref5mjskley.pdf",
     thumbnailUrl:
-      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728677214/papers/ssw52yz7fpbjdeyp9bha.jpg",
-    subject: "Operating Systems [BCSE303L]",
-    slot: "B1",
-    year: "2023",
+      "https://res.cloudinary.com/dtorpaj1c/image/upload/w_400,h_400,c_fill/v1728675912/papers/lvtypsfdtref5mjskley.jpg",
+    subject: "Compiler Design [BCSE307L]",
+    slot: "A2",
+    year: "2024",
     exam: "CAT-2",
   },
   {

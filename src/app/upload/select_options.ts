@@ -67,6 +67,7 @@ const courses = [
   "Parallel Computing [BITE406L]",
   "Special Project [BITE397J]",
   "Machine Learning [BITE410L]",
+  "Machine Learning [BCSE209L]",
   "Cloud Computing [BITE412L]",
   "Mobile Application Development [BITE409L]",
   "Network Management [BITE408L]",
@@ -153,7 +154,7 @@ const courses = [
   "Rocket Propulsion [CFOC235M]",
   "Natural Hazards [CFOC203M]",
   "Training of Trainers [CFOC119M]",
-  "Compiler Design [CFOC218M]",
+  "Compiler Design [BCSE307L]",
   "Business Statistics [CFOC498M]",
   "Entrepreneurship Essentials [CFOC384M]",
   "Public Speaking [CFOC570M]",
@@ -213,6 +214,12 @@ const courses = [
   "Foundations of Data Analytics [BCSE351E]",
   "Embedded Systems Design [BECE403E]",
   "Electronic Devices and Circuits [BECE205L]",
+  "Linear Algebra [UMAT201L]",
+  "Digital Watermarking and Steganography [BCSE323L]",
+  "Electronic Circuits [BEVD204L]",
+  "Digital Signal Processing [BECE301L]",
+  "Signals and Systems [BECE202L]",
+  "Engineering Electromagnetics [BECE205L]",
 ];
 
 const slots: string[] = [
