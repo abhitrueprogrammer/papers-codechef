@@ -232,6 +232,10 @@ function Upload() {
 
   const handleSubmitMerged = async (e: React.FormEvent) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     if (files.length === 0) {
       alert("Please upload at least one file");
       return;
@@ -247,6 +251,7 @@ function Upload() {
           const response = await axios.post<PostPDF>(
             "/api/admin/imgtopdf",
             formData,
+            { headers },
           );
           setPdfUrl(response.data.url);
         } catch (error: unknown) {
@@ -305,16 +310,17 @@ function Upload() {
 
   const handleDeleteMerged = async () => {
     if (!pdfUrl) return;
+    const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
     void toast.promise(
       (async () => {
         try {
-          const response = await axios.delete<DeletePDF>(
-            "/api/admin/imgtopdf",
-            {
-              data: { filePath: pdfUrl },
-            },
-          );
-          // alert(response.data.message);
+          const response = await axios.delete<DeletePDF>("/api/admin/imgtopdf", {
+            data: { filePath: pdfUrl },
+            headers,
+          });
           setPdfUrl(null);
         } catch (error: unknown) {
           throw handleAPIError(error);

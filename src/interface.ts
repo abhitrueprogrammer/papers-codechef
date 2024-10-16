@@ -41,6 +41,7 @@ export interface IPaper{
   slot: string;
   year: string;
   exam: "CAT-1" | "CAT-2" | "FAT";
+  isSelected: boolean;
 }
 export interface IAdminUpload{
   urls: Array<string>;

@@ -220,6 +220,7 @@ const courses = [
   "Digital Signal Processing [BECE301L]",
   "Signals and Systems [BECE202L]",
   "Engineering Electromagnetics [BECE205L]",
+  "Digital Electronics [BEEE206L]"
 ];
 
 const slots: string[] = [
