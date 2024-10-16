@@ -16,7 +16,7 @@ export async function GET() {
         {
           message: "No selected papers found.",
         },
-        { status: 404, headers: { "Cache-Control": "no-store" } },
+        { status: 404 },
       );
     }
     return NextResponse.json(selectedPapers, {
@@ -29,7 +29,7 @@ export async function GET() {
       {
         error: "Failed to fetch papers.",
       },
-      { status: 500, headers: { "Cache-Control": "no-store" } },
+      { status: 500 },
     );
   }
 }
