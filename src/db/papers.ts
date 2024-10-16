@@ -8,6 +8,7 @@ const paperSchema = new Schema<IPaper>({
   slot: { type: String, required: true },
   year: { type: String, required: true },
   exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT"], required: true },
+  isSelected: { type: Boolean, default: false },
 });
 
 paperSchema.index({ subject: 1 });
