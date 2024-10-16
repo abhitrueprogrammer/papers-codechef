@@ -14,17 +14,20 @@ export async function GET() {
         {
           message: "No selected papers found.",
         },
-        { status: 404 },
+        { status: 404, headers: { "Cache-Control": "no-store" } },
       );
     }
-    return NextResponse.json(selectedPapers, { status: 200 });
+    return NextResponse.json(selectedPapers, {
+      status: 200,
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch (error) {
     console.error("Error fetching papers:", error);
     return NextResponse.json(
       {
         error: "Failed to fetch papers.",
       },
-      { status: 500 },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
     );
   }
 }
