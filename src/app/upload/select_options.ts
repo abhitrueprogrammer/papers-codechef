@@ -95,6 +95,7 @@ const courses = [
   "Economics of Strategy [BHUM208L]",
   "Game Theory [BHUM209L]",
   "Behavioral Economics [BHUM211L]",
+  "Behavioral Economics [HUM1046]",
   "Econometrics [BHUM210E]",
   "Fluid Mechanics and Machines [BMEE204L]",
   "Cloud Computing using Salesforce [BMEE355L]",
@@ -196,6 +197,7 @@ const courses = [
   "Organizational Behavior [BMGT103L]",
   "Cognitive Psychology [BHUM110]",
   "Microprocessors and Microcontrollers Lab [BEEE309P]",
+  "Microprocessors and Microcontrollers [BECE204L]",
   "Big Data Analytic Applications to Electrical Systems [BECS403L]",
   "Big Data Analytic Applications to Electrical Systems Lab [BECS403P]",
   "Cyber Security [BCSE410L]",
@@ -219,8 +221,12 @@ const courses = [
   "Electronic Circuits [BEVD204L]",
   "Digital Signal Processing [BECE301L]",
   "Signals and Systems [BECE202L]",
+  "Signals and Systems [BEEE204L]",
   "Engineering Electromagnetics [BECE205L]",
-  "Digital Electronics [BEEE206L]"
+  "Digital Electronics [BEEE206L]",
+  "Artficial Intelligence [CBS3004]",
+  "Information Security [CBS3002]",
+  "Design and Analysis of Algorithms [MCSE502L]",
 ];
 
 const slots: string[] = [
