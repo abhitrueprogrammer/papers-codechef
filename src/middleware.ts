@@ -1,19 +1,22 @@
-import { NextResponse } from "next/server";
-import { verifyToken } from "./lib/auth";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { kv } from '@vercel/kv';
 
-export async function middleware(request: Request) {
-  const authtoken = request.headers.get("Authorization");
-  if (!authtoken ?? !authtoken?.startsWith("Bearer ")) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
-  const token = authtoken.split(" ")[1];
-  const isValidToken = await verifyToken(token);
-  if (!isValidToken) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
-  return NextResponse.next();
-}
+const ratelimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(5, '900 s'),
+});
 
 export const config = {
-  matcher: ["/api/admin/:path*"],
+  matcher: '/api/mail',
 };
+
+export default async function middleware(request: NextRequest) {
+  const ip = request.ip ?? '127.0.0.1';
+  const { success } = await ratelimit.limit(
+    ip
+  );
+  return success
+    ? NextResponse.next()
+    : NextResponse.json({ message: "You can upload a maximum of 5 papers every 15 minutes" }, { status: 429 });
+}

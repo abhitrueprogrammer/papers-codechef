@@ -24,6 +24,8 @@
     "@react-pdf-viewer/zoom": "^3.12.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@types/mongoose": "^5.11.97",
+    "@upstash/ratelimit": "^2.0.3",
+    "@vercel/kv": "^3.0.0",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
