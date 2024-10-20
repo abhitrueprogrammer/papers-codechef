@@ -1,29 +1,57 @@
-# Create T3 App
+<p align="center"><a href="https://www.codechefvit.com" target="_blank"><img src="https://i.ibb.co/4J9LXxS/cclogo.png" width=160 title="CodeChef-VIT" alt="Codechef-VIT"></a>
+</p>
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+<h2 align="center"> Papers </h2>
+<br/>
 
-## What's next? How do I make an app with this?
+> <p>Prepare to excel in your CATs and FATs with CodeChef-VIT's dedicated repository of past exam papers. Access key resources to review concepts, tackle challenging questions, and familiarize yourself with exam patterns. Boost your confidence, sharpen your strategy, and get ready to ace your exams!</p>
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## 🌐 Deploy
+[https://papers.codechefvit.com/](https://papers.codechefvit.com/)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## ⚙️ Tech Stack:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- Next.js
+- NextAuth.js
+- Prisma
+- Drizzle
+- Tailwind CSS
+- tRPC
 
-## Learn More
+## 💡 Features:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Access a vast collection of past CAT and FAT papers
+- Review papers sorted by subject, year, and difficulty
+- Download papers for offline use
+- Familiarize yourself with exam patterns and types of questions
+- Stay updated with any new additions to the repository
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## 🏁 Get Started
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+To get started, fork your own copy and clone the master branch. To clone a branch you can run the following:
 
-## How do I deploy this?
+```bash
+git clone -b master https://github.com/<Your username>/papers-codechef.git
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Run these commands on your bash/terminal and open it in a code editor of your choice.
+
+Run the following to install all the dependencies:
+
+```bash
+pnpm i
+```
+
+To start your development server run:
+
+```bash
+pnpm dev
+```
+
+## License
+
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
+<p align="center">
+	Made with :heart: by <a href="https://www.codechefvit.com" target="_blank">CodeChef-VIT</a>
+</p>
