@@ -11,12 +11,12 @@
 
 ## ⚙️ Tech Stack:
 
-- Next.js
-- NextAuth.js
-- Prisma
-- Drizzle
-- Tailwind CSS
-- tRPC
+- Next.js : Framework for React applications with server-side rendering.
+- Tailwind CSS : Utility-first CSS framework for rapid UI development.
+- MongoDB & Mongoose : Database and object data modeling (ODM) for Node.js.
+- Cloudinary : Media storage and optimization service.
+- Nodemailer : Node.js library for sending emails.
+- Shadcn : Collection of pre-built components using Radix UI and Tailwind CSS.
 
 ## 💡 Features:
 
@@ -47,6 +47,7 @@ To start your development server run:
 ```bash
 pnpm dev
 ```
+Before getting started, please ensure that the .env file is properly configured. The .env.example file has been provided for your reference, with examples of environment variables to be  listed.
 
 ## License
 
