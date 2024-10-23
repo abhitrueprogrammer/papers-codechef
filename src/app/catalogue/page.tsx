@@ -8,11 +8,7 @@ const Catalogue = () => {
   return (
     <>
       <Navbar />
-      <Suspense
-        fallback={
-          <Loader />
-        }
-      >
+      <Suspense fallback={<Loader />}>
         <CatalogueContent />
       </Suspense>
     </>
