@@ -7,6 +7,7 @@ import { handleAPIError } from "../../util/error";
 import { useRouter } from "next/navigation";
 import { type ApiError } from "next/dist/server/api-utils";
 import { Button } from "@/components/ui/button";
+import { CldUploadWidget } from "next-cloudinary";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -27,7 +28,8 @@ import {
 } from "@/components/ui/command";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
+import { array } from "zod";
+import {PostPDFToCloudinary} from "@/interface"
 const Page = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,15 +39,20 @@ const Page = () => {
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState("");
   const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const handlePrint = async () => {
     const maxFileSize = 5 * 1024 * 1024;
-    const allowedFileTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif"];
+    const allowedFileTypes = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+    ];
     const files = fileInputRef.current?.files as FileList | null;
-  
+
     if (!slot) {
       toast.error("Slot is required");
       return;
@@ -69,66 +76,114 @@ const Page = () => {
       toast.error("More than 5 files selected");
       return;
     }
-  
+    //file have same extension
+    if (!Array.from(files).every((file) => file.type == files[0]?.type))
+      toast.error(`All files MUST be of same type`);
     for (const file of files) {
       if (file.size > maxFileSize) {
         toast.error(`File ${file.name} is more than 5MB`);
         return;
       }
-  
+
       if (!allowedFileTypes.includes(file.type)) {
-        toast.error(`File type of ${file.name} is not allowed. Only PDFs and images are accepted.`);
+        toast.error(
+          `File type of ${file.name} is not allowed. Only PDFs and images are accepted.`,
+        );
         return;
       }
     }
-  
-    const formData = new FormData();
-    for (const file of files) {
-      formData.append("files", file);
-    }
-    formData.append("slot", slot);
-    formData.append("subject", subject);
-    formData.append("exam", exam);
-    formData.append("year", year);
-  
-    setIsUploading(true); // Set uploading to true
 
-    try {
-      const result = await toast.promise(
-        (async () => {
-          try {
-            const response = await axios.post<{ message: string }>(
-              "/api/mail",
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            );
-            return response.data;
-          } catch (error) {
-            throw handleAPIError(error);
-          }
-        })(),
-        {
-          loading: "Sending papers",
-          success: "Papers successfully sent",
-          error: (err: ApiError) => err.message,
-        }
-      );
-
-      if (result?.message === "Email sent successfully!") {
+    let isPdf = false;
+    if (files[0]?.type === "application/pdf") {
+      isPdf = true;
+      if(files.length > 1)
+      {
+        toast.error(`PDFs should be uploaded seperately`);
+        return;
       }
-    } catch (e) {
-    } finally {
-      setIsUploading(false);
     }
+    const Arrfiles = Array.from(files);
+    const formData = new FormData();
+    Arrfiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    // const body = {
+    //   subject: subject,
+    //   slot: slot,
+    //   year: year,
+    //   exam: exam,
+    //   isPdf: isPdf,
+    // };
+    formData.append("subject", subject);
+    formData.append("slot", slot);
+    formData.append("year", year);
+    formData.append("exam", exam);
+    formData.append("isPdf", String(isPdf));
+    void toast.promise(
+      (async () => {
+        try {
+          const response = await axios.post<PostPDFToCloudinary>(
+            "/api/admin",
+            formData,
+          );
+        } catch (error: unknown) {
+          throw handleAPIError(error);
+        }
+      })(),
+      {
+        loading: "Uploading papers...",
+        success: "papers uploaded",
+        error: (err: ApiError) => err.message,
+      },
+    );
+
+    // const formData = new FormData();
+    // for (const file of files) {
+    //   formData.append("files", file);
+    // }
+    // formData.append("slot", slot);
+    // formData.append("subject", subject);
+    // formData.append("exam", exam);
+    // formData.append("year", year);
+    // setIsUploading(true); // Set uploading to true
+
+    // try {
+    //   const result = await toast.promise(
+    //     (async () => {
+    //       try {
+    //         const response = await axios.post<{ message: string }>(
+    //           "/api/mail",
+    //           formData,
+    //           {
+    //             headers: {
+    //               "Content-Type": "multipart/form-data",
+    //             },
+    //           }
+    //         );
+    //         return response.data;
+    //       } catch (error) {
+    //         throw handleAPIError(error);
+    //       }
+    //     })(),
+    //     {
+    //       loading: "Sending papers",
+    //       success: "Papers successfully sent",
+    // error: (err: ApiError) => err.message,
+    //     }
+    //   );
+
+    //   if (result?.message === "Email sent successfully!") {
+    //   }
+    // } catch (e) {
+    // } finally {
+    //   setIsUploading(false);
+    // }
   };
-  
+
   const handleSubjectSelect = (value: string) => {
     setSubject(value);
-    setInputValue(value)
+    setInputValue(value);
     setIsSubjectCommandOpen(false);
   };
 
@@ -172,9 +227,9 @@ const Page = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Exams</SelectLabel>
-                    <SelectItem value="cat1">Cat 1</SelectItem>
-                    <SelectItem value="cat2">Cat 2</SelectItem>
-                    <SelectItem value="fat">Fat</SelectItem>
+                    <SelectItem value="CAT-1">CAT-1</SelectItem>
+                    <SelectItem value="CAT-2">CAT-2</SelectItem>
+                    <SelectItem value="FAT">FAT</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -184,10 +239,13 @@ const Page = () => {
             <div>
               <label>Subject:</label>
               <Command className="rounded-lg border shadow-md md:min-w-[450px]">
-                <CommandInput 
-                value={inputValue} 
-                onChangeCapture={(e) => setInputValue((e.target as HTMLInputElement).value)} 
-                placeholder="Type a subject or search..." />
+                <CommandInput
+                  value={inputValue}
+                  onChangeCapture={(e) =>
+                    setInputValue((e.target as HTMLInputElement).value)
+                  }
+                  placeholder="Type a subject or search..."
+                />
                 <CommandList className="h-[100px]">
                   <CommandEmpty>No results found.</CommandEmpty>
 
