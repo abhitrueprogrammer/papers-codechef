@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
     let finalUrl: string | undefined = "";
+    let public_id_cloudinary: string | undefined = "";
     let thumbnailUrl: string | undefined = "";
     const existingPaper = await Paper.findOne({
       subject,
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
         }
         
         const mergedPdfBytes = await CreatePDF(files);
-        finalUrl = await uploadPDFFile(mergedPdfBytes, uploadPreset);
+        [public_id_cloudinary, finalUrl]  = await uploadPDFFile(mergedPdfBytes, uploadPreset);
       } catch (error) {
         return NextResponse.json(
           { error: "Failed to process PDF" },
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      finalUrl = await uploadPDFFile(files[0] as File, uploadPreset);
+      [public_id_cloudinary, finalUrl] = await uploadPDFFile(files[0] as File, uploadPreset);
     }
     const thumbnailResponse = cloudinary.v2.image(finalUrl!, {
       format: "jpg",
@@ -77,8 +78,9 @@ export async function POST(req: Request) {
       .replace("pdf", "jpg")
       .replace("upload", "upload/w_400,h_400,c_fill")
       .replace(/<img src='|'\s*\/>/g, "");
-
     const paper = new Paper({
+
+      public_id_cloudinary,
       finalUrl,
       thumbnailUrl,
       subject,
@@ -101,40 +103,38 @@ export async function POST(req: Request) {
   }
 }
 
-export async function DELETE(req: Request) {
-  try {
-    const url = new URL(req.url);
-    const public_id = url.searchParams.get("public_id");
-    const type = url.searchParams.get("type");
+// export async function DELETE(req: Request) {
+//   try {
+//     const url = new URL(req.url);
+//     const public_id = url.searchParams.get("public_id");
+//     const type = url.searchParams.get("type");
 
-    if (!public_id || !type) {
-      return NextResponse.json(
-        { message: "Missing parameters: public_id or type" },
-        { status: 400 },
-      );
-    }
-    await cloudinary.v2.uploader.destroy(public_id, {
-      type: type,
-    });
+//     if (!public_id || !type) {
+//       return NextResponse.json(
+//         { message: "Missing parameters: public_id or type" },
+//         { status: 400 },
+//       );
+//     }
+//     await cloudinary.v2.uploader.destroy(public_id, {
+//       type: type,
+//     });
 
-    return NextResponse.json({ message: "Asset deleted successfully" });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Failed to delete asset", error },
-      { status: 500 },
-    );
-  }
-}
+//     return NextResponse.json({ message: "Asset deleted successfully" });
+//   } catch (error) {
+//     return NextResponse.json(
+//       { message: "Failed to delete asset", error },
+//       { status: 500 },
+//     );
+//   }
+// }
 async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
   let bytes;
-  if(file instanceof File)
+  if(file instanceof File) //for pdf
   {
-    console.log("PDF file");
     bytes = await file.arrayBuffer();
   }
-  else
+  else // for images that are pdf
   {
-    console.log("Non PDF file");
     bytes = file as ArrayBuffer;
   }
   return uploadFile(bytes, uploadPreset, "application/pdf")
@@ -146,8 +146,7 @@ async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
 
     const uploadResult: CloudinaryUploadResult =
       await cloudinary.v2.uploader.unsigned_upload(dataUrl, uploadPreset);
-
-    return uploadResult.secure_url;
+    return [uploadResult.public_id, uploadResult.secure_url ];
   } catch (e) {
     throw (e);
   }

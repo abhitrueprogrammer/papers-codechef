@@ -56,6 +56,7 @@ export interface PostRequestBody {
 }
 
 export interface IPaper{
+  public_id_cloudinary: string;
   finalUrl: string;
   thumbnailUrl: string;
   subject: string;
