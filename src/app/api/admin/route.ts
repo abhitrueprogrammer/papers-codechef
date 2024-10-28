@@ -4,13 +4,11 @@ import { PDFDocument } from "pdf-lib";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import {
-  type IAdminUpload,
-  type ConverttoPDFResponse,
+
   CloudinaryUploadResult,
 } from "@/interface";
 import Paper from "@/db/papers";
-import { handleAPIError } from "@/util/error";
-
+// TODO: REMOVE THUMBNAIL FROM admin-buffer DB
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -36,18 +34,7 @@ export async function POST(req: Request) {
     let finalUrl: string | undefined = "";
     let public_id_cloudinary: string | undefined = "";
     let thumbnailUrl: string | undefined = "";
-    const existingPaper = await Paper.findOne({
-      subject,
-      slot,
-      year,
-      exam,
-    });
-    if (existingPaper) {
-      return NextResponse.json(
-        { message: "Paper already exists" },
-        { status: 409 },
-      );
-    }
+
     if (!files || files.length === 0) {
       return NextResponse.json(
         { error: "No files received." },
@@ -103,30 +90,7 @@ export async function POST(req: Request) {
   }
 }
 
-// export async function DELETE(req: Request) {
-//   try {
-//     const url = new URL(req.url);
-//     const public_id = url.searchParams.get("public_id");
-//     const type = url.searchParams.get("type");
 
-//     if (!public_id || !type) {
-//       return NextResponse.json(
-//         { message: "Missing parameters: public_id or type" },
-//         { status: 400 },
-//       );
-//     }
-//     await cloudinary.v2.uploader.destroy(public_id, {
-//       type: type,
-//     });
-
-//     return NextResponse.json({ message: "Asset deleted successfully" });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { message: "Failed to delete asset", error },
-//       { status: 500 },
-//     );
-//   }
-// }
 async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
   let bytes;
   if(file instanceof File) //for pdf
