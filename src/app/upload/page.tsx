@@ -124,7 +124,7 @@ const Page = () => {
       (async () => {
         try {
           const response = await axios.post<PostPDFToCloudinary>(
-            "/api/admin",
+            "/api/upload",
             formData,
           );
         } catch (error: unknown) {
