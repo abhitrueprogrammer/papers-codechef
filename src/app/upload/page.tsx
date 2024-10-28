@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/command";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { array } from "zod";
 import {PostPDFToCloudinary} from "@/interface"
 const Page = () => {
   const router = useRouter();
@@ -138,47 +137,7 @@ const Page = () => {
       },
     );
 
-    // const formData = new FormData();
-    // for (const file of files) {
-    //   formData.append("files", file);
-    // }
-    // formData.append("slot", slot);
-    // formData.append("subject", subject);
-    // formData.append("exam", exam);
-    // formData.append("year", year);
-    // setIsUploading(true); // Set uploading to true
 
-    // try {
-    //   const result = await toast.promise(
-    //     (async () => {
-    //       try {
-    //         const response = await axios.post<{ message: string }>(
-    //           "/api/mail",
-    //           formData,
-    //           {
-    //             headers: {
-    //               "Content-Type": "multipart/form-data",
-    //             },
-    //           }
-    //         );
-    //         return response.data;
-    //       } catch (error) {
-    //         throw handleAPIError(error);
-    //       }
-    //     })(),
-    //     {
-    //       loading: "Sending papers",
-    //       success: "Papers successfully sent",
-    // error: (err: ApiError) => err.message,
-    //     }
-    //   );
-
-    //   if (result?.message === "Email sent successfully!") {
-    //   }
-    // } catch (e) {
-    // } finally {
-    //   setIsUploading(false);
-    // }
   };
 
   const handleSubjectSelect = (value: string) => {
