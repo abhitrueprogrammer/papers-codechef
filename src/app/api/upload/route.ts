@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      [public_id_cloudinary, finalUrl] = await uploadPDFFile(files[0] as File, uploadPreset);
+      [public_id_cloudinary, finalUrl] = await uploadPDFFile(files[0]!, uploadPreset);
     }
     const thumbnailResponse = cloudinary.v2.image(finalUrl!, {
       format: "jpg",
@@ -99,7 +99,7 @@ async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
   }
   else // for images that are pdf
   {
-    bytes = file as ArrayBuffer;
+    bytes = file;
   }
   return uploadFile(bytes, uploadPreset, "application/pdf")
 }
@@ -107,9 +107,7 @@ async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
   try {
     const buffer = Buffer.from(bytes);
     const dataUrl = `data:${fileType};base64,${buffer.toString("base64")}`;
-
-    const uploadResult: CloudinaryUploadResult =
-      await cloudinary.v2.uploader.unsigned_upload(dataUrl, uploadPreset);
+    const uploadResult = await cloudinary.v2.uploader.unsigned_upload(dataUrl, uploadPreset) as CloudinaryUploadResult;
     return [uploadResult.public_id, uploadResult.secure_url ];
   } catch (e) {
     throw (e);

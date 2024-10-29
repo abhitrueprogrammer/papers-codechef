@@ -111,11 +111,11 @@ const CatalogueContent = () => {
         setLoading(true);
 
         try {
-          const papersResponse = await axios.get("/api/papers", {
+          const papersResponse = await axios.get<{ papers: Paper[], filters: Filters }>("/api/papers", {
             params: { subject },
           });
           const papersData: Paper[] = papersResponse.data.papers;
-          const filters: Filters = papersResponse.data;
+          const filters: Filters = papersResponse.data.filters;
 
           setFilterOptions(filters);
 

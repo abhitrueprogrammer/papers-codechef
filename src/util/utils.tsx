@@ -15,7 +15,7 @@ export function toSentenceCase(input: string): string {
 
 export function extractBracketContent(subject: string): string | null {
   const match = subject.match(/\[(.*?)\]/);
-  return match && match[1] ? match[1] : "BMAT102L"; //MAKE SURE IT WORKS WHEN URL IS DONE FROM BACKEND
+  return match?.[1] ? match[1] : "BMAT102L"; //MAKE SURE IT WORKS WHEN URL IS DONE FROM BACKEND
 }
 
 export function extractWithoutBracketContent(subject: string): string {

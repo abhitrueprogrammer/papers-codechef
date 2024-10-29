@@ -20,7 +20,7 @@ function SearchBar() {
       if (text.length > 1) {
         setLoading(true);
         try {
-          const searchResponse = await axios.get("/api/search", {
+          const searchResponse = await axios.get<{ subjects: { subject: string }[] }>("/api/search", {
             params: { text },
           });
 
@@ -51,7 +51,7 @@ function SearchBar() {
     if (text.length <= 1) {
       setSuggestions([]);
     }
-    debouncedSearch(text);
+    void debouncedSearch(text);
   };
 
   const handleSelectSuggestion = async (suggestion: string) => {
