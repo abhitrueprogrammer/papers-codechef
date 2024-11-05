@@ -7,7 +7,7 @@ import Link from "next/link";
 
 function Navbar() {
   return (
-    <div className="flex items-center justify-between gap-x-3 px-2 py-6 md:px-12">
+    <div className="flex items-center justify-between gap-x-3 w-[90%] md:w-full overflow-x-hidden px-2 py-6 md:px-12">
       <div className="hidden w-[20%] md:block">
         <a href="https://www.codechefvit.com/" className="inline-block">
           <Image
@@ -21,7 +21,7 @@ function Navbar() {
       <div>
         <Link
           href="/"
-          className="jost bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-5xl font-bold text-transparent dark:from-[#562EE7] dark:to-[#FFC6E8] md:w-[60%] md:text-6xl"
+          className="jost tracking-wide bg-gradient-to-r from-[#562EE7] to-[#bd21b4] bg-clip-text text-center text-4xl font-extrabold text-transparent dark:from-[#562EE7] dark:to-[#bd21b4] md:w-[60%] md:text-6xl"
         >
           Papers
         </Link>
@@ -32,14 +32,13 @@ function Navbar() {
         </div>
 
         <Link href="/upload">
-          <Button
-            variant="outline"
-            className="mt-2 rounded-full px-6 py-4 text-xs md:mt-0 md:text-sm"
-          >
-            <ArrowUpToLine />
-            <span>UPLOAD PAPERS</span>
-          </Button>
+          <div className="md:p-[2px] bg-gradient-to-r from-[#562EE7] to-[#bd21b4] rounded-full">
+              <div className="rounded-full font-bold text-xs md:text-sm mt-2 md:mt-0 bg-slate-200 dark:bg-black px-4 md:px-6 py-3 tracking-wider text-black dark:text-white font-sans hover:bg-white dark:hover:bg-slate-700">
+              ⇱ UPLOAD PAPERS
+              </div>
+            </div>
         </Link>
+
       </div>
     </div>
   );

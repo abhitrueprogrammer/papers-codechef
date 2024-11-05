@@ -28,10 +28,25 @@
 
 ## 🏁 Get Started
 
-To get started, fork your own copy and clone the master branch. To clone a branch you can run the following:
+The repository has two branches, 'prod' and 'staging'.
+
+prod (Production Branch) represents the live, user-facing version of the project where bug-free, well-tested code resides. 
+
+staging (Staging Branch) serves as a pre-production environment, where features and fixes are tested before they go live.
+
+To get started, fork your own copy and clone your chosen branch. To clone a branch you can run the following:
+
+Clone the 'prod' branch (production)
 
 ```bash
-git clone -b master https://github.com/<Your username>/papers-codechef.git
+git clone -b prod https://github.com/<Your username>/papers-codechef.git
+```
+OR
+
+Clone the 'staging' branch (staging)
+
+```bash
+git clone -b staging https://github.com/<Your username>/papers-codechef.git
 ```
 
 Run these commands on your bash/terminal and open it in a code editor of your choice.
@@ -47,7 +62,8 @@ To start your development server run:
 ```bash
 pnpm dev
 ```
-Before getting started, please ensure that the .env file is properly configured. The .env.example file has been provided for your reference, with examples of environment variables to be  listed.
+
+Before getting started, please ensure that the .env file is properly configured. The .env.example file has been provided for your reference, with examples of environment variables to be listed.
 
 ## License
 
