@@ -13,7 +13,7 @@ function StoredPapers() {
     async function fetchPapers() {
       try {
         const response = await axios.get("/api/selected-papers");
-        setDisplayPapers(response.data);
+        setDisplayPapers(response.data as Paper[]);
       } catch (error) {
         setDisplayPapers(papers);
         console.error("Failed to fetch papers:", error);

@@ -2,6 +2,7 @@ import mongoose, { Schema, type Model } from "mongoose";
 import { type IPaper } from "@/interface";
 
 const paperSchema = new Schema<IPaper>({
+  public_id_cloudinary: {type: String, required: true},
   finalUrl: { type: String, required: true },
   thumbnailUrl: { type: String, required: true },
   subject: { type: String, required: true, index: true },
@@ -14,6 +15,6 @@ const paperSchema = new Schema<IPaper>({
 paperSchema.index({ subject: 1 });
 
 const Paper: Model<IPaper> =
-  mongoose.models.Paper ?? mongoose.model<IPaper>("Paper", paperSchema);
+  mongoose.models.Admin ?? mongoose.model<IPaper>("Admin", paperSchema);
 
 export default Paper;
