@@ -14,7 +14,10 @@ const paperSchema = new Schema<IPaper>({
 
 paperSchema.index({ subject: 1 });
 
-const Paper: Model<IPaper> =
+export const PaperAdmin: Model<IPaper> =
   mongoose.models.Admin ?? mongoose.model<IPaper>("Admin", paperSchema);
+const Paper: Model<IPaper> =
+  mongoose.models.Paper  ?? mongoose.model<IPaper>("Paper", paperSchema);
 
 export default Paper;
+
