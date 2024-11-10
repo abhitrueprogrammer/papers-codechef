@@ -89,6 +89,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+    <meta name="google-site-verification" content="SjVFuH8GzIj3Ooh2JcWufBoSMWTzo77TACHomonCKVs" />
       <body>
         <ThemeProvider
           attribute="class"

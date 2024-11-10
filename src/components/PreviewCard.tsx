@@ -16,7 +16,7 @@ const PreviewCard = ({ paper }: { paper: Paper }) => {
       key={paper._id}
       className="w-56 space-y-1 rounded-xl border border-black border-opacity-50 p-4 dark:border-[#7480FF]/25"
     >
-      <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+      <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
