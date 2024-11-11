@@ -29,7 +29,7 @@ function StoredPapers() {
 
   return (
     <>
-      <p className="mt-8 mb-6 text-center font-sans text-2xl md:text-3xl font-semibold">Most Viewed Papers</p>
+      <p className="mt-2 mb-6 text-center font-sans text-xl font-semibold">Most Viewed Papers</p>
       <div className="flex flex-wrap justify-center gap-4">
         {displayPapers.map((paper: Paper) => (
           <PreviewCard key={paper._id} paper={paper} />
