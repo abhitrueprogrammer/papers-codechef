@@ -68,7 +68,7 @@ export default function PdfViewer({ url }: PdfViewerProps) {
         <div className="hidden gap-x-4 md:flex md:items-center">
           <getFilePluginInstance.Download>
             {(props) => (
-              <button className="" onClick={props.onClick}>
+              <button className="" onClick={() => props.onClick()}>
                 <Download />
               </button>
             )}
