@@ -7,7 +7,7 @@ import {
 
   CloudinaryUploadResult,
 } from "@/interface";
-import Paper from "@/db/papers";
+import {PaperAdmin} from "@/db/papers";
 // TODO: REMOVE THUMBNAIL FROM admin-buffer DB
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       .replace("pdf", "jpg")
       .replace("upload", "upload/w_400,h_400,c_fill")
       .replace(/<img src='|'\s*\/>/g, "");
-    const paper = new Paper({
+    const paper = new PaperAdmin({
 
       public_id_cloudinary,
       finalUrl,
