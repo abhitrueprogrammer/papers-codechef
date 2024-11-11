@@ -58,7 +58,7 @@ const Card = ({
       key={paper._id}
       className={`flex flex-col mb-2 justify-between w-[65%] md:w-64 space-y-1 rounded-xl border-2 bg-white dark:bg-black hover:border-[#434dba] dark:border-[#434dba] dark:hover:border-white border-black  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+      <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
@@ -92,8 +92,8 @@ const Card = ({
           />
           <p className="text-sm font-sans">Select</p>
         </div>
-        <div className="flex gap-3">
-          <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+        <div className="flex gap-2">
+          <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
             <Eye size={20} />
           </Link>
           <button onClick={() => handleDownload(paper)}>
