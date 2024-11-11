@@ -21,7 +21,7 @@ function Navbar() {
       <div>
         <Link
           href="/"
-          className="jost tracking-wide bg-gradient-to-r from-[#562EE7] to-[#bd21b4] bg-clip-text text-center text-4xl font-extrabold text-transparent dark:from-[#562EE7] dark:to-[#bd21b4] md:w-[60%] md:text-6xl"
+          className="jost tracking-wide bg-gradient-to-r from-[#562EE7] to-[rgba(116,128,255,0.8)] bg-clip-text text-center text-4xl font-extrabold text-transparent dark:from-[#562EE7] dark:to-[#FFC6E8] md:w-[60%] md:text-6xl"
         >
           Papers
         </Link>
@@ -33,7 +33,7 @@ function Navbar() {
 
         <Link href="/upload">
           <div className="md:p-[2px] bg-gradient-to-r from-[#562EE7] to-[#bd21b4] rounded-full">
-              <div className="rounded-full font-bold text-xs md:text-sm mt-2 md:mt-0 bg-slate-200 dark:bg-black px-4 md:px-6 py-3 tracking-wider text-black dark:text-white font-sans hover:bg-white dark:hover:bg-slate-700">
+              <div className="whitespace-nowrap rounded-full font-bold text-xs md:text-sm mt-2 md:mt-0 bg-slate-200 dark:bg-black px-4 md:px-6 py-3 tracking-wider text-black dark:text-white font-sans hover:bg-white dark:hover:bg-slate-700">
               ⇱ UPLOAD PAPERS
               </div>
             </div>
