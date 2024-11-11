@@ -118,7 +118,7 @@ export interface Paper {
 }
 
 export interface Filters {
-  paper: Paper;
+  papers: Paper[];
   uniqueExams: string[];
   uniqueSlots: string[];
   uniqueYears: string[];
