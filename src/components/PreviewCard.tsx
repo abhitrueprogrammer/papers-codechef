@@ -14,7 +14,7 @@ const PreviewCard = ({ paper }: { paper: Paper }) => {
   return (
     <div
       key={paper._id}
-      className="w-56 space-y-1 rounded-xl border border-black border-opacity-50 p-4 dark:border-[#7480FF]/25"
+      className="w-[65%] md:w-64 space-y-1 rounded-xl border-2 bg-white dark:bg-black hover:border-[#434dba] dark:hover:border-white border-black p-4 dark:border-[#434dba]"
     >
       <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
         <Image
@@ -22,14 +22,15 @@ const PreviewCard = ({ paper }: { paper: Paper }) => {
           alt={paper.subject}
           width={180}
           height={180}
-          className="mb-2 h-[150px] w-full object-cover"
+          className="mb-2 h-[160px] md:h-[180px] w-full object-cover"
         />
       </Link>
-      <div className="flex flex-col justify-between h-28">
-        <div className="text-sm font-medium">
+      
+      <div className="flex flex-col justify-center space-y-2 h-28">
+        <div className="text-sm font-sans font-medium">
           {extractBracketContent(paper.subject)}
         </div>
-        <div className="text-md font-medium">
+        <div className="text-base font-sans cursor-pointer font-semibold">
           {extractWithoutBracketContent(paper.subject)}
         </div>
         <div className="flex gap-2">
@@ -38,6 +39,7 @@ const PreviewCard = ({ paper }: { paper: Paper }) => {
           {capsule(paper.year)}
         </div>
       </div>
+    
     </div>
   );
 };

@@ -175,16 +175,17 @@ const CatalogueContent = () => {
             />
           )}{" "}
           <div className=" hidden items-center justify-center gap-2 md:flex md:justify-end 2xl:mr-4">
-            <Button variant="outline" onClick={handleSelectAll}>
+            <Button variant="outline" onClick={handleSelectAll} className="font-sans font-semibold border-2 border-black dark:border-[#434dba] hover:bg-slate-800 hover:text-white dark:hover:bg-slate-900 dark:hover:border-white">
               Select All
             </Button>
-            <Button variant="outline" onClick={handleDeselectAll}>
+            <Button variant="outline" onClick={handleDeselectAll} className="font-sans font-semibold border-2 border-black dark:border-[#434dba] hover:bg-slate-800 hover:text-white dark:hover:bg-slate-900 dark:hover:border-white">
               Deselect All
             </Button>
             <Button
               variant="outline"
               onClick={handleDownloadAll}
               disabled={selectedPapers.length === 0}
+              className="font-sans font-semibold border-2 border-black dark:border-[#434dba] hover:bg-slate-800 hover:text-white dark:hover:bg-slate-900 dark:hover:border-white"
             >
               Download All ({selectedPapers.length})
             </Button>
