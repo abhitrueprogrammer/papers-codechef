@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios, { type AxiosResponse } from "axios";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { Eye, Maximize } from "lucide-react";
+import { Download, Eye, Maximize } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Worker } from "@react-pdf-viewer/core";
 import { Viewer } from "@react-pdf-viewer/core";
@@ -15,23 +15,19 @@ import {
   type RenderZoomInProps,
   type RenderCurrentScaleProps,
 } from "@react-pdf-viewer/zoom";
+import { getFilePlugin } from "@react-pdf-viewer/get-file";
+
 import {
   fullScreenPlugin,
   type RenderEnterFullScreenProps,
 } from "@react-pdf-viewer/full-screen";
+
 import "@react-pdf-viewer/full-screen/lib/styles/index.css";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/zoom/lib/styles/index.css";
 import Loader from "@/components/ui/loader";
 import Link from "next/link";
-
-interface PaperResponse {
-  finalUrl: string;
-  subject: string;
-  year: string;
-  slot: string;
-  exam: string;
-}
+import { PaperResponse } from "@/interface";
 
 interface ErrorResponse {
   message: string;
@@ -45,7 +41,7 @@ export default function PaperPage({ params }: Params) {
   const [paper, setPaper] = useState<PaperResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
+  const getFilePluginInstance = getFilePlugin();
   const zoomPluginInstance = zoomPlugin();
   const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
   const fullScreenPluginInstance = fullScreenPlugin();
@@ -116,7 +112,14 @@ export default function PaperPage({ params }: Params) {
               )}
             </ZoomIn>
           </div>
-          <div className="hidden gap-x-4 md:flex">
+          <div className="hidden gap-x-4 md:flex md:items-center">
+            <getFilePluginInstance.Download>
+              {(props) => (
+                <button className="" onClick={props.onClick}>
+                  <Download />
+                </button>
+              )}
+            </getFilePluginInstance.Download>
             <EnterFullScreen>
               {(props: RenderEnterFullScreenProps) => (
                 <button onClick={() => props.onClick()}>
@@ -126,7 +129,7 @@ export default function PaperPage({ params }: Params) {
             </EnterFullScreen>
           </div>
           <Link className="flex md:hidden" href={paper.finalUrl}>
-            <Eye size={20} />
+            <Download />
           </Link>
         </div>
 
@@ -134,7 +137,11 @@ export default function PaperPage({ params }: Params) {
           <div className="border-1 w-[95%] overflow-x-hidden md:w-[80%]">
             <Viewer
               fileUrl={paper.finalUrl}
-              plugins={[zoomPluginInstance, fullScreenPluginInstance]}
+              plugins={[
+                zoomPluginInstance,
+                getFilePluginInstance,
+                fullScreenPluginInstance,
+              ]}
             />
           </div>
         </Worker>
