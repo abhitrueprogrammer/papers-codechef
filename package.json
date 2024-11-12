@@ -21,6 +21,7 @@
     "@react-pdf-viewer/core": "3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@react-pdf-viewer/full-screen": "^3.12.0",
+    "@react-pdf-viewer/get-file": "^3.12.0",
     "@react-pdf-viewer/zoom": "^3.12.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@types/mongoose": "^5.11.97",
