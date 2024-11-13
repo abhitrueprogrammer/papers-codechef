@@ -55,6 +55,14 @@ export interface PostRequestBody {
   tags: string;
 }
 
+export interface PaperResponse {
+  finalUrl: string;
+  subject: string;
+  year: string;
+  slot: string;
+  exam: string;
+}
+
 export interface IPaper{
   public_id_cloudinary: string;
   finalUrl: string;
@@ -118,7 +126,7 @@ export interface Paper {
 }
 
 export interface Filters {
-  paper: Paper;
+  papers: Paper[];
   uniqueExams: string[];
   uniqueSlots: string[];
   uniqueYears: string[];

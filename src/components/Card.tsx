@@ -56,41 +56,44 @@ const Card = ({
   return (
     <div
       key={paper._id}
-      className={`flex flex-col justify-between w-56 space-y-1 rounded-xl border border-black dark:border-[#7480FF]/25  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
+      className={`flex flex-col mb-2 justify-between w-[65%] md:w-64 space-y-1 rounded-xl border-2 bg-white dark:bg-black hover:border-[#434dba] dark:border-[#434dba] dark:hover:border-white border-black  ${checked ? "bg-[#EEF2FF] dark:bg-[#050b1f]" : ""}  p-4 `}
     >
-      <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+      <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
         <Image
           src={paper.thumbnailUrl}
           alt={paper.subject}
           width={320}
           height={180}
-          className="mb-2 h-[180px] w-full cursor-pointer object-cover"
+          className="mb-2 h-[160px] md:h-[180px] w-full object-cover"
         />
       </Link>
+      
+      <div className="justify-center space-y-2 h-28">
+        <div className="text-sm font-sans font-medium">
+          {extractBracketContent(paper.subject)}
+        </div>
+        <div className="text-base font-sans font-semibold">
+          {extractWithoutBracketContent(paper.subject)}
+        </div>
+        <div className="flex gap-2 py-2">
+          {capsule(paper.exam)}
+          {capsule(paper.slot)}
+          {capsule(paper.year)}
+        </div>
+      </div>
 
-      <div className="text-sm font-medium">
-        {extractBracketContent(paper.subject)}
-      </div>
-      <div className="text-md font-medium">
-        {extractWithoutBracketContent(paper.subject)}
-      </div>
-      <div className="flex gap-2 py-2">
-        {capsule(paper.exam)}
-        {capsule(paper.slot)}
-        {capsule(paper.year)}
-      </div>
-      <div className="hidden items-center justify-between gap-2 md:flex">
-        <div className="flex items-center gap-1">
+      <div className="hidden items-center pt-4 justify-between gap-2 md:flex">
+        <div className="flex items-center gap-2">
           <input
             checked={checked}
             onChange={handleCheckboxChange}
-            className="h-3 w-3 rounded-lg"
+            className="h-4 w-4 rounded-lg"
             type="checkbox"
           />
-          <p className="text-sm">Select</p>
+          <p className="text-sm font-sans">Select</p>
         </div>
         <div className="flex gap-2">
-          <Link href={paper.finalUrl} target="_blank" rel="noopener noreferrer">
+          <Link href={`/paper/${paper._id}`} target="_blank" rel="noopener noreferrer">
             <Eye size={20} />
           </Link>
           <button onClick={() => handleDownload(paper)}>

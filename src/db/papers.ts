@@ -12,7 +12,12 @@ const paperSchema = new Schema<IPaper>({
   isSelected: { type: Boolean, default: false },
 });
 
+paperSchema.index({ subject: 1 });
+
+export const PaperAdmin: Model<IPaper> =
+  mongoose.models.Admin ?? mongoose.model<IPaper>("Admin", paperSchema);
 const Paper: Model<IPaper> =
-  mongoose.models.paper ?? mongoose.model<IPaper>("paper", paperSchema);
+  mongoose.models.Paper  ?? mongoose.model<IPaper>("Paper", paperSchema);
 
 export default Paper;
+
