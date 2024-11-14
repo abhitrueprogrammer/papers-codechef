@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
 import axios from "axios";
-import { slots, courses } from "./select_options";
 import toast, { Toaster } from "react-hot-toast";
 import { handleAPIError } from "../../util/error";
 import { useRouter } from "next/navigation";
@@ -29,6 +28,8 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import {PostPDFToCloudinary} from "@/interface"
+import { courses, slots } from "@/components/select_options";
+import SearchBar from "@/components/searchbarSubjectList";
 const Page = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -197,15 +198,17 @@ const Page = () => {
             {/* Subject Selection */}
             <div>
               <label>Subject:</label>
-              <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+              {/* setSubject */}
+                <SearchBar setSubject={setSubject}></SearchBar>
+              {/* <Command className="rounded-lg border shadow-md md:min-w-[450px]">
                 <CommandInput
                   value={inputValue}
                   onChangeCapture={(e) =>
                     setInputValue((e.target as HTMLInputElement).value)
                   }
                   placeholder="Type a subject or search..."
-                />
-                <CommandList className="h-[100px]">
+                /> */}
+                {/* <CommandList className="h-[100px]">
                   <CommandEmpty>No results found.</CommandEmpty>
 
                   <CommandGroup heading="Subjects">
@@ -219,7 +222,7 @@ const Page = () => {
                     ))}
                   </CommandGroup>
                 </CommandList>
-              </Command>
+              </Command> */}
             </div>
 
             {/* Year Selection */}
