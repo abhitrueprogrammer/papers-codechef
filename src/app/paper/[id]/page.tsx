@@ -16,21 +16,37 @@ export async function generateMetadata({
   const paper: PaperResponse | null = await fetchPaperID(params.id);
 
   if (paper) {
-    const subject = paper.subject;
     return {
-      title: `Papers | ${subject}`,
+      metadataBase: new URL("https://papers.codechefvit.com/"),
+      title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
+      description:
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
+      icons: [{ rel: "icon", url: "/codechef_logo.svg" }],
       openGraph: {
-        title: "Papers by CodeChef-VIT | Exam Resources",
+        title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
         images: [{ url: "/papers.png" }],
         url: "https://papers.codechefvit.com/",
         type: "website",
         description:
-          "Discover previous year question papers created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.",
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
         siteName: "Papers by CodeChef-VIT",
       },
       twitter: {
-        title: `Papers | ${subject}`,
+        card: "summary_large_image",
+        title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
+        description:
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
+        images: [{ url: "/papers.png" }],
       },
+      applicationName: "Papers by CodeChef-VIT",
+      keywords: [
+        paper.subject,
+        paper.exam,
+        paper.slot,
+        paper.year
+      ],
+      robots: "index, follow",
+    
     };
   }
 
