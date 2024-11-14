@@ -20,7 +20,13 @@ export async function generateMetadata({
     return {
       title: `Papers | ${subject}`,
       openGraph: {
-        title: `Papers | ${subject}`,
+        title: "Papers by CodeChef-VIT | Exam Resources",
+        images: [{ url: "/papers.png" }],
+        url: "https://papers.codechefvit.com/",
+        type: "website",
+        description:
+          "Discover previous year question papers created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.",
+        siteName: "Papers by CodeChef-VIT",
       },
       twitter: {
         title: `Papers | ${subject}`,
@@ -39,7 +45,6 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
       return paper;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-
         const errorResponse = err.response as AxiosResponse<ErrorResponse>;
         if (errorResponse?.status === 400 || errorResponse?.status === 404) {
           redirect("/");
@@ -69,7 +74,7 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
             {paper.subject} {paper.exam} {paper.slot} {paper.year}
           </h1>
           <center>
-            <PdfViewer url={paper.finalUrl}></PdfViewer> 
+            <PdfViewer url={paper.finalUrl}></PdfViewer>
           </center>
         </>
       )}
