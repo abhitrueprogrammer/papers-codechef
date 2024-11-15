@@ -245,5 +245,20 @@ const slots: string[] = [
   "F2",
   "G2",
 ];
+function getYears(startYear: number) {
+  const currentYear = new Date().getFullYear();  // Get the current year
+  const years = [];
 
-export { slots, courses };
+  // Loop from startYear to currentYear and add each year to the array
+  for (let year = startYear; year <= currentYear; year++) {
+      years.push(String(year));
+  }
+
+  return years;
+}
+
+// Example usage:
+const startYear = 2011;
+const years = getYears(startYear);
+
+export { slots, courses, years };

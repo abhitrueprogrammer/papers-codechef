@@ -16,15 +16,37 @@ export async function generateMetadata({
   const paper: PaperResponse | null = await fetchPaperID(params.id);
 
   if (paper) {
-    const subject = paper.subject;
     return {
-      title: `Papers | ${subject}`,
+      metadataBase: new URL("https://papers.codechefvit.com/"),
+      title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
+      description:
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
+      icons: [{ rel: "icon", url: "/codechef_logo.svg" }],
       openGraph: {
-        title: `Papers | ${subject}`,
+        title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
+        images: [{ url: "/papers.png" }],
+        url: "https://papers.codechefvit.com/",
+        type: "website",
+        description:
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
+        siteName: "Papers by CodeChef-VIT",
       },
       twitter: {
-        title: `Papers | ${subject}`,
+        card: "summary_large_image",
+        title: `Papers| ${paper.subject}| ${paper.exam} |${paper.slot}`,
+        description:
+        `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
+        images: [{ url: "/papers.png" }],
       },
+      applicationName: "Papers by CodeChef-VIT",
+      keywords: [
+        paper.subject,
+        paper.exam,
+        paper.slot,
+        paper.year
+      ],
+      robots: "index, follow",
+    
     };
   }
 
@@ -39,7 +61,6 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
       return paper;
     } catch (err) {
       if (axios.isAxiosError(err)) {
-
         const errorResponse = err.response as AxiosResponse<ErrorResponse>;
         if (errorResponse?.status === 400 || errorResponse?.status === 404) {
           redirect("/");
@@ -69,7 +90,7 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
             {paper.subject} {paper.exam} {paper.slot} {paper.year}
           </h1>
           <center>
-            <PdfViewer url={paper.finalUrl}></PdfViewer> 
+            <PdfViewer url={paper.finalUrl}></PdfViewer>
           </center>
         </>
       )}

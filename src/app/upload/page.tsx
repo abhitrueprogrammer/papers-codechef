@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
 import axios from "axios";
-import { slots, courses } from "./select_options";
 import toast, { Toaster } from "react-hot-toast";
 import { handleAPIError } from "../../util/error";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,9 @@ import {
 } from "@/components/ui/command";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import {PostPDFToCloudinary} from "@/interface"
+import { PostPDFToCloudinary } from "@/interface";
+import { courses, slots, years } from "@/components/select_options";
+import SearchBar from "@/components/searchbarSubjectList";
 const Page = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -95,8 +96,7 @@ const Page = () => {
     let isPdf = false;
     if (files[0]?.type === "application/pdf") {
       isPdf = true;
-      if(files.length > 1)
-      {
+      if (files.length > 1) {
         toast.error(`PDFs should be uploaded seperately`);
         return;
       }
@@ -136,8 +136,6 @@ const Page = () => {
         error: (err: ApiError) => err.message,
       },
     );
-
-
   };
 
   const handleSubjectSelect = (value: string) => {
@@ -197,15 +195,17 @@ const Page = () => {
             {/* Subject Selection */}
             <div>
               <label>Subject:</label>
-              <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+              {/* setSubject */}
+              <SearchBar setSubject={setSubject}></SearchBar>
+              {/* <Command className="rounded-lg border shadow-md md:min-w-[450px]">
                 <CommandInput
                   value={inputValue}
                   onChangeCapture={(e) =>
                     setInputValue((e.target as HTMLInputElement).value)
                   }
                   placeholder="Type a subject or search..."
-                />
-                <CommandList className="h-[100px]">
+                /> */}
+              {/* <CommandList className="h-[100px]">
                   <CommandEmpty>No results found.</CommandEmpty>
 
                   <CommandGroup heading="Subjects">
@@ -219,7 +219,7 @@ const Page = () => {
                     ))}
                   </CommandGroup>
                 </CommandList>
-              </Command>
+              </Command> */}
             </div>
 
             {/* Year Selection */}
@@ -232,21 +232,14 @@ const Page = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Years</SelectLabel>
-                    {(() => {
-                      const options = [];
-                      for (
-                        let i = 2011;
-                        i <= Number(new Date().getFullYear());
-                        i++
-                      ) {
-                        options.push(
-                          <SelectItem key={i} value={String(i)}>
-                            {i}
-                          </SelectItem>,
-                        );
-                      }
-                      return options;
-                    })()}
+                    {years.map((year)=>
+                    {
+                      return (<SelectItem key={year} value={String(year)}>
+                        {year}
+                      </SelectItem>)
+
+                    }
+                    )}
                   </SelectGroup>
                 </SelectContent>
               </Select>
