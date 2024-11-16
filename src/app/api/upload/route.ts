@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
-
+import {courses, slots, years} from "@/components/select_options"
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import {
@@ -29,7 +29,14 @@ export async function POST(req: Request) {
     const year = formData.get("year") as string;
     const exam = formData.get("exam") as string;
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
-
+    if(!(courses.includes(subject) && slots.includes(slot) && years.includes(year)))
+    {
+      return NextResponse.json(
+        { message: "Bad Request" },
+  
+        { status: 400 },
+      );
+    }
     await connectToDatabase();
     let finalUrl: string | undefined = "";
     let public_id_cloudinary: string | undefined = "";
