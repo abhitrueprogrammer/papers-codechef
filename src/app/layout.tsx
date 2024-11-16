@@ -30,6 +30,7 @@ export const metadata: Metadata = {
   keywords: [
     "CodeChef",
     "VIT",
+    "VIT Papers",
     "Vellore Institute of Technology",
     "CodeChef-VIT",
     "Papers",
