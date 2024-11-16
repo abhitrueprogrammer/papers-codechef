@@ -3,9 +3,9 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import PdfViewer from "@/components/pdfViewer";
 import Loader from "@/components/ui/loader";
-import { ErrorResponse, PaperResponse } from "@/interface";
-import axios, { AxiosResponse } from "axios";
-import { Metadata } from "next";
+import { type ErrorResponse, type PaperResponse } from "@/interface";
+import axios, { type AxiosResponse } from "axios";
+import { type Metadata } from "next";
 import { redirect } from "next/navigation"; // Import redirect
 
 export async function generateMetadata({
