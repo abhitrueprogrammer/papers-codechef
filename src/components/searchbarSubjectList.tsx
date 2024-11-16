@@ -6,7 +6,7 @@ import debounce from "debounce";
 import { Input } from "@/components/ui/input";
 import { courses } from "./select_options";
 
-function searchbarSubjectList({
+function SearchbarSubjectList({
   setSubject,
 }: {
   setSubject: React.Dispatch<React.SetStateAction<string>>;
@@ -131,4 +131,4 @@ function searchbarSubjectList({
   );
 }
 
-export default searchbarSubjectList;
+export default SearchbarSubjectList;
