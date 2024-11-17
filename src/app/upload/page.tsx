@@ -46,12 +46,26 @@ const Page = () => {
     ];
     const files = fileInputRef.current?.files as FileList | null;
 
-    if (!slot || !subject || !exam || !year || !files || files.length === 0) {
-      toast.error("All fields are required.");
+    if (!slot) {
+      toast.error("Slot is required");
       return;
     }
-
-    if (files.length > 5) {
+    if (!subject) {
+      toast.error("Subject is required");
+      return;
+    }
+    if (!exam) {
+      toast.error("Exam is required");
+      return;
+    }
+    if (!year) {
+      toast.error("Year is required");
+      return;
+    }
+    if (!files || files.length === 0) {
+      toast.error("No files selected");
+      return;
+    } else if (files.length > 5) {
       toast.error("More than 5 files selected");
       return;
     }
@@ -99,7 +113,10 @@ const Page = () => {
     void toast.promise(
       (async () => {
         try {
-          await axios.post("/api/upload", formData);
+          const response = await axios.post<PostPDFToCloudinary>(
+            "/api/upload",
+            formData,
+          );
 
           setSlot("");
           setSubject("");
