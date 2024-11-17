@@ -85,7 +85,9 @@
     "prettier-plugin-tailwindcss": "^0.5.14",
     "raw-loader": "^4.0.2",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
   },
   "ct3aMetadata": {
     "initVersion": "7.34.0"

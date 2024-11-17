@@ -23,9 +23,9 @@ import Footer from "@/components/Footer";
 import { PostPDFToCloudinary } from "@/interface";
 import { courses, slots, years } from "@/components/select_options";
 import SearchBar from "@/components/searchbarSubjectList";
+import Dropzone from "react-dropzone";
 
 const Page = () => {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [slot, setSlot] = useState("");
@@ -33,6 +33,8 @@ const Page = () => {
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isSubjectCommandOpen, setIsSubjectCommandOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [resetSearch, setResetSearch] = useState(false);
 
@@ -44,6 +46,7 @@ const Page = () => {
       "image/png",
       "image/gif",
     ];
+
     const files = fileInputRef.current?.files as FileList | null;
 
     if (!slot) {
@@ -138,7 +141,7 @@ const Page = () => {
       {
         loading: "Uploading papers...",
         success: "Papers uploaded",
-        error: (err:ApiError) => err.message,
+        error: (err: ApiError) => err.message,
       },
     );
   };
@@ -217,33 +220,38 @@ const Page = () => {
               </Select>
             </div>
 
-            <div className="m-4 flex items-center">
-              <Input
-                required
-                type="file"
-                accept="image/*,.pdf"
-                multiple
-                ref={fileInputRef}
-                className="hidden"
-                onChange={(e) => {
-                  const filesArray = Array.from(e.target.files ?? []);
-                  setFiles(filesArray);
+            <div>
+              <Dropzone
+                onDrop={(acceptedFiles) => {
+                  console.log(acceptedFiles);
+                  setFiles(acceptedFiles);
                 }}
-              />
-              <div>
-                <Button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="rounded-md px-4 py-2 transition"
-                >
-                  Choose files
-                </Button>
-                <div
-                  className={`ml-2 mt-1 text-xs ${files.length === 0 ? "text-red-500" : ""}`}
-                >
-                  {files.length} files selected
-                </div>
-              </div>
+                accept={{ "image/*": [], "application/pdf": [] }}
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section className=" my-2 -mr-2 rounded-2xl border-2 border-dashed p-8 text-center">
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <p>
+                        Drag &apos;n&apos; drop some files here, or{" "}
+                        <span className="text-[#6D28D9]">click</span> to select
+                        files
+                      </p>
+                    </div>
+                    <div
+                      className={`mt-2 text-xs ${
+                        files?.length === 0 ? "text-red-500" : "text-gray-600"
+                      }`}
+                    >
+                      {files?.length || 0} files selected
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
+              <label className="mx-2 -mr-2 block text-center text-xs font-medium text-gray-700">
+                Only Images and PDFs are allowed
+                <sup className="text-red-500">*</sup>
+              </label>
             </div>
           </div>
         </fieldset>
