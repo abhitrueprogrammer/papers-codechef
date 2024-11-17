@@ -1,3 +1,4 @@
+"use client";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Search } from "lucide-react";
 import debounce from "debounce";
@@ -82,8 +83,8 @@ function SearchbarSubjectList({
   }, [resetSearch]);
 
   return (
-    <div className="mx-4 md:mx-0">
-      <form className=" my-2 ml-2 w-full max-w-xl">
+    <div className="mx-0">
+      <form className="my-2 ml-2 w-full max-w-xl">
         <div className="relative">
           <Input
             type="text"
