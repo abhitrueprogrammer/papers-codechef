@@ -84,6 +84,7 @@ function SearchbarSubjectList({
             value={searchText}
             onChange={handleSearchChange}
             placeholder="Search for subject..."
+            className=" pr-10"
             // className={`text-md w-fuyll rounded-full border bg-[#434dba] px-4 py-6 pr-10 font-sans tracking-wider text-white shadow-sm placeholder:text-white focus:outline-none focus:ring-2 ${loading ? "opacity-70" : ""}`}
           />
           <button
