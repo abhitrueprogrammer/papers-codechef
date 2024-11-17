@@ -113,7 +113,10 @@ const Page = () => {
     void toast.promise(
       (async () => {
         try {
-          const response = await axios.post("/api/upload", formData);
+          const response = await axios.post<PostPDFToCloudinary>(
+            "/api/upload",
+            formData,
+          );
 
           setSlot("");
           setSubject("");
