@@ -90,9 +90,9 @@ export default function Footer() {
             </Button>
           </Link>
         </div>
-        <p className="hidden text-center text-xl lg:block">
+        {/* <p className="hidden text-center text-xl lg:block">
           Made with 💜 By Codechef-VIT
-        </p>
+        </p> */}
       </div>
       <p className="block text-xl lg:hidden">Made with 💜 By Codechef-VIT</p>
     </div>

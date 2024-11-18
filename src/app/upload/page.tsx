@@ -1,33 +1,27 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { handleAPIError } from "../../util/error";
-import { useRouter } from "next/navigation";
-import { type ApiError } from "next/dist/server/api-utils";
 import { Button } from "@/components/ui/button";
-import { CldUploadWidget } from "next-cloudinary";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-} from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { PostPDFToCloudinary } from "@/interface";
-import { courses, slots, years } from "@/components/select_options";
+import { type PostPDFToCloudinary } from "@/interface";
+import { slots, years } from "@/components/select_options";
 import SearchBar from "@/components/searchbarSubjectList";
+import Dropzone from "react-dropzone";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Page = () => {
-  const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const [slot, setSlot] = useState("");
   const [subject, setSubject] = useState("");
   const [exam, setExam] = useState("");
@@ -44,7 +38,6 @@ const Page = () => {
       "image/png",
       "image/gif",
     ];
-    const files = fileInputRef.current?.files as FileList | null;
 
     if (!slot) {
       toast.error("Slot is required");
@@ -62,44 +55,39 @@ const Page = () => {
       toast.error("Year is required");
       return;
     }
+
     if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
-    } else if (files.length > 5) {
+    }
+
+    if (files.length > 5) {
       toast.error("More than 5 files selected");
       return;
     }
 
-    if (!Array.from(files).every((file) => file.type === files[0]?.type)) {
-      toast.error(`All files MUST be of the same type`);
+    // File validations
+    const invalidFiles = files.filter(
+      (file) =>
+        file.size > maxFileSize || !allowedFileTypes.includes(file.type),
+    );
+
+    if (invalidFiles.length > 0) {
+      toast.error(
+        `Some files are invalid. Ensure each file is below 5MB and of an allowed type (PDF, JPEG, PNG, GIF).`,
+      );
       return;
     }
 
-    for (const file of files) {
-      if (file.size > maxFileSize) {
-        toast.error(`File ${file.name} is more than 5MB`);
-        return;
-      }
-      if (!allowedFileTypes.includes(file.type)) {
-        toast.error(
-          `File type of ${file.name} is not allowed. Only PDFs and images are accepted.`,
-        );
-        return;
-      }
+    const isPdf = files.length === 1 && files[0]?.type === "application/pdf";
+    if (isPdf && files.length > 1) {
+      toast.error("PDFs must be uploaded separately");
+      return;
     }
 
-    let isPdf = false;
-    if (files[0]?.type === "application/pdf") {
-      isPdf = true;
-      if (files.length > 1) {
-        toast.error(`PDFs should be uploaded separately`);
-        return;
-      }
-    }
-
-    const Arrfiles = Array.from(files);
+    // Prepare FormData
     const formData = new FormData();
-    Arrfiles.forEach((file) => {
+    files.forEach((file) => {
       formData.append("files", file);
     });
     formData.append("subject", subject);
@@ -110,37 +98,28 @@ const Page = () => {
 
     setIsUploading(true);
 
-    void toast.promise(
-      (async () => {
-        try {
-          const response = await axios.post<PostPDFToCloudinary>(
-            "/api/upload",
-            formData,
-          );
+    try {
+      await toast.promise(
+        axios.post<PostPDFToCloudinary>("/api/upload", formData),
+        {
+          loading: "Uploading papers...",
+          success: "Papers uploaded successfully!",
+          error: "Failed to upload papers. Please try again.",
+        },
+      );
 
-          setSlot("");
-          setSubject("");
-          setExam("");
-          setYear("");
-          setFiles([]);
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-
-          setResetSearch(true);
-          setTimeout(() => setResetSearch(false), 100);
-        } catch (error) {
-          handleAPIError(error);
-        } finally {
-          setIsUploading(false);
-        }
-      })(),
-      {
-        loading: "Uploading papers...",
-        success: "Papers uploaded",
-        error: (err:ApiError) => err.message,
-      },
-    );
+      setSlot("");
+      setSubject("");
+      setExam("");
+      setYear("");
+      setFiles([]);
+      setResetSearch(true);
+      setTimeout(() => setResetSearch(false), 100);
+    } catch (error) {
+      handleAPIError(error);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -217,33 +196,36 @@ const Page = () => {
               </Select>
             </div>
 
-            <div className="m-4 flex items-center">
-              <Input
-                required
-                type="file"
-                accept="image/*,.pdf"
-                multiple
-                ref={fileInputRef}
-                className="hidden"
-                onChange={(e) => {
-                  const filesArray = Array.from(e.target.files ?? []);
-                  setFiles(filesArray);
-                }}
-              />
-              <div>
-                <Button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="rounded-md px-4 py-2 transition"
-                >
-                  Choose files
-                </Button>
-                <div
-                  className={`ml-2 mt-1 text-xs ${files.length === 0 ? "text-red-500" : ""}`}
-                >
-                  {files.length} files selected
-                </div>
-              </div>
+            {/* File Dropzone */}
+            <div>
+              <Dropzone
+                onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
+                accept={{ "image/*": [], "application/pdf": [] }}
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section className="my-2 -mr-2 rounded-2xl border-2 border-dashed p-8 text-center">
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <p>
+                        Drag &apos;n&apos; drop some files here, or{" "}
+                        <span className="text-[#6D28D9]">click</span> to select
+                        files
+                      </p>
+                    </div>
+                    <div
+                      className={`mt-2 text-xs ${
+                        files?.length === 0 ? "text-red-500" : "text-gray-600"
+                      }`}
+                    >
+                      {files?.length || 0} files selected
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
+              <label className="mx-2 -mr-2 block text-center text-xs font-medium text-gray-700">
+                Only Images and PDFs are allowed
+                <sup className="text-red-500">*</sup>
+              </label>
             </div>
           </div>
         </fieldset>
