@@ -32,6 +32,7 @@ function SearchbarSubjectList({
         if (filteredSubjects.length === 0) {
           setError("Subject not found");
           setSuggestions([]);
+          setLoading(false);
           return;
         }
         setSuggestions(filteredSubjects);
