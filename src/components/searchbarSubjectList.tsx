@@ -2,8 +2,9 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Search } from "lucide-react";
 import debounce from "debounce";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
-import { courses } from "./select_options";
+import { type ICourses } from "@/interface";
 
 function SearchbarSubjectList({
   setSubject,
@@ -16,10 +17,28 @@ function SearchbarSubjectList({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [courses, setCourses] = useState<string[]>([]);
   const suggestionsRef = useRef<HTMLUListElement | null>(null);
 
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get<ICourses[]>("/api/course-list");
+      const fetchedCourses = response.data.map((course: { name: string }) => course.name);
+      setCourses(fetchedCourses);
+      setLoading(false);
+    } catch (err) {
+      setError("Failed to fetch courses");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchCourses();
+  }, []);
+
   const debouncedSearch = useCallback(
-    debounce(async (text: string) => {
+    debounce((text: string) => {
       if (text.length > 0) {
         setLoading(true);
         const escapedSearchText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -32,6 +51,7 @@ function SearchbarSubjectList({
         if (filteredSubjects.length === 0) {
           setError("Subject not found");
           setSuggestions([]);
+          setLoading(false);
           return;
         }
         setSuggestions(filteredSubjects);
@@ -41,7 +61,7 @@ function SearchbarSubjectList({
         setSuggestions([]);
       }
     }, 500),
-    [],
+    [courses]
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +70,7 @@ function SearchbarSubjectList({
     if (text.length <= 0) {
       setSuggestions([]);
     }
-    void debouncedSearch(text);
+    debouncedSearch(text);
   };
 
   const handleSelectSuggestion = (suggestion: string) => {
