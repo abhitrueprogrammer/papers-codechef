@@ -73,6 +73,10 @@ export interface IPaper{
   exam: "CAT-1" | "CAT-2" | "FAT";
   isSelected: boolean;
 }
+
+export interface ICourses{
+  name: string;
+}
 export interface IAdminUpload{
   formData:  FormData;
   files: File[];
