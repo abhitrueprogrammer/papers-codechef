@@ -1,13 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
-import {courses, slots, years} from "@/components/select_options"
+import { slots, years } from "@/components/select_options";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
-import {
-
-  CloudinaryUploadResult,
-} from "@/interface";
-import {PaperAdmin} from "@/db/papers";
+import { type ICourses, type CloudinaryUploadResult } from "@/interface";
+import { PaperAdmin } from "@/db/papers";
+import axios from "axios";
 // TODO: REMOVE THUMBNAIL FROM admin-buffer DB
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -29,14 +27,19 @@ export async function POST(req: Request) {
     const year = formData.get("year") as string;
     const exam = formData.get("exam") as string;
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
-    if(!(courses.includes(subject) && slots.includes(slot) && years.includes(year)))
-    {
-      return NextResponse.json(
-        { message: "Bad Request" },
-  
-        { status: 400 },
-      );
+
+    const { data } = await axios.get<ICourses[]>(`${process.env.SERVER_URL}/api/course-list`);
+    const courses = data.map((course: { name: string }) => course.name);
+    if (
+      !(
+        courses.includes(subject) &&
+        slots.includes(slot) &&
+        years.includes(year)
+      )
+    ) {
+      return NextResponse.json({ message: "Bad Request" }, { status: 400 });
     }
+
     await connectToDatabase();
     let finalUrl: string | undefined = "";
     let public_id_cloudinary: string | undefined = "";
@@ -53,9 +56,12 @@ export async function POST(req: Request) {
         if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
           return;
         }
-        
+
         const mergedPdfBytes = await CreatePDF(files);
-        [public_id_cloudinary, finalUrl]  = await uploadPDFFile(mergedPdfBytes, uploadPreset);
+        [public_id_cloudinary, finalUrl] = await uploadPDFFile(
+          mergedPdfBytes,
+          uploadPreset,
+        );
       } catch (error) {
         return NextResponse.json(
           { error: "Failed to process PDF" },
@@ -63,8 +69,12 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      [public_id_cloudinary, finalUrl] = await uploadPDFFile(files[0]!, uploadPreset);
+      [public_id_cloudinary, finalUrl] = await uploadPDFFile(
+        files[0]!,
+        uploadPreset,
+      );
     }
+
     const thumbnailResponse = cloudinary.v2.image(finalUrl!, {
       format: "jpg",
     });
@@ -73,7 +83,6 @@ export async function POST(req: Request) {
       .replace("upload", "upload/w_400,h_400,c_fill")
       .replace(/<img src='|'\s*\/>/g, "");
     const paper = new PaperAdmin({
-
       public_id_cloudinary,
       finalUrl,
       thumbnailUrl,
@@ -91,35 +100,39 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json(
       { message: "Failed to upload papers", error },
-
       { status: 500 },
     );
   }
 }
 
-
 async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
   let bytes;
-  if(file instanceof File) //for pdf
-  {
+  if (file instanceof File) {
     bytes = await file.arrayBuffer();
-  }
-  else // for images that are pdf
-  {
+  } else {
     bytes = file;
   }
-  return uploadFile(bytes, uploadPreset, "application/pdf")
+  return uploadFile(bytes, uploadPreset, "application/pdf");
 }
-  async function uploadFile(bytes: ArrayBuffer, uploadPreset: string, fileType: string) {
+
+async function uploadFile(
+  bytes: ArrayBuffer,
+  uploadPreset: string,
+  fileType: string,
+) {
   try {
     const buffer = Buffer.from(bytes);
     const dataUrl = `data:${fileType};base64,${buffer.toString("base64")}`;
-    const uploadResult = await cloudinary.v2.uploader.unsigned_upload(dataUrl, uploadPreset) as CloudinaryUploadResult;
-    return [uploadResult.public_id, uploadResult.secure_url ];
+    const uploadResult = (await cloudinary.v2.uploader.unsigned_upload(
+      dataUrl,
+      uploadPreset,
+    )) as CloudinaryUploadResult;
+    return [uploadResult.public_id, uploadResult.secure_url];
   } catch (e) {
-    throw (e);
+    throw e;
   }
 }
+
 async function CreatePDF(files: File[]) {
   const pdfDoc = await PDFDocument.create();
 
