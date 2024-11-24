@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GeistSans } from "geist/font/sans";
 import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://papers.codechefvit.com/"),
@@ -90,7 +91,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-    <meta name="google-site-verification" content="SjVFuH8GzIj3Ooh2JcWufBoSMWTzo77TACHomonCKVs" />
+      <meta
+        name="google-site-verification"
+        content="SjVFuH8GzIj3Ooh2JcWufBoSMWTzo77TACHomonCKVs"
+      />
       <body>
         <ThemeProvider
           attribute="class"
@@ -100,6 +104,7 @@ export default function RootLayout({
         >
           <Toaster position="top-right" reverseOrder={false} />
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
