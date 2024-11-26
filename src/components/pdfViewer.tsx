@@ -42,8 +42,8 @@ export default function PdfViewer({ url }: PdfViewerProps) {
   );
 
   return (
-    <div >
-      <div className="flex w-[95%] items-center justify-between bg-gray-900 px-4 py-4 md:w-[80%]">
+    <div>
+      <div className="flex w-[95%] items-center justify-between bg-violet-400 dark:bg-gray-900 px-4 py-4 md:w-[80%]">
         <div className="flex gap-x-4">
           <ZoomOut>
             {(props: RenderZoomOutProps) => (
