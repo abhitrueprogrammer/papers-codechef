@@ -2,8 +2,8 @@ import "@/styles/globals.css";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GeistSans } from "geist/font/sans";
+import Script from "next/script";
 import { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://papers.codechefvit.com/"),
@@ -95,6 +95,18 @@ export default function RootLayout({
         name="google-site-verification"
         content="SjVFuH8GzIj3Ooh2JcWufBoSMWTzo77TACHomonCKVs"
       />
+      <head>
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-J5CD036GJP"
+        ></Script>
+        <Script id="google-analytics">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-J5CD036GJP');`}
+        </Script>
+      </head>
       <body>
         <ThemeProvider
           attribute="class"
@@ -104,7 +116,6 @@ export default function RootLayout({
         >
           <Toaster position="top-right" reverseOrder={false} />
           {children}
-          <Analytics />
         </ThemeProvider>
       </body>
     </html>
