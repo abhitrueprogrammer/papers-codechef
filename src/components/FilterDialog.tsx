@@ -60,6 +60,7 @@ export const FilterDialog = ({
 
   const handleFilterClick = () => {
     onApplyFilters(selectedExams, selectedSlots, selectedYears);
+    setOpen(false); 
   };
 
   const handleResetClick = () => {
