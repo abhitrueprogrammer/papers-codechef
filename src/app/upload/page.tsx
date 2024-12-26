@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import { slots, years } from "@/components/select_options";
+import { slots, years, campuses, semesters, exams } from "@/components/select_options";
 import SearchBar from "@/components/searchbarSubjectList";
 import Dropzone from "react-dropzone";
 import {
@@ -26,6 +26,9 @@ const Page = () => {
   const [subject, setSubject] = useState("");
   const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
+  const [campus, setCampus] = useState("");
+  const [semester, setSemester] = useState("");
+
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [resetSearch, setResetSearch] = useState(false);
@@ -55,7 +58,14 @@ const Page = () => {
       toast.error("Year is required");
       return;
     }
-
+    if (!campus) {
+      toast.error("Campus is required");
+      return;
+    }
+    if (!semester) {
+      toast.error("Semester is required");
+      return;
+    }
     if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
@@ -94,6 +104,9 @@ const Page = () => {
     formData.append("slot", slot);
     formData.append("year", year);
     formData.append("exam", exam);
+    formData.append("semester", semester);
+    formData.append("campus", campus);
+
     formData.append("isPdf", String(isPdf));
 
     setIsUploading(true);
@@ -162,9 +175,11 @@ const Page = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Exams</SelectLabel>
-                    <SelectItem value="CAT-1">CAT-1</SelectItem>
-                    <SelectItem value="CAT-2">CAT-2</SelectItem>
-                    <SelectItem value="FAT">FAT</SelectItem>
+                    {exams.map((exam) => (
+                      <SelectItem key={exam} value={String(exam)}>
+                        {exam}
+                      </SelectItem>
+                    ))}{" "}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -189,6 +204,44 @@ const Page = () => {
                     {years.map((year) => (
                       <SelectItem key={year} value={String(year)}>
                         {year}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Selection */}
+            <div>
+              <label>Campus Selection:</label>
+              <Select value={campus} onValueChange={setCampus}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select campus" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Years</SelectLabel>
+                    {campuses.map((campus) => (
+                      <SelectItem key={campus} value={String(campus)}>
+                        {campus}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label>Semester Selection:</label>
+              <Select value={semester} onValueChange={setSemester}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Semester</SelectLabel>
+                    {semesters.map((semester) => (
+                      <SelectItem key={semester} value={String(semester)}>
+                        {semester}
                       </SelectItem>
                     ))}
                   </SelectGroup>

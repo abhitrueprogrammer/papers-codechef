@@ -1,4 +1,4 @@
-import { type Paper } from "@/interface";
+import { type IPaper } from "@/interface";
 import Image from "next/image";
 import {
   extractBracketContent,
@@ -7,7 +7,7 @@ import {
 import { capsule } from "@/util/utils";
 import Link from "next/link";
 
-const PreviewCard = ({ paper }: { paper: Paper }) => {
+const PreviewCard = ({ paper }: { paper: IPaper }) => {
   if (paper.finalUrl.startsWith("http://")) {
     paper.finalUrl = paper.finalUrl.replace("http://", "https://");
   }
