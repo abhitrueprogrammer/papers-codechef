@@ -9,6 +9,7 @@ import { extractBracketContent } from "@/util/utils";
 import { useRouter } from "next/navigation";
 import SearchBar from "./searchbar";
 import Loader from "./ui/loader";
+import { campuses, semesters } from "./select_options";
 
 const CatalogueContent = () => {
   const searchParams = useSearchParams();
@@ -17,6 +18,9 @@ const CatalogueContent = () => {
   const exams = searchParams.get("exams")?.split(",");
   const slots = searchParams.get("slots")?.split(",");
   const years = searchParams.get("years")?.split(",");
+  const semesters = searchParams.get("semesters")?.split(",");
+  const campuses = searchParams.get("campuses")?.split(",");
+
   const [selectedExams, setSelectedExams] = useState<string[] | undefined>(
     exams,
   );
@@ -171,6 +175,8 @@ const CatalogueContent = () => {
               initialExams={exams}
               initialSlots={slots}
               initialYears={years}
+              initialCampuses={campuses}
+              initialSemesters={semesters}
               onReset={handleResetFilters}
               onApplyFilters={handleApplyFilters}
             />

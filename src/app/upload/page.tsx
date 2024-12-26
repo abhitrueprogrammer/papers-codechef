@@ -58,7 +58,14 @@ const Page = () => {
       toast.error("Year is required");
       return;
     }
-
+    if (!campus) {
+      toast.error("Campus is required");
+      return;
+    }
+    if (!semester) {
+      toast.error("Semester is required");
+      return;
+    }
     if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
@@ -97,6 +104,9 @@ const Page = () => {
     formData.append("slot", slot);
     formData.append("year", year);
     formData.append("exam", exam);
+    formData.append("semester", semester);
+    formData.append("campus", campus);
+
     formData.append("isPdf", String(isPdf));
 
     setIsUploading(true);
