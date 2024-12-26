@@ -8,10 +8,9 @@ const adminSchema = new Schema<IAdminPaper>({
   subject: { type: String, required: true, index: true },
   slot: { type: String, required: true },
   year: { type: String, required: true },
-  exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT"], required: true },
+  exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT","Model CAT-1" , "Model CAT-2" , "Model FAT"], required: true },
   semester:{ type: String, enum: ["Fall" , "Winter" , "Summer", "Weekend"], required: true },
   campus:{ type: String, enum: ["Vellore" ,"Chennai" , "Andhra Pradesh" ,"Bhopal" , "Bangalore" , "Mauritius"], required: true },
-  modelPaper: {type: Boolean, default: false},
   answerKeyIncluded: { type: Boolean, default: false },
   isSelected: { type: Boolean, default: false },
 });
@@ -22,10 +21,9 @@ const paperSchema = new Schema<IPaper>({
   subject: { type: String, required: true, index: true },
   slot: { type: String, required: true },
   year: { type: String, required: true },
-  exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT"], required: true },
+  exam: { type: String, enum: ["CAT-1", "CAT-2", "FAT","Model CAT-1" , "Model CAT-2" , "Model FAT"], required: true },
   semester:{ type: String, enum: ["Fall" , "Winter" , "Summer", "Weekend"], required: true },
   campus:{ type: String, enum: ["Vellore" ,"Chennai" , "Andhra Pradesh" ,"Bhopal" , "Bangalore" , "Mauritius"], required: true },
-  modelPaper: {type: Boolean, default: false},
   answerKeyIncluded: { type: Boolean, default: false },
 });
 

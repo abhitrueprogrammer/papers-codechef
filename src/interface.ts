@@ -69,7 +69,7 @@ export interface IAdminPaper {
   subject: string;
   slot: string;
   year: string;
-  exam: "CAT-1" | "CAT-2" | "FAT";
+  exam: "CAT-1" | "CAT-2" | "FAT" | "Model";
   semester: "Fall" | "Winter" | "Summer" | "Weekend";
   campus:
     | "Vellore"
@@ -78,7 +78,6 @@ export interface IAdminPaper {
     | "Bhopal"
     | "Bangalore"
     | "Mauritius";
-  modelPaper?: boolean;
   answerKeyIncluded?: boolean;
   isSelected?: boolean;
 }
@@ -130,7 +129,7 @@ export interface DecryptedLoginResponse {
 
 export interface IPaper {
   _id: string;
-  exam: string;
+  exam: "CAT-1" | "CAT-2" | "FAT" | "Model CAT-1" | "Model CAT-2" | "Model FAT";
   finalUrl: string;
   thumbnailUrl: string;
   semester: "Fall" | "Winter" | "Summer" | "Weekend";
@@ -144,7 +143,6 @@ export interface IPaper {
   slot: string;
   subject: string;
   year: string;
-  modelPaper?: boolean;
   answerKeyIncluded?: boolean;
 }
 

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import { slots, years, campuses } from "@/components/select_options";
+import { slots, years, campuses, semesters, exams } from "@/components/select_options";
 import SearchBar from "@/components/searchbarSubjectList";
 import Dropzone from "react-dropzone";
 import {
@@ -25,9 +25,9 @@ const Page = () => {
   const [slot, setSlot] = useState("");
   const [subject, setSubject] = useState("");
   const [exam, setExam] = useState("");
-  const [year, setYear] = useState(""); 
-  const [campus, setCampus] = useState(""); 
-  const [semester, setSemester] = useState(""); 
+  const [year, setYear] = useState("");
+  const [campus, setCampus] = useState("");
+  const [semester, setSemester] = useState("");
 
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -165,9 +165,11 @@ const Page = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Exams</SelectLabel>
-                    <SelectItem value="CAT-1">CAT-1</SelectItem>
-                    <SelectItem value="CAT-2">CAT-2</SelectItem>
-                    <SelectItem value="FAT">FAT</SelectItem>
+                    {exams.map((exam) => (
+                      <SelectItem key={exam} value={String(exam)}>
+                        {exam}
+                      </SelectItem>
+                    ))}{" "}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -226,10 +228,10 @@ const Page = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Years</SelectLabel>
-                    {campuses.map((campus) => (
-                      <SelectItem key={campus} value={String(campus)}>
-                        {campus}
+                    <SelectLabel>Semester</SelectLabel>
+                    {semesters.map((semester) => (
+                      <SelectItem key={semester} value={String(semester)}>
+                        {semester}
                       </SelectItem>
                     ))}
                   </SelectGroup>
