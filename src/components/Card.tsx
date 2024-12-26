@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { type Paper } from "@/interface";
+import { type IPaper } from "@/interface";
 import Image from "next/image";
 import { Eye, Download } from "lucide-react";
 import {
+  capsuleGreen,
   extractBracketContent,
   extractWithoutBracketContent,
 } from "@/util/utils";
@@ -16,8 +17,8 @@ const Card = ({
   onSelect,
   isSelected,
 }: {
-  paper: Paper;
-  onSelect: (paper: Paper, isSelected: boolean) => void;
+  paper: IPaper;
+  onSelect: (paper: IPaper, isSelected: boolean) => void;
   isSelected: boolean;
 }) => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const Card = ({
     setChecked(isSelected);
   }, [isSelected]);
 
-  const handleDownload = async (paper: Paper) => {
+  const handleDownload = async (paper: IPaper) => {
     const extension = paper.finalUrl.split(".").pop();
     const fileName = `${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}.${extension}`;
     await downloadFile(paper.finalUrl, fileName);
@@ -68,17 +69,21 @@ const Card = ({
         />
       </Link>
       
-      <div className="justify-center space-y-2 h-28">
+      <div className="justify-center space-y-2 h-30">
         <div className="text-sm font-sans font-medium">
           {extractBracketContent(paper.subject)}
         </div>
         <div className="text-base font-sans font-semibold">
           {extractWithoutBracketContent(paper.subject)}
         </div>
-        <div className="flex gap-2 py-2">
+        <div className="flex flex-wrap  gap-2 py-2">
           {capsule(paper.exam)}
           {capsule(paper.slot)}
           {capsule(paper.year)}
+          {capsule(paper.campus)}
+          {capsule(paper.semester)}
+          {paper.answerKeyIncluded && capsuleGreen("Answer key included")}
+          {paper.modelPaper && capsuleGreen( "Model Paper")}
         </div>
       </div>
 

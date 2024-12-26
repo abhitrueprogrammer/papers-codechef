@@ -2,7 +2,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios, { type AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
-import { type Paper, type Filters } from "@/interface";
+import { type IPaper, type Filters } from "@/interface";
 import { FilterDialog } from "@/components/FilterDialog";
 import Card from "./Card";
 import { extractBracketContent } from "@/util/utils";
@@ -34,8 +34,8 @@ const CatalogueContent = () => {
     router.push(`/catalogue?subject=${encodeURIComponent(subject!)}`);
   };
 
-  const [papers, setPapers] = useState<Paper[]>([]);
-  const [selectedPapers, setSelectedPapers] = useState<Paper[]>([]);
+  const [papers, setPapers] = useState<IPaper[]>([]);
+  const [selectedPapers, setSelectedPapers] = useState<IPaper[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filterOptions, setFilterOptions] = useState<Filters>();
@@ -63,7 +63,7 @@ const CatalogueContent = () => {
     } catch (error) {}
   }
 
-  const handleSelectPaper = (paper: Paper, isSelected: boolean) => {
+  const handleSelectPaper = (paper: IPaper, isSelected: boolean) => {
     if (isSelected) {
       setSelectedPapers((prev) => [...prev, paper]);
     } else {

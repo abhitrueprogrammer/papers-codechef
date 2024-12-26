@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import { slots, years } from "@/components/select_options";
+import { slots, years, campuses } from "@/components/select_options";
 import SearchBar from "@/components/searchbarSubjectList";
 import Dropzone from "react-dropzone";
 import {
@@ -25,7 +25,10 @@ const Page = () => {
   const [slot, setSlot] = useState("");
   const [subject, setSubject] = useState("");
   const [exam, setExam] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(""); 
+  const [campus, setCampus] = useState(""); 
+  const [semester, setSemester] = useState(""); 
+
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [resetSearch, setResetSearch] = useState(false);
@@ -189,6 +192,44 @@ const Page = () => {
                     {years.map((year) => (
                       <SelectItem key={year} value={String(year)}>
                         {year}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Year Selection */}
+            <div>
+              <label>Campus Selection:</label>
+              <Select value={campus} onValueChange={setCampus}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select campus" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Years</SelectLabel>
+                    {campuses.map((campus) => (
+                      <SelectItem key={campus} value={String(campus)}>
+                        {campus}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label>Semester Selection:</label>
+              <Select value={semester} onValueChange={setSemester}>
+                <SelectTrigger className="m-2 rounded-md border p-2">
+                  <SelectValue placeholder="Select semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Years</SelectLabel>
+                    {campuses.map((campus) => (
+                      <SelectItem key={campus} value={String(campus)}>
+                        {campus}
                       </SelectItem>
                     ))}
                   </SelectGroup>
