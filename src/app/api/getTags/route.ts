@@ -1,250 +1,201 @@
-import { fromPath } from 'pdf2pic';
-import { existsSync, mkdirSync } from 'fs';
-import { join, dirname } from 'path';
-import axios from 'axios';
-import * as tmp from 'tmp';
-import * as fs from 'fs';
-import { Mistral } from "@mistralai/mistralai";
-import { readdir } from 'fs/promises';
-import dotenv from 'dotenv';
+import { NextResponse } from "next/server";
+import { PDFDocument } from "pdf-lib";
+import { campuses, exams, semesters, slots, years } from "@/components/select_options";
+import { connectToDatabase } from "@/lib/mongoose";
+import cloudinary from "cloudinary";
+import { type ICourses, type CloudinaryUploadResult } from "@/interface";
+import { PaperAdmin } from "@/db/papers";
+import axios from "axios";
+import processAndAnalyze from "./mistral";
+// TODO: REMOVE THUMBNAIL FROM admin-buffer DB
+cloudinary.v2.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
 
-// Load environment variables
-dotenv.config();
-
-// Type definitions
-type ExamDetail = {
-    "course-name": string;
-    "slot": string;
-    "course-code": string;
-    "exam-type": string;
-}
-
-type AnalysisResult = {
-    imageName: string;
-    examDetail: ExamDetail;
-    rawAnalysis: string;
-}
-
-type MistralResponse = {
-    choices: Array<{
-        message: {
-            content: string;
-        };
-    }>;
-};
-
-// Custom error type
-class ProcessingError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'ProcessingError';
+export async function POST(req: Request) {
+  try {
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
+      return NextResponse.json({ message: "ServerMisconfig" }, { status: 500 });
     }
-}
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    const formData = await req.formData();
+    const files: File[] = formData.getAll("files") as File[];
+    const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
 
-// Function to ensure output directory exists
-function ensureOutputDirectory(): string {
-    const outputDir = join(process.cwd(), 'output_images');
-    if (!existsSync(outputDir)) {
-        mkdirSync(outputDir, { recursive: true });
+    let tags = await  processAndAnalyze( { files, isPdf})
+    let subject = ""
+    let slot = ""
+    let exam = ""
+    let year = ""
+    let campus = ""
+    let semester = ""
+    if(!tags)
+    {
+        console.log("Anaylsis failed, inputing blank strings as fields")
     }
-    return outputDir;
-}
+    else{
+         subject = tags["course-name"]
+         slot = tags.slot
+         exam = tags["exam-type"]
+         year = formData.get("year") as string;
+         campus = formData.get("campus") as string;
+         semester = formData.get("semester") as string;
 
-// Function to download the PDF from the URL
-async function downloadPDF(url: string): Promise<string> {
-    try {
-        const tmpFile = tmp.fileSync({ postfix: '.pdf' });
-        const response = await axios({
-            method: 'GET',
-            url,
-            responseType: 'arraybuffer',
-        });
-        fs.writeFileSync(tmpFile.name, response.data);
-        return tmpFile.name;
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        console.error('Error downloading PDF:', errorMessage);
-        throw new ProcessingError(errorMessage);
     }
-}
 
-// Function to convert the downloaded PDF to images
-async function convertPDFToImages(pdfUrl: string): Promise<string> {
-    try {
-        const pdfPath = await downloadPDF(pdfUrl);
-        const outputDir = ensureOutputDirectory();
 
-        const options = {
-            density: 300,
-            saveFilename: "page",
-            savePath: outputDir,
-            format: "png",
-            width: 2480,
-            height: 3508
-        };
-
-        const convert = fromPath(pdfPath, options);
-        const pageCount = await convert.bulk(-1, { responseType: "image" });
-        console.log(`Successfully converted ${pageCount.length} pages to images`);
-        console.log(`Images are saved in: ${outputDir}`);
-        
-        return outputDir;
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        console.error('Error converting PDF to images:', errorMessage);
-        throw new ProcessingError(errorMessage);
+    const { data } = await axios.get<ICourses[]>(`${process.env.SERVER_URL}/api/course-list`);
+    const courses = data.map((course: { name: string }) => course.name);
+    if (!courses.includes(subject))
+    {
+        subject = ""
     }
-}
-
-// Function to convert image to base64
-function imageToBase64(filePath: string): string {
-    try {
-        const image = fs.readFileSync(filePath);
-        return Buffer.from(image).toString('base64');
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        throw new ProcessingError(`Error converting image to base64: ${errorMessage}`);
+    if(!exams.includes(exam))
+    {
+        exam = ""
     }
-}
-
-// Function to parse Mistral's response into ExamDetail format
-function parseExamDetail(analysis: string): ExamDetail {
-    try {
-        // Try to find JSON in the response
-        const jsonMatch = analysis.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-            const examDetail = JSON.parse(jsonMatch[0]);
-            return examDetail as ExamDetail;
-        }
-        
-        throw new Error("Could not parse exam details from response");
-    } catch (error) {
-        console.error("Error parsing exam details:", error);
-        return {
-            "course-name": "Unknown",
-            "slot": "Unknown",
-            "course-code": "Unknown",
-            "exam-type": "Unknown"
-        };
+    if(!slots.includes(slot))
+    {
+        slot = ""
     }
-}
+    if (
+      !(
+        years.includes(year) &&
+        campuses.includes(campus) &&
+        semesters.includes(semester) 
+      )
+    ) {
+      return NextResponse.json({ message: "Bad request" }, { status: 400 });
+    }
 
-// Function to analyze images using Mistral AI
-async function analyzeImages(imageDirectory: string): Promise<AnalysisResult[]> {
-    try {
-        const apiKey = process.env.MISTRAL_API_KEY;
-        if (!apiKey) {
-            throw new ProcessingError("MISTRAL_API_KEY environment variable not set");
-        }
-        const client = new Mistral({ apiKey });
+    await connectToDatabase();
+    let finalUrl: string | undefined = "";
+    let public_id_cloudinary: string | undefined = "";
+    let thumbnailUrl: string | undefined = "";
 
-        const files = await readdir(imageDirectory);
-        const firstImageFile = files.find(file => file.toLowerCase().endsWith('.png'));
+    if (!files || files.length === 0) {
+      return NextResponse.json(
+        { error: "No files received." },
+        { status: 400 },
+      );
+    }
+    
+    if (!isPdf) {
 
-        const results: AnalysisResult[] = [];
-
-        if (!firstImageFile) {
-            throw new ProcessingError('No .png file found in the directory');
+      try {
+        if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
+          return;
         }
 
-        const imagePath = join(imageDirectory, firstImageFile);
-        const imageBase64 = imageToBase64(imagePath);
-        const dataUrl = `data:image/png;base64,${imageBase64}`;
-
-        const prompt = `Please analyze this exam paper image and extract the following details in JSON format:
-        - course-name: The full name of the course (3-4 words, no numbers or special characters)
-        - slot: One of A1|A2|B1|B2|C1|C2|D1|D2|E1|E2|F1|F2|G1|G2
-        - course-code: The course code (format: department letters + numbers)
-        - exam-type: One of "Final Assessment Test|Continuous Assessment Test - 1|Continuous Assessment Test - 2"
-
-        Provide the response in this exact format:
-        {
-            "course-name": "...",
-            "slot": "...",
-            "course-code": "...",
-            "exam-type": "..."
-        }`;
-
-        const chatResponse = await client.chat.complete({
-            model: "pixtral-12b",
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: prompt },
-                        { type: "image_url", imageUrl: dataUrl }
-                    ]
-                }
-            ]
-        }) as MistralResponse;
-
-        if (!chatResponse?.choices?.[0]?.message?.content) {
-            throw new ProcessingError('Invalid response from Mistral API');
-        }
-
-        const rawAnalysis = chatResponse.choices[0].message.content;
-        const examDetail = parseExamDetail(rawAnalysis);
-
-        results.push({
-            imageName: firstImageFile,
-            examDetail,
-            rawAnalysis
-        });
-
-        return results;
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        console.error('Error analyzing images:', errorMessage);
-
-        return [{
-            imageName: 'error.png',
-            examDetail: {
-                "course-name": "Error",
-                "slot": "Error",
-                "course-code": "Error",
-                "exam-type": "Error"
-            },
-            rawAnalysis: `Error analyzing image: ${errorMessage}`
-        }];
-    }
-}
-
-// Main function to process everything
-async function processPDFAndAnalyze(pdfUrl: string): Promise<void> {
-    try {
-        // Convert PDF to images and get the output directory
-        const outputDir = await convertPDFToImages(pdfUrl);
-        
-        // Analyze all the generated images
-        const analysisResults = await analyzeImages(outputDir);
-        
-        // Save results to a JSON file
-        const resultsPath = join(outputDir, 'analysis_results.json');
-        fs.writeFileSync(
-            resultsPath,
-            JSON.stringify(analysisResults, null, 2)
+        const mergedPdfBytes = await CreatePDF(files);
+        [public_id_cloudinary, finalUrl] = await uploadPDFFile(
+          mergedPdfBytes,
+          uploadPreset,
         );
-        
-        console.log('Analysis completed. Results saved to:', resultsPath);
-        
-        // Log results to console
-        analysisResults.forEach(result => {
-            console.log(`\nAnalysis for ${result.imageName}:`);
-            console.log('Exam Details:', result.examDetail);
-            console.log('Raw Analysis:', result.rawAnalysis);
-        });
-        
-    } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        console.error('Error in processing:', errorMessage);
-        throw new ProcessingError(errorMessage);
+      } catch (error) {
+        return NextResponse.json(
+          { error: "Failed to process PDF" },
+          { status: 500 },
+        );
+      }
+    } else {
+      [public_id_cloudinary, finalUrl] = await uploadPDFFile(
+        files[0]!,
+        uploadPreset,
+      );
     }
+
+    const thumbnailResponse = cloudinary.v2.image(finalUrl!, {
+      format: "jpg",
+    });
+    thumbnailUrl = thumbnailResponse
+      .replace("pdf", "jpg")
+      .replace("upload", "upload/w_400,h_400,c_fill")
+      .replace(/<img src='|'\s*\/>/g, "");
+    const paper = new PaperAdmin({
+      public_id_cloudinary,
+      finalUrl,
+      thumbnailUrl,
+      subject,
+      slot,
+      year,
+      exam,
+      campus,
+      semester
+    });
+    await paper.save();
+    return NextResponse.json(
+      { status: "success", url: finalUrl, thumbnailUrl: thumbnailUrl },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Failed to upload papers", error },
+      { status: 500 },
+    );
+  }
 }
 
-// Example usage - Replace with your PDF URL
-const pdfUrl = 'https://res.cloudinary.com/dtorpaj1c/image/upload/v1731668830/papers/mykcs2yxaman61kx0jvj.pdf';
+async function uploadPDFFile(file: File | ArrayBuffer, uploadPreset: string) {
+  let bytes;
+  if (file instanceof File) {
+    bytes = await file.arrayBuffer();
+  } else {
+    bytes = file;
+  }
+  return uploadFile(bytes, uploadPreset, "application/pdf");
+}
 
-// Run the complete process
-processPDFAndAnalyze(pdfUrl)
-    .then(() => console.log('Complete processing finished'))
-    .catch(error => console.error('Processing failed:', error));
+async function uploadFile(
+  bytes: ArrayBuffer,
+  uploadPreset: string,
+  fileType: string,
+) {
+  try {
+    const buffer = Buffer.from(bytes);
+    const dataUrl = `data:${fileType};base64,${buffer.toString("base64")}`;
+    const uploadResult = (await cloudinary.v2.uploader.unsigned_upload(
+      dataUrl,
+      uploadPreset,
+    )) as CloudinaryUploadResult;
+    return [uploadResult.public_id, uploadResult.secure_url];
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function CreatePDF(files: File[]) {
+  const pdfDoc = await PDFDocument.create();
+//sort files using name. Later remove to see if u can without names
+  const orderedFiles = Array.from(files).sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  for (const file of orderedFiles) {
+    const fileBlob = new Blob([file]);
+    const imgBytes = Buffer.from(await fileBlob.arrayBuffer());
+    let img;
+    if (file instanceof File) {
+      if (file.type === "image/png") {
+        img = await pdfDoc.embedPng(imgBytes);
+      } else if (file.type === "image/jpeg" || file.type === "image/jpg") {
+        img = await pdfDoc.embedJpg(imgBytes);
+      } else {
+        continue;
+      }
+      const page = pdfDoc.addPage([img.width, img.height]);
+      page.drawImage(img, {
+        x: 0,
+        y: 0,
+        width: img.width,
+        height: img.height,
+      });
+    }
+  }
+
+  const mergedPdfBytes = await pdfDoc.save();
+  return mergedPdfBytes;
+}
