@@ -1,12 +1,8 @@
 import '@ungap/with-resolvers';
-import { PDFDocument,  } from "pdf-lib";
-import { getDocument, GlobalWorkerOptions, version } from "pdfjs-dist";
-
 
 
 import { Mistral } from "@mistralai/mistralai";
 
-import { createCanvas } from "canvas";
 // Type definitions
 type ExamDetail = {
   "course-name": string;
