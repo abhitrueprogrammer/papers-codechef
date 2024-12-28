@@ -184,7 +184,7 @@ const Page = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Years</SelectLabel>
+                    <SelectLabel>Year:</SelectLabel>
                     {years.map((year) => (
                       <SelectItem key={year} value={String(year)}>
                         {year}
@@ -197,7 +197,7 @@ const Page = () => {
 
             {/* Year Selection */}
             <div>
-              <label>Campus Selection:</label>
+              <label>Campus:</label>
               <Select value={campus} onValueChange={setCampus}>
                 <SelectTrigger className="m-2 rounded-md border p-2">
                   <SelectValue placeholder="Select campus" />
@@ -215,7 +215,7 @@ const Page = () => {
               </Select>
             </div>
             <div>
-              <label>Semester Selection:</label>
+              <label>Semester:</label>
               <Select value={semester} onValueChange={setSemester}>
                 <SelectTrigger className="m-2 rounded-md border p-2">
                   <SelectValue placeholder="Select semester" />
