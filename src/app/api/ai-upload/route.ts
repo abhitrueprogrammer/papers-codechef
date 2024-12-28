@@ -26,7 +26,21 @@ export async function POST(req: Request) {
     const files: File[] = formData.getAll("files") as File[];
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
 
-    let tags = await processAndAnalyze({files, isPdf})
+    let imageURL = ""
+    if(isPdf)
+    {
+      imageURL = formData.get("image") as string
+    }
+    else 
+    {
+      const bytes = await files[0]?.arrayBuffer();
+      if (bytes) {
+        const buffer = await Buffer.from(bytes);
+        imageURL = `data:${"image/png"};base64,${buffer.toString("base64")}`;
+  
+    }
+  }
+    const tags = await processAndAnalyze({imageURL})
     let subject = ""
     let slot = ""
     let exam = ""

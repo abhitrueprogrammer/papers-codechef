@@ -1,9 +1,12 @@
 import '@ungap/with-resolvers';
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { PDFDocument,  } from "pdf-lib";
-import PdfToImg from "pdftoimg-js";
-import { fromBuffer as convertPdfToPng } from 'pdf2pic'
+import { getDocument, GlobalWorkerOptions, version } from "pdfjs-dist";
+
+
+
 import { Mistral } from "@mistralai/mistralai";
+
+import { createCanvas } from "canvas";
 // Type definitions
 type ExamDetail = {
   "course-name": string;
@@ -35,47 +38,32 @@ class ProcessingError extends Error {
 
 // Function to ensure output directory exists
 export default async function processAndAnalyze({
-  files,
-  isPdf,
+  imageURL,
 }: {
-  files: File[];
-  isPdf: boolean;
+  imageURL:string;
 }) {
-  let firstPage;
-  if (isPdf) {
-    if (!files[0]) {
-      throw "No file";
-    }
-    firstPage = await pdfToImage(files[0], "base64");
-  } else {
-    const bytes = await files[0]?.arrayBuffer();
-    if (bytes) {
-      const buffer = await Buffer.from(bytes);
-      firstPage = `data:${"image/png"};base64,${buffer.toString("base64")}`;
-    }
-  }
-  if (firstPage) {
-    const analysisResult = await analyzeImage(firstPage);
+
+  if (imageURL) {
+    const analysisResult = await analyzeImage(imageURL);
     return analysisResult[0]?.examDetail;
   } else {
     throw "Error Creating the Image";
   }
 }
-
+// export async function pdfToImage(file: File) {
+//   // GlobalWorkerOptions.workerSrc = process.cwd() + '/public/pdf.worker.js'
+//     const bytes = await file.arrayBuffer();
+  
+//     const buffer = Buffer.from(bytes);
+//     const singlePage = await PdfToImg(buffer, {
+//       returnType: "base64", // accept "base64" and "buffer"
+//       imgType: "png", // accept "png" and "jpg"
+//       pages: "firstPage",
+//   });
+//     return singlePage
+//   }
 // Function to convert PDF file's first page to image
-async function pdfToImage(file: File, outputFormat: string) {
-GlobalWorkerOptions.workerSrc = process.cwd() + '/public/pdf.worker.js'
-  const bytes = await file.arrayBuffer();
 
-  const buffer = Buffer.from(bytes);
-  const singlePage = await PdfToImg(buffer, {
-    scale: 1.5, // accept only number
-    returnType: "base64", // accept "base64" and "buffer"
-    imgType: "jpg", // accept "png" and "jpg"
-    pages: "firstPage",
-});
-  return singlePage
-}
 
 // Function to convert the downloaded PDF to images
 // async function convertPDFToImages(binaryData: string): Promise<string> {
