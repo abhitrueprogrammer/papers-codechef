@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
 import {
   campuses,
-  exams,
   semesters,
   slots,
   years,
@@ -39,7 +38,7 @@ export async function POST(req: Request) {
     } else {
       const bytes = await files[0]?.arrayBuffer();
       if (bytes) {
-        const buffer = await Buffer.from(bytes);
+        const buffer =  Buffer.from(bytes);
         imageURL = `data:${"image/png"};base64,${buffer.toString("base64")}`;
       }
     }

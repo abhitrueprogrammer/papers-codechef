@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import { slots, years, campuses, semesters, exams } from "@/components/select_options";
-import SearchBar from "@/components/searchbarSubjectList";
+import {  years, campuses, semesters } from "@/components/select_options";
 import Dropzone from "react-dropzone";
 import {
   Select,
@@ -56,7 +55,7 @@ const Page = () => {
 
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [resetSearch, setResetSearch] = useState(false);
+  const [, setResetSearch] = useState(false);
 
   const handlePrint = async () => {
     const maxFileSize = 5 * 1024 * 1024;

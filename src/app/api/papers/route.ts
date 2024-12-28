@@ -1,7 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Paper from "@/db/papers";
-import { IPaper, type IAdminPaper } from "@/interface";
+import { type IPaper,  } from "@/interface";
 
 export const dynamic = "force-dynamic";
 
