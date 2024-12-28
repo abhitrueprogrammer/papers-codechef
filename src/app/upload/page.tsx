@@ -22,7 +22,7 @@ import {
 import { createCanvas } from "canvas";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
-export async function pdfToImage(file: File) {
+ async function pdfToImage(file: File) {
    GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'
 
    const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
