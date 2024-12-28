@@ -113,7 +113,7 @@ const Page = () => {
 
     try {
       await toast.promise(
-        axios.post<PostPDFToCloudinary>("/api/upload", formData),
+        axios.post<PostPDFToCloudinary>("/api/ai-upload", formData),
         {
           loading: "Uploading papers...",
           success: "Papers uploaded successfully!",

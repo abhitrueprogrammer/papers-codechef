@@ -31,7 +31,7 @@ const courseSchema = new Schema<ICourses>({
   name: { type: String, required: true },
 });
 
-adminSchema.index({ subject: 1 });
+// adminSchema.index({ subject: 1 });
 
 export const PaperAdmin: Model<IAdminPaper> =
   mongoose.models.Admin ?? mongoose.model<IAdminPaper>("Admin", adminSchema);

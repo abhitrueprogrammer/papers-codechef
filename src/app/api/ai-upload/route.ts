@@ -6,7 +6,9 @@ import cloudinary from "cloudinary";
 import { type ICourses, type CloudinaryUploadResult } from "@/interface";
 import { PaperAdmin } from "@/db/papers";
 import axios from "axios";
-import processAndAnalyze from "./mistral";
+import processAndAnalyze from "@/util/mistral";
+import { examMap } from "./map";
+// import processAndAnalyze from "./mistral";
 // TODO: REMOVE THUMBNAIL FROM admin-buffer DB
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -24,13 +26,14 @@ export async function POST(req: Request) {
     const files: File[] = formData.getAll("files") as File[];
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
 
-    let tags = await  processAndAnalyze( { files, isPdf})
+    let tags = await processAndAnalyze({files, isPdf})
     let subject = ""
     let slot = ""
     let exam = ""
     let year = ""
     let campus = ""
     let semester = ""
+    
     if(!tags)
     {
         console.log("Anaylsis failed, inputing blank strings as fields")
@@ -38,30 +41,25 @@ export async function POST(req: Request) {
     else{
          subject = tags["course-name"]
          slot = tags.slot
-         exam = tags["exam-type"]
+         if("exam-type" in tags && tags["exam-type"] in examMap)
+         {
+          const examType = tags["exam-type"] as keyof typeof examMap; 
+          exam = examMap[examType];
+        
+         }
          year = formData.get("year") as string;
          campus = formData.get("campus") as string;
          semester = formData.get("semester") as string;
 
     }
-
+    console.log(exam, slot, subject)
 
     const { data } = await axios.get<ICourses[]>(`${process.env.SERVER_URL}/api/course-list`);
     const courses = data.map((course: { name: string }) => course.name);
-    if (!courses.includes(subject))
-    {
-        subject = ""
-    }
-    if(!exams.includes(exam))
-    {
-        exam = ""
-    }
-    if(!slots.includes(slot))
-    {
-        slot = ""
-    }
+
     if (
       !(
+        exam.includes(exam) &&
         years.includes(year) &&
         campuses.includes(campus) &&
         semesters.includes(semester) 
@@ -155,6 +153,7 @@ async function uploadFile(
   fileType: string,
 ) {
   try {
+
     const buffer = Buffer.from(bytes);
     const dataUrl = `data:${fileType};base64,${buffer.toString("base64")}`;
     const uploadResult = (await cloudinary.v2.uploader.unsigned_upload(
