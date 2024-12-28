@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import { slots, years, campuses, semesters, exams } from "@/components/select_options";
-import SearchBar from "@/components/searchbarSubjectList";
+import {  years, campuses, semesters } from "@/components/select_options";
 import Dropzone from "react-dropzone";
 import {
   Select,
@@ -22,7 +21,7 @@ import {
 import { createCanvas } from "canvas";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
-export async function pdfToImage(file: File) {
+ async function pdfToImage(file: File) {
    GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'
 
    const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
@@ -56,7 +55,7 @@ const Page = () => {
 
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [resetSearch, setResetSearch] = useState(false);
+  const [, setResetSearch] = useState(false);
 
   const handlePrint = async () => {
     const maxFileSize = 5 * 1024 * 1024;
@@ -184,7 +183,7 @@ const Page = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Years</SelectLabel>
+                    <SelectLabel>Year:</SelectLabel>
                     {years.map((year) => (
                       <SelectItem key={year} value={String(year)}>
                         {year}
@@ -197,7 +196,7 @@ const Page = () => {
 
             {/* Year Selection */}
             <div>
-              <label>Campus Selection:</label>
+              <label>Campus:</label>
               <Select value={campus} onValueChange={setCampus}>
                 <SelectTrigger className="m-2 rounded-md border p-2">
                   <SelectValue placeholder="Select campus" />
@@ -215,7 +214,7 @@ const Page = () => {
               </Select>
             </div>
             <div>
-              <label>Semester Selection:</label>
+              <label>Semester:</label>
               <Select value={semester} onValueChange={setSemester}>
                 <SelectTrigger className="m-2 rounded-md border p-2">
                   <SelectValue placeholder="Select semester" />

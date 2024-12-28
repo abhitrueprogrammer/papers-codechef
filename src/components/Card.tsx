@@ -21,7 +21,6 @@ const Card = ({
   onSelect: (paper: IPaper, isSelected: boolean) => void;
   isSelected: boolean;
 }) => {
-  const router = useRouter();
   const [checked, setChecked] = useState<boolean>(false);
 
   useEffect(() => {

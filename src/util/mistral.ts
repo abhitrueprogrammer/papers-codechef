@@ -78,8 +78,8 @@ function parseExamDetail(analysis: string): ExamDetail {
     // Try to find JSON in the response
     const jsonMatch = analysis.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      const examDetail = JSON.parse(jsonMatch[0]);
-      return examDetail as ExamDetail;
+      const examDetail: ExamDetail = JSON.parse(jsonMatch[0]) as ExamDetail;
+      return examDetail
     }
 
     throw new Error("Could not parse exam details from response");
@@ -139,7 +139,7 @@ async function analyzeImage(dataUrl: string): Promise<AnalysisResult[]> {
     }
 
     const rawAnalysis = chatResponse.choices[0].message.content;
-    const examDetail = parseExamDetail(rawAnalysis);
+    const examDetail: ExamDetail = parseExamDetail(rawAnalysis);
 
     results.push({
       examDetail,
