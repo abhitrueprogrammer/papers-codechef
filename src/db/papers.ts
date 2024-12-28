@@ -15,7 +15,6 @@ const adminSchema = new Schema<IAdminPaper>({
   isSelected: { type: Boolean, default: false },
 });
 const paperSchema = new Schema<IPaper>({
-  _id: { type: String, required: true },
   finalUrl: { type: String, required: true },
   thumbnailUrl: { type: String, required: true },
   subject: { type: String, required: true, index: true },
