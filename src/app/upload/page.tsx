@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -20,11 +19,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createCanvas } from "canvas";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import { PDFDocument } from "pdf-lib";
+export async function pdfToImage(file: File) {
+   GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'
+
+   const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+
+  // Get the first page
+  const page = pdfDoc.getPages()[0];
+  if (!page) {
+    throw "First page not found";
+  }
+  // Create a canvas to render the image
+  const canvas = createCanvas(page.getWidth(), page.getHeight());
+  const context = canvas.getContext("2d");
+
+  // Use pdfjs-dist to render the page
+  const pdfjsDoc = await getDocument({ data: await file.arrayBuffer() })
+    .promise;
+  const pdfPage = await pdfjsDoc.getPage(1);
+
+  // Render page to canvas
+  const viewport = pdfPage.getViewport({ scale: 1 });
+  await pdfPage.render({ canvasContext: context, viewport }).promise;
+
+  // Convert the canvas to the desired output (Buffer, base64, etc.)
+  return canvas.toDataURL(); // Returns a Base64 string
+}
 
 const Page = () => {
-  const [slot, setSlot] = useState("");
-  const [subject, setSubject] = useState("");
-  const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [campus, setCampus] = useState("");
   const [semester, setSemester] = useState("");
@@ -42,18 +67,18 @@ const Page = () => {
       "image/gif",
     ];
 
-    if (!slot) {
-      toast.error("Slot is required");
-      return;
-    }
-    if (!subject) {
-      toast.error("Subject is required");
-      return;
-    }
-    if (!exam) {
-      toast.error("Exam is required");
-      return;
-    }
+    // if (!slot) {
+    //   toast.error("Slot is required");
+    //   return;
+    // }
+    // if (!subject) {
+    //   toast.error("Subject is required");
+    //   return;
+    // }
+    // if (!exam) {
+    //   toast.error("Exam is required");
+    //   return;
+    // }
     if (!year) {
       toast.error("Year is required");
       return;
@@ -94,16 +119,21 @@ const Page = () => {
       toast.error("PDFs must be uploaded separately");
       return;
     }
+    console.log("Outside")
 
     // Prepare FormData
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("files", file);
     });
-    formData.append("subject", subject);
-    formData.append("slot", slot);
+    // formData.append("subject", subject);
+    // formData.append("slot", slot);
+    if(isPdf && files[0])
+    {
+      formData.append("image", await pdfToImage(files[0]))
+    }
     formData.append("year", year);
-    formData.append("exam", exam);
+    // formData.append("exam", exam);
     formData.append("semester", semester);
     formData.append("campus", campus);
 
@@ -113,7 +143,7 @@ const Page = () => {
 
     try {
       await toast.promise(
-        axios.post<PostPDFToCloudinary>("/api/upload", formData),
+        axios.post<PostPDFToCloudinary>("/api/ai-upload", formData),
         {
           loading: "Uploading papers...",
           success: "Papers uploaded successfully!",
@@ -121,9 +151,9 @@ const Page = () => {
         },
       );
 
-      setSlot("");
-      setSubject("");
-      setExam("");
+      // setSlot("");
+      // setSubject("");
+      // setExam("");
       setYear("");
       setFiles([]);
       setResetSearch(true);
@@ -145,52 +175,6 @@ const Page = () => {
           <legend className="text-lg font-bold">Select paper parameters</legend>
 
           <div className="flex w-full flex-col 2xl:gap-y-4">
-            {/* Slot Selection */}
-            <div>
-              <label>Slot:</label>
-              <Select value={slot} onValueChange={setSlot}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select slot" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Slots</SelectLabel>
-                    {slots.map((slot) => (
-                      <SelectItem key={slot} value={slot}>
-                        {slot}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Exam Selection */}
-            <div>
-              <label>Exam:</label>
-              <Select value={exam} onValueChange={setExam}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select exam" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Exams</SelectLabel>
-                    {exams.map((exam) => (
-                      <SelectItem key={exam} value={String(exam)}>
-                        {exam}
-                      </SelectItem>
-                    ))}{" "}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Subject Selection */}
-            <div>
-              <label>Subject:</label>
-              <SearchBar setSubject={setSubject} resetSearch={resetSearch} />
-            </div>
-
             {/* Year Selection */}
             <div>
               <label>Year:</label>
