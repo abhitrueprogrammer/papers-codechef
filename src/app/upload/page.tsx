@@ -50,9 +50,6 @@ export async function pdfToImage(file: File) {
 }
 
 const Page = () => {
-  const [slot, setSlot] = useState("");
-  const [subject, setSubject] = useState("");
-  const [exam, setExam] = useState("");
   const [year, setYear] = useState("");
   const [campus, setCampus] = useState("");
   const [semester, setSemester] = useState("");
@@ -70,18 +67,18 @@ const Page = () => {
       "image/gif",
     ];
 
-    if (!slot) {
-      toast.error("Slot is required");
-      return;
-    }
-    if (!subject) {
-      toast.error("Subject is required");
-      return;
-    }
-    if (!exam) {
-      toast.error("Exam is required");
-      return;
-    }
+    // if (!slot) {
+    //   toast.error("Slot is required");
+    //   return;
+    // }
+    // if (!subject) {
+    //   toast.error("Subject is required");
+    //   return;
+    // }
+    // if (!exam) {
+    //   toast.error("Exam is required");
+    //   return;
+    // }
     if (!year) {
       toast.error("Year is required");
       return;
@@ -129,14 +126,14 @@ const Page = () => {
     files.forEach((file) => {
       formData.append("files", file);
     });
-    formData.append("subject", subject);
-    formData.append("slot", slot);
+    // formData.append("subject", subject);
+    // formData.append("slot", slot);
     if(isPdf && files[0])
     {
       formData.append("image", await pdfToImage(files[0]))
     }
     formData.append("year", year);
-    formData.append("exam", exam);
+    // formData.append("exam", exam);
     formData.append("semester", semester);
     formData.append("campus", campus);
 
@@ -154,9 +151,9 @@ const Page = () => {
         },
       );
 
-      setSlot("");
-      setSubject("");
-      setExam("");
+      // setSlot("");
+      // setSubject("");
+      // setExam("");
       setYear("");
       setFiles([]);
       setResetSearch(true);
@@ -178,52 +175,6 @@ const Page = () => {
           <legend className="text-lg font-bold">Select paper parameters</legend>
 
           <div className="flex w-full flex-col 2xl:gap-y-4">
-            {/* Slot Selection */}
-            <div>
-              <label>Slot:</label>
-              <Select value={slot} onValueChange={setSlot}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select slot" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Slots</SelectLabel>
-                    {slots.map((slot) => (
-                      <SelectItem key={slot} value={slot}>
-                        {slot}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Exam Selection */}
-            <div>
-              <label>Exam:</label>
-              <Select value={exam} onValueChange={setExam}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select exam" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Exams</SelectLabel>
-                    {exams.map((exam) => (
-                      <SelectItem key={exam} value={String(exam)}>
-                        {exam}
-                      </SelectItem>
-                    ))}{" "}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Subject Selection */}
-            <div>
-              <label>Subject:</label>
-              <SearchBar setSubject={setSubject} resetSearch={resetSearch} />
-            </div>
-
             {/* Year Selection */}
             <div>
               <label>Year:</label>
