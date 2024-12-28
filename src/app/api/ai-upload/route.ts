@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
-import { campuses, exams, semesters, slots, years } from "@/components/select_options";
+import {
+  campuses,
+  exams,
+  semesters,
+  slots,
+  years,
+} from "@/components/select_options";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import { type ICourses, type CloudinaryUploadResult } from "@/interface";
@@ -8,6 +14,7 @@ import { PaperAdmin } from "@/db/papers";
 import axios from "axios";
 import processAndAnalyze from "@/util/mistral";
 import { examMap } from "./map";
+import Fuse from "fuse.js";
 // import processAndAnalyze from "./mistral";
 // TODO: REMOVE THUMBNAIL FROM admin-buffer DB
 cloudinary.v2.config({
@@ -26,57 +33,54 @@ export async function POST(req: Request) {
     const files: File[] = formData.getAll("files") as File[];
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
 
-    let imageURL = ""
-    if(isPdf)
-    {
-      imageURL = formData.get("image") as string
-    }
-    else 
-    {
+    let imageURL = "";
+    if (isPdf) {
+      imageURL = formData.get("image") as string;
+    } else {
       const bytes = await files[0]?.arrayBuffer();
       if (bytes) {
         const buffer = await Buffer.from(bytes);
         imageURL = `data:${"image/png"};base64,${buffer.toString("base64")}`;
-  
+      }
     }
-  }
-    const tags = await processAndAnalyze({imageURL})
-    let subject = ""
-    let slot = ""
-    let exam = ""
-    let year = ""
-    let campus = ""
-    let semester = ""
-    
-    if(!tags)
-    {
-        console.log("Anaylsis failed, inputing blank strings as fields")
-    }
-    else{
-         subject = tags["course-name"]
-         slot = tags.slot
-         if("exam-type" in tags && tags["exam-type"] in examMap)
-         {
-          const examType = tags["exam-type"] as keyof typeof examMap; 
-          exam = examMap[examType];
-        
-         }
-         year = formData.get("year") as string;
-         campus = formData.get("campus") as string;
-         semester = formData.get("semester") as string;
-
-    }
-    console.log(exam, slot, subject)
-
-    const { data } = await axios.get<ICourses[]>(`${process.env.SERVER_URL}/api/course-list`);
+    const tags = await processAndAnalyze({ imageURL });
+    let subject = "";
+    let slot = "";
+    let exam = "";
+    let year = "";
+    let campus = "";
+    let semester = "";
+    const { data } = await axios.get<ICourses[]>(
+      `${process.env.SERVER_URL}/api/course-list`,
+    );
     const courses = data.map((course: { name: string }) => course.name);
+    const coursesFuzy = new Fuse(courses);
+    if (!tags) {
+      console.log("Anaylsis failed, inputing blank strings as fields");
+    } else {
+      const subjectSearch = coursesFuzy.search(tags["course-name"])[0];
+      if (subjectSearch) {
+        subject = subjectSearch.item;
+      }
+      const slotPattern = new RegExp(`[${tags.slot}]`, "i");
+      const slotSearchResult = slots.find((s) => slotPattern.test(s));
+      slot = slotSearchResult ? slotSearchResult : tags.slot;
+      if ("exam-type" in tags && tags["exam-type"] in examMap) {
+        const examType = tags["exam-type"] as keyof typeof examMap;
+        exam = examMap[examType];
+      }
+      year = formData.get("year") as string;
+      campus = formData.get("campus") as string;
+      semester = formData.get("semester") as string;
+    }
+    console.log(exam, slot, subject);
 
     if (
       !(
         exam.includes(exam) &&
         years.includes(year) &&
         campuses.includes(campus) &&
-        semesters.includes(semester) 
+        semesters.includes(semester)
       )
     ) {
       return NextResponse.json({ message: "Bad request" }, { status: 400 });
@@ -93,9 +97,8 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    
-    if (!isPdf) {
 
+    if (!isPdf) {
       try {
         if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) {
           return;
@@ -135,7 +138,7 @@ export async function POST(req: Request) {
       year,
       exam,
       campus,
-      semester
+      semester,
     });
     await paper.save();
     return NextResponse.json(
@@ -167,7 +170,6 @@ async function uploadFile(
   fileType: string,
 ) {
   try {
-
     const buffer = Buffer.from(bytes);
     const dataUrl = `data:${fileType};base64,${buffer.toString("base64")}`;
     const uploadResult = (await cloudinary.v2.uploader.unsigned_upload(
@@ -182,7 +184,7 @@ async function uploadFile(
 
 async function CreatePDF(files: File[]) {
   const pdfDoc = await PDFDocument.create();
-//sort files using name. Later remove to see if u can without names
+  //sort files using name. Later remove to see if u can without names
   const orderedFiles = Array.from(files).sort((a, b) => {
     return a.name.localeCompare(b.name);
   });
