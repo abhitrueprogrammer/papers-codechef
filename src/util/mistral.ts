@@ -2,14 +2,10 @@ import '@ungap/with-resolvers';
 
 
 import { Mistral } from "@mistralai/mistralai";
+import {type  ExamDetail } from '@/interface';
 
 // Type definitions
-type ExamDetail = {
-  "course-name": string;
-  slot: string;
-  "course-code": string;
-  "exam-type": string;
-};
+
 
 type AnalysisResult = {
   examDetail: ExamDetail;

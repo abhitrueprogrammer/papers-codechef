@@ -145,7 +145,12 @@ export interface IPaper {
   year: string;
   answerKeyIncluded?: boolean;
 }
-
+export type ExamDetail = {
+  "course-name": string;
+  slot: string;
+  "course-code": string;
+  "exam-type": string;
+};
 export interface Filters {
   papers: IPaper[];
   uniqueExams: string[];

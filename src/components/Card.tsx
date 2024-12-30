@@ -79,7 +79,7 @@ const Card = ({
           {capsule(paper.exam)}
           {capsule(paper.slot)}
           {capsule(paper.year)}
-          {capsule(paper.campus)}
+          {/* {capsule(paper.campus)} */}
           {capsule(paper.semester)}
           {paper.answerKeyIncluded && capsuleGreen("Answer key included")}
         </div>

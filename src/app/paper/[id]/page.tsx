@@ -138,9 +138,12 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
         } else {
           return errorResponse?.data?.message ?? "Failed to fetch paper";
         }
+      } else if (err instanceof Error) {
+        return err.message;
       } else {
-        return `${err}`;
+        return String(err);
       }
+      
     }
   }
   const paper = await getPaper();
