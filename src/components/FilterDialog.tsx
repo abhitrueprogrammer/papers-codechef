@@ -132,12 +132,12 @@ export const FilterDialog = ({
             placeholder="Semesters"
             defaultValue={selectedSemesters}
           />
-          <MultiSelect
+          {/* <MultiSelect
             options={campuses}
             onValueChange={setSelectedCampuses}
             placeholder="Campuses"
             defaultValue={selectedCampuses}
-          />
+          /> */}
         </div>
         <div className="flex justify-between">
           <Button variant="outline" onClick={handleFilterClick}>

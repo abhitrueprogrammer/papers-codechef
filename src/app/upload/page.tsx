@@ -83,8 +83,9 @@ const Page = () => {
       return;
     }
     if (!campus) {
-      toast.error("Campus is required");
-      return;
+      setCampus("Vellore")
+      // toast.error("Campus is required");
+      // return;
     }
     if (!semester) {
       toast.error("Semester is required");
@@ -194,9 +195,8 @@ const Page = () => {
               </Select>
             </div>
 
-            {/* Year Selection */}
             <div>
-              <label>Campus:</label>
+              {/* <label>Campus:</label>
               <Select value={campus} onValueChange={setCampus}>
                 <SelectTrigger className="m-2 rounded-md border p-2">
                   <SelectValue placeholder="Select campus" />
@@ -211,7 +211,7 @@ const Page = () => {
                     ))}
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <div>
               <label>Semester:</label>
