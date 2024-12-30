@@ -2,13 +2,19 @@ import { NextResponse } from "next/server";
 import { PDFDocument } from "pdf-lib";
 import {
   campuses,
+  courses,
+  exams,
   semesters,
   slots,
   years,
 } from "@/components/select_options";
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
-import { type ICourses, type CloudinaryUploadResult } from "@/interface";
+import type {
+   ICourses,
+   CloudinaryUploadResult,
+  ExamDetail,
+} from "@/interface";
 import { PaperAdmin } from "@/db/papers";
 import axios from "axios";
 import processAndAnalyze from "@/util/mistral";
@@ -38,53 +44,34 @@ export async function POST(req: Request) {
     } else {
       const bytes = await files[0]?.arrayBuffer();
       if (bytes) {
-        const buffer =  Buffer.from(bytes);
+        const buffer = Buffer.from(bytes);
         imageURL = `data:${"image/png"};base64,${buffer.toString("base64")}`;
       }
     }
     const tags = await processAndAnalyze({ imageURL });
-    let subject = "";
-    let slot = "";
-    let exam = "";
-    let year = "";
-    let campus = "";
-    let semester = "";
-    const { data } = await axios.get<ICourses[]>(
-      `${process.env.SERVER_URL}/api/course-list`,
-    );
-    const courses = data.map((course: { name: string }) => course.name);
-    const coursesFuzy = new Fuse(courses);
-    if (!tags) {
-      console.log("Anaylsis failed, inputing blank strings as fields");
-    } else {
-      const subjectSearch = coursesFuzy.search(tags["course-name"])[0];
-      if (subjectSearch) {
-        subject = subjectSearch.item;
-      }
-      const slotPattern = new RegExp(`[${tags.slot}]`, "i");
-      const slotSearchResult = slots.find((s) => slotPattern.test(s));
-      slot = slotSearchResult ? slotSearchResult : tags.slot;
-      if ("exam-type" in tags && tags["exam-type"] in examMap) {
-        const examType = tags["exam-type"] as keyof typeof examMap;
-        exam = examMap[examType];
-      }
-      year = formData.get("year") as string;
-      campus = formData.get("campus") as string;
-      semester = formData.get("semester") as string;
-    }
-    console.log(exam, slot, subject);
+    const finalTags = await setTagsFromCurrentLists(tags);
+    console.log(finalTags)
+    const subject = finalTags["course-name"];
+    const slot = finalTags.slot;
+    const exam = finalTags["exam-type"];
+    const year = formData.get("year") as string;
+    const campus = formData.get("campus") as string;
+    const semester =formData.get("semester") as string;
 
+ 
+    console.log(subject , slot, exam)
     if (
       !(
+        courses.includes(subject) &&
+        slots.includes(slot) &&
         exam.includes(exam) &&
         years.includes(year) &&
         campuses.includes(campus) &&
         semesters.includes(semester)
       )
     ) {
-      return NextResponse.json({ message: "Bad request" }, { status: 400 });
+      return NextResponse.json({ message: "Bad request/AI couldn't set tags" }, { status: 400 });
     }
-
     await connectToDatabase();
     let finalUrl: string | undefined = "";
     let public_id_cloudinary: string | undefined = "";
@@ -212,4 +199,46 @@ async function CreatePDF(files: File[]) {
 
   const mergedPdfBytes = await pdfDoc.save();
   return mergedPdfBytes;
+}
+
+//sets course-name to corresponding course name from our api
+async function setTagsFromCurrentLists(
+  tags: ExamDetail | undefined,
+): Promise<ExamDetail> {
+  const { data } = await axios.get<ICourses[]>(
+    `${process.env.SERVER_URL}/api/course-list`,
+  );
+  const courses = data.map((course: { name: string }) => course.name);
+  if (!courses[0] || !slots[0] || !exams[0]) {
+    throw "Cannot fetch default value for courses/slot/exam!";
+  }
+  const newTags: ExamDetail = {
+    "course-name": courses[0],
+    slot: slots[0],
+    "course-code": "notInUse",
+    "exam-type": exams[0],
+  };
+  const coursesFuzy = new Fuse(courses);
+  if (!tags) {
+    console.log("Anaylsis failed setting random courses as fields");
+    return newTags;
+  } else {
+    const subjectSearch = coursesFuzy.search(
+      tags["course-name"] + "|" + tags["course-code"],
+    )[0];
+    if (subjectSearch) {
+      newTags["course-name"] = subjectSearch.item;
+    }
+    const slotPattern = new RegExp(`[${tags.slot}]`, "i");
+    const slotSearchResult = slots.find((s) => slotPattern.test(s));
+    if(slotSearchResult)
+    {
+      newTags.slot = slotSearchResult 
+    }
+    if ("exam-type" in tags && tags["exam-type"] in examMap) {
+      const examType = tags["exam-type"] as keyof typeof examMap;
+      newTags["exam-type"] = examMap[examType];
+    }
+  }
+  return newTags;
 }
