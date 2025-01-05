@@ -150,6 +150,8 @@ export type ExamDetail = {
   slot: string;
   "course-code": string;
   "exam-type": string;
+  semester: "Fall" | "Winter" | "Summer" | "Weekend";
+  year: string;
 };
 export interface Filters {
   papers: IPaper[];
