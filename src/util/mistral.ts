@@ -75,6 +75,19 @@ function parseExamDetail(analysis: string): ExamDetail {
     const jsonMatch = analysis.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const examDetail: ExamDetail = JSON.parse(jsonMatch[0]) as ExamDetail;
+      if (examDetail.semester) {
+        const validSemesters = ["Fall", "Winter", "Summer", "Weekend"];
+        if (!validSemesters.includes(examDetail.semester)) {
+          examDetail.semester = "Fall"; // Default to Fall if invalid
+        }
+      }
+      
+      if (examDetail.year) {
+        const yearPattern = /^\d{4}$/;
+        if (!yearPattern.test(examDetail.year)) {
+          examDetail.year = new Date().getFullYear().toString(); // Default to current year if invalid
+        }
+      }
       return examDetail
     }
 
@@ -86,6 +99,8 @@ function parseExamDetail(analysis: string): ExamDetail {
       slot: "Unknown",
       "course-code": "Unknown",
       "exam-type": "Unknown",
+      semester: "Fall",
+      year: new Date().getFullYear().toString() 
     };
   }
 }
@@ -104,18 +119,22 @@ async function analyzeImage(dataUrl: string): Promise<AnalysisResult[]> {
     // const dataUrl = `data:image/png;base64,${imageBase64}`;
 
     const prompt = `Please analyze this exam paper image and extract the following details in JSON format:
-        - course-name: The full name of the course (3-4 words, no numbers or special characters)
-        - slot: One of A1|A2|B1|B2|C1|C2|D1|D2|E1|E2|F1|F2|G1|G2
-        - course-code: The course code (format: department letters + numbers)
-        - exam-type: One of "Final Assessment Test|Continuous Assessment Test - 1|Continuous Assessment Test - 2"
-        
-        Provide the response in this exact format:
-        {
-            "course-name": "...",
-            "slot": "...",
-            "course-code": "...",
-            "exam-type": "..."
-            }`;
+    - course-name: The full name of the course (3-4 words, no numbers or special characters)
+    - slot: One of A1|A2|B1|B2|C1|C2|D1|D2|E1|E2|F1|F2|G1|G2
+    - course-code: The course code (format: department letters + numbers)
+    - exam-type: One of "Final Assessment Test|Continuous Assessment Test - 1|Continuous Assessment Test - 2"
+    - semester: Must be exactly one of "Fall", "Winter", "Summer", or "Weekend"
+    - year: The year in YYYY format (e.g., "2023")
+    
+    Provide the response in this exact format:
+    {
+        "course-name": "...",
+        "slot": "...",
+        "course-code": "...",
+        "exam-type": "...",
+        "semester": "...",
+        "year": "..."
+    }`;
 
     const chatResponse = (await client.chat.complete({
       model: "pixtral-12b",
@@ -155,6 +174,8 @@ async function analyzeImage(dataUrl: string): Promise<AnalysisResult[]> {
           slot: "Error",
           "course-code": "Error",
           "exam-type": "Error",
+          semester: "Fall", 
+          year: new Date().getFullYear().toString()
         },
         rawAnalysis: `Error analyzing image: ${errorMessage}`,
       },
