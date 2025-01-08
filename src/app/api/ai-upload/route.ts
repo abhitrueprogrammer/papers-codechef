@@ -14,7 +14,7 @@ import type {
   ICourses,
   CloudinaryUploadResult,
   ExamDetail,
-  Semester,
+  IAdminPaper,
 } from "@/interface";
 import { PaperAdmin } from "@/db/papers";
 import axios from "axios";
@@ -28,6 +28,7 @@ cloudinary.v2.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
+type SemesterType = IAdminPaper["semester"]; // Extract the exam type from the IPaper interface
 
 export async function POST(req: Request) {
   try {
@@ -220,7 +221,7 @@ async function setTagsFromCurrentLists(
     slot: slots[0],
     "course-code": "notInUse",
     "exam-type": exams[0],
-    semester: semesters[0] as Semester,
+    semester: semesters[0] as SemesterType,
     year: years[0],
   };
   const coursesFuzy = new Fuse(courses);
@@ -244,7 +245,7 @@ async function setTagsFromCurrentLists(
     }
     const semesterSearchResult = findMatch(semesters, tags.semester);
     if (semesterSearchResult) {
-      newTags.semester = semesterSearchResult as Semester;
+      newTags.semester = semesterSearchResult as SemesterType;
     }
     const yearSearchResult = findMatch(years, tags.year);
     if (yearSearchResult) {

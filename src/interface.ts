@@ -126,7 +126,6 @@ export interface DecryptedLoginResponse {
     id: string;
   };
 }
-export type Semester = "Fall" | "Winter" | "Summer" | "Weekend";
 
 export interface IPaper {
   _id: string;
