@@ -7,17 +7,8 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type PostPDFToCloudinary } from "@/interface";
-import {  years, campuses, semesters } from "@/components/select_options";
 import Dropzone from "react-dropzone";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { createCanvas } from "canvas";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
@@ -49,9 +40,7 @@ import { PDFDocument } from "pdf-lib";
 }
 
 const Page = () => {
-  const [year, setYear] = useState("");
   const [campus, setCampus] = useState("");
-  const [semester, setSemester] = useState("");
 
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -78,19 +67,19 @@ const Page = () => {
     //   toast.error("Exam is required");
     //   return;
     // }
-    if (!year) {
-      toast.error("Year is required");
-      return;
-    }
+    // if (!year) {
+    //   toast.error("Year is required");
+    //   return;
+    // }
     if (!campus) {
       setCampus("Vellore")
       // toast.error("Campus is required");
       // return;
     }
-    if (!semester) {
-      toast.error("Semester is required");
-      return;
-    }
+    // if (!semester) {
+    //   toast.error("Semester is required");
+    //   return;
+    // }
     if (!files || files.length === 0) {
       toast.error("No files selected");
       return;
@@ -132,9 +121,7 @@ const Page = () => {
     {
       formData.append("image", await pdfToImage(files[0]))
     }
-    formData.append("year", year);
     // formData.append("exam", exam);
-    formData.append("semester", semester);
     formData.append("campus", campus);
 
     formData.append("isPdf", String(isPdf));
@@ -154,7 +141,7 @@ const Page = () => {
       // setSlot("");
       // setSubject("");
       // setExam("");
-      setYear("");
+      // setYear("");
       setFiles([]);
       setResetSearch(true);
       setTimeout(() => setResetSearch(false), 100);
@@ -172,65 +159,9 @@ const Page = () => {
       </div>
       <div className="2xl:my-15 flex flex-col items-center">
         <fieldset className="mb-4 w-[350px] rounded-lg border-2 border-gray-300 p-4 pr-8">
-          <legend className="text-lg font-bold">Select paper parameters</legend>
+          {/* <legend className="text-lg font-bold">Upload papers</legend> */}
 
           <div className="flex w-full flex-col 2xl:gap-y-4">
-            {/* Year Selection */}
-            <div>
-              <label>Year:</label>
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Year:</SelectLabel>
-                    {years.map((year) => (
-                      <SelectItem key={year} value={String(year)}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              {/* <label>Campus:</label>
-              <Select value={campus} onValueChange={setCampus}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select campus" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Years</SelectLabel>
-                    {campuses.map((campus) => (
-                      <SelectItem key={campus} value={String(campus)}>
-                        {campus}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select> */}
-            </div>
-            <div>
-              <label>Semester:</label>
-              <Select value={semester} onValueChange={setSemester}>
-                <SelectTrigger className="m-2 rounded-md border p-2">
-                  <SelectValue placeholder="Select semester" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Semester</SelectLabel>
-                    {semesters.map((semester) => (
-                      <SelectItem key={semester} value={String(semester)}>
-                        {semester}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
 
             {/* File Dropzone */}
             <div>

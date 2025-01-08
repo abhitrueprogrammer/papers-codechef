@@ -11,9 +11,10 @@ import {
 import { connectToDatabase } from "@/lib/mongoose";
 import cloudinary from "cloudinary";
 import type {
-   ICourses,
-   CloudinaryUploadResult,
+  ICourses,
+  CloudinaryUploadResult,
   ExamDetail,
+  Semester,
 } from "@/interface";
 import { PaperAdmin } from "@/db/papers";
 import axios from "axios";
@@ -50,16 +51,14 @@ export async function POST(req: Request) {
     }
     const tags = await processAndAnalyze({ imageURL });
     const finalTags = await setTagsFromCurrentLists(tags);
-    console.log(finalTags)
+    console.log("Final tags:", finalTags);
     const subject = finalTags["course-name"];
     const slot = finalTags.slot;
     const exam = finalTags["exam-type"];
-    const year = formData.get("year") as string;
-    const campus = formData.get("campus") as string;
-    const semester =formData.get("semester") as string;
+    const year = finalTags.year;
+    const campus = formData.get("campus") as string
+    const semester = finalTags.semester;
 
- 
-    console.log(subject , slot, exam)
     if (
       !(
         courses.includes(subject) &&
@@ -70,7 +69,10 @@ export async function POST(req: Request) {
         semesters.includes(semester)
       )
     ) {
-      return NextResponse.json({ message: "Bad request/AI couldn't set tags" }, { status: 400 });
+      return NextResponse.json(
+        { message: "AI couldn't set tags" },
+        { status: 400 },
+      );
     }
     await connectToDatabase();
     let finalUrl: string | undefined = "";
@@ -209,14 +211,17 @@ async function setTagsFromCurrentLists(
     `${process.env.SERVER_URL}/api/course-list`,
   );
   const courses = data.map((course: { name: string }) => course.name);
-  if (!courses[0] || !slots[0] || !exams[0]) {
-    throw "Cannot fetch default value for courses/slot/exam!";
+  if (!courses[0] || !slots[0] || !exams[0] || !semesters[0] || !years[0]) {
+    throw "Cannot fetch default value for courses/slot/exam/sem/year!";
   }
+
   const newTags: ExamDetail = {
     "course-name": courses[0],
     slot: slots[0],
     "course-code": "notInUse",
     "exam-type": exams[0],
+    semester: semesters[0] as Semester,
+    year: years[0],
   };
   const coursesFuzy = new Fuse(courses);
   if (!tags) {
@@ -229,16 +234,27 @@ async function setTagsFromCurrentLists(
     if (subjectSearch) {
       newTags["course-name"] = subjectSearch.item;
     }
-    const slotPattern = new RegExp(`[${tags.slot}]`, "i");
-    const slotSearchResult = slots.find((s) => slotPattern.test(s));
-    if(slotSearchResult)
-    {
-      newTags.slot = slotSearchResult 
+    const slotSearchResult = findMatch(slots, tags.slot);
+    if (slotSearchResult) {
+      newTags.slot = slotSearchResult;
     }
     if ("exam-type" in tags && tags["exam-type"] in examMap) {
       const examType = tags["exam-type"] as keyof typeof examMap;
       newTags["exam-type"] = examMap[examType];
     }
+    const semesterSearchResult = findMatch(semesters, tags.semester);
+    if (semesterSearchResult) {
+      newTags.semester = semesterSearchResult as Semester;
+    }
+    const yearSearchResult = findMatch(years, tags.year);
+    if (yearSearchResult) {
+      newTags.year = yearSearchResult;
+    }
   }
   return newTags;
+}
+function findMatch<T>(arr: T[], value: string | undefined): T | undefined {
+  if (!value) return undefined; // Handle undefined case
+  const pattern = new RegExp(`[${value}]`, "i");
+  return arr.find((item) => pattern.test(String(item)));
 }
