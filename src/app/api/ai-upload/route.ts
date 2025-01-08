@@ -60,21 +60,50 @@ export async function POST(req: Request) {
     const campus = formData.get("campus") as string
     const semester = finalTags.semester;
 
-    if (
-      !(
-        courses.includes(subject) &&
-        slots.includes(slot) &&
-        exam.includes(exam) &&
-        years.includes(year) &&
-        campuses.includes(campus) &&
-        semesters.includes(semester)
-      )
-    ) {
+    if (!courses.includes(subject)) {
       return NextResponse.json(
-        { message: "AI couldn't set tags" },
-        { status: 400 },
+        { message: "The course subject is invalid." },
+        { status: 400 }
       );
     }
+    
+    if (!slots.includes(slot)) {
+      return NextResponse.json(
+        { message: "The slot is invalid." },
+        { status: 400 }
+      );
+    }
+    
+    if (!exam.includes(exam)) {
+      return NextResponse.json(
+        { message: "The exam type is invalid." },
+        { status: 400 }
+      );
+    }
+    
+    if (!years.includes(year)) {
+      return NextResponse.json(
+        { message: "The year is invalid." },
+        { status: 400 }
+      );
+    }
+    
+    if (!campuses.includes(campus)) {
+      return NextResponse.json(
+        { message:`The ${campus} is invalid.` },
+        { status: 400 }
+      );
+    }
+    
+    if (!semesters.includes(semester)) {
+      return NextResponse.json(
+        { message: "The semester is invalid." },
+        { status: 400 }
+      );
+    }
+    
+    // If all checks pass, continue with the rest of the logic
+    
     await connectToDatabase();
     let finalUrl: string | undefined = "";
     let public_id_cloudinary: string | undefined = "";

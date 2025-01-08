@@ -40,7 +40,7 @@ import { PDFDocument } from "pdf-lib";
 }
 
 const Page = () => {
-  const [campus, setCampus] = useState("");
+  const [campus, setCampus] = useState("Vellore");
 
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -73,8 +73,7 @@ const Page = () => {
     // }
     if (!campus) {
       setCampus("Vellore")
-      // toast.error("Campus is required");
-      // return;
+
     }
     // if (!semester) {
     //   toast.error("Semester is required");
