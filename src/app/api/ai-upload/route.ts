@@ -51,7 +51,6 @@ export async function POST(req: Request) {
       }
     }
     const tags = await processAndAnalyze({ imageURL });
-    console.log(" tags:", tags);
 
     const finalTags = await setTagsFromCurrentLists(tags);
     console.log("Final tags:", finalTags);
@@ -278,7 +277,6 @@ async function setTagsFromCurrentLists(
     if (semesterSearchResult) {
       newTags.semester = semesterSearchResult as SemesterType;
     }
-    console.log(tags.year, years)
     const yearSearchResult = findMatch(years, tags.year);
     if (yearSearchResult) {
       newTags.year = yearSearchResult;
