@@ -51,6 +51,8 @@ export async function POST(req: Request) {
       }
     }
     const tags = await processAndAnalyze({ imageURL });
+    console.log(" tags:", tags);
+
     const finalTags = await setTagsFromCurrentLists(tags);
     console.log("Final tags:", finalTags);
     const subject = finalTags["course-name"];
@@ -276,6 +278,7 @@ async function setTagsFromCurrentLists(
     if (semesterSearchResult) {
       newTags.semester = semesterSearchResult as SemesterType;
     }
+    console.log(tags.year, years)
     const yearSearchResult = findMatch(years, tags.year);
     if (yearSearchResult) {
       newTags.year = yearSearchResult;
@@ -285,6 +288,11 @@ async function setTagsFromCurrentLists(
 }
 function findMatch<T>(arr: T[], value: string | undefined): T | undefined {
   if (!value) return undefined; // Handle undefined case
-  const pattern = new RegExp(`[${value}]`, "i");
-  return arr.find((item) => pattern.test(String(item)));
+  const pattern = new RegExp(
+    value
+      .split("")
+      .map((char) => `(?=.*${char})`)
+      .join(""),
+    "i"
+  );  return arr.find((item) => pattern.test(String(item)));
 }

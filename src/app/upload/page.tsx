@@ -169,7 +169,7 @@ const Page = () => {
                 accept={{ "image/*": [], "application/pdf": [] }}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <section className="my-2 -mr-2 rounded-2xl border-2 border-dashed p-8 text-center">
+                  <section className="my-2 cursor-pointer -mr-2 rounded-2xl border-2 border-dashed p-8 text-center">
                     <div {...getRootProps()}>
                       <input {...getInputProps()} />
                       <p>
