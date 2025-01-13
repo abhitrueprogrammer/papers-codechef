@@ -12,10 +12,11 @@ import Dropzone from "react-dropzone";
 import { createCanvas } from "canvas";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
- async function pdfToImage(file: File) {
-   GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'
+async function pdfToImage(file: File) {
+  GlobalWorkerOptions.workerSrc =
+    "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
-   const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
+  const pdfDoc = await PDFDocument.load(await file.arrayBuffer());
 
   // Get the first page
   const page = pdfDoc.getPages()[0];
@@ -45,8 +46,7 @@ const Page = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [, setResetSearch] = useState(false);
-
-  const handlePrint = async () => {
+  function pdfCheckAndSelect<T extends File>(acceptedFiles: T[]) {
     const maxFileSize = 5 * 1024 * 1024;
     const allowedFileTypes = [
       "application/pdf",
@@ -55,42 +55,23 @@ const Page = () => {
       "image/gif",
     ];
 
-    // if (!slot) {
-    //   toast.error("Slot is required");
-    //   return;
-    // }
-    // if (!subject) {
-    //   toast.error("Subject is required");
-    //   return;
-    // }
-    // if (!exam) {
-    //   toast.error("Exam is required");
-    //   return;
-    // }
-    // if (!year) {
-    //   toast.error("Year is required");
-    //   return;
-    // }
-    if (!campus) {
-      setCampus("Vellore")
-
-    }
-    // if (!semester) {
-    //   toast.error("Semester is required");
-    //   return;
-    // }
-    if (!files || files.length === 0) {
-      toast.error("No files selected");
+    const toastId = toast.loading("uploading your files");
+    if (!acceptedFiles || acceptedFiles.length === 0) {
+      toast.error("No files selected", {
+        id: toastId,
+      });
       return;
     }
 
-    if (files.length > 5) {
-      toast.error("More than 5 files selected");
+    if (acceptedFiles.length > 5) {
+      toast.error("More than 5 files selected", {
+        id: toastId,
+      });
       return;
     }
 
     // File validations
-    const invalidFiles = files.filter(
+    const invalidFiles = acceptedFiles.filter(
       (file) =>
         file.size > maxFileSize || !allowedFileTypes.includes(file.type),
     );
@@ -98,27 +79,43 @@ const Page = () => {
     if (invalidFiles.length > 0) {
       toast.error(
         `Some files are invalid. Ensure each file is below 5MB and of an allowed type (PDF, JPEG, PNG, GIF).`,
+        {
+          id: toastId,
+        },
       );
       return;
     }
 
-    const isPdf = files.length === 1 && files[0]?.type === "application/pdf";
-    if (isPdf && files.length > 1) {
-      toast.error("PDFs must be uploaded separately");
+    const isPdf =
+      acceptedFiles.length === 1 &&
+      acceptedFiles[0]?.type === "application/pdf";
+    if (isPdf && acceptedFiles.length > 1) {
+      toast.error("PDFs must be uploaded separately", {
+        id: toastId,
+      });
       return;
     }
-    console.log("Outside")
+
+    setFiles(acceptedFiles);
+    toast.success(`${acceptedFiles.length} files selected!`, {
+      id: toastId,
+    });
+  }
+  const handlePrint = async () => {
+    if (!campus) {
+      setCampus("Vellore");
+    }
+
+    const isPdf = files.length === 1 && files[0]?.type === "application/pdf";
 
     // Prepare FormData
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("files", file);
     });
-    // formData.append("subject", subject);
-    // formData.append("slot", slot);
-    if(isPdf && files[0])
-    {
-      formData.append("image", await pdfToImage(files[0]))
+
+    if (isPdf && files[0]) {
+      formData.append("image", await pdfToImage(files[0]));
     }
     // formData.append("exam", exam);
     formData.append("campus", campus);
@@ -161,15 +158,11 @@ const Page = () => {
           {/* <legend className="text-lg font-bold">Upload papers</legend> */}
 
           <div className="flex w-full flex-col 2xl:gap-y-4">
-
             {/* File Dropzone */}
             <div>
-              <Dropzone
-                onDrop={(acceptedFiles) => setFiles(acceptedFiles)}
-                accept={{ "image/*": [], "application/pdf": [] }}
-              >
+              <Dropzone onDrop={pdfCheckAndSelect}>
                 {({ getRootProps, getInputProps }) => (
-                  <section className="my-2 -mr-2 rounded-2xl border-2 border-dashed p-8 text-center">
+                  <section className="my-2 -mr-2 cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center">
                     <div {...getRootProps()}>
                       <input {...getInputProps()} />
                       <p>
