@@ -36,6 +36,7 @@ import {
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface Params {
   params: { id: string };
@@ -94,7 +95,7 @@ export default function PdfViewer({ url, name }: PdfViewerProps) {
             )}
           </ZoomIn>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-5">
           <div className="hidden gap-x-4 md:flex md:items-center">
             <getFilePluginInstance.Download>
               {(props) => (
@@ -130,15 +131,24 @@ export default function PdfViewer({ url, name }: PdfViewerProps) {
                 <div className="flex justify-center  space-x-4">
                   <QR url={paperPath}></QR>
                 </div>
-                  <Button
-                    type="submit"
-                    size="sm"
-                    className="px-3"
-                    onClick={() => navigator.clipboard.writeText(paperPath)}
-                  >
-                    <span className="sr-only">Copy</span>
-                    <Copy />
-                  </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="px-3"
+                  onClick={async () => {
+                    await toast.promise(
+                      navigator.clipboard.writeText(paperPath), // This is a promise
+                      {
+                        success: "Link copied successfully",
+                        loading: "Copying link...",
+                        error: "Error copying link",
+                      },
+                    );
+                  }}
+                >
+                  <span className="sr-only">Copy</span>
+                  <Copy />
+                </Button>
               </DialogContent>
             </Dialog>
           </div>
