@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import PdfViewer from "@/components/pdfViewer";
 import Loader from "@/components/ui/loader";
 import { type ErrorResponse, type PaperResponse } from "@/interface";
+import { extractBracketContent } from "@/util/utils";
 import axios, { type AxiosResponse } from "axios";
 import { type Metadata } from "next";
 import { redirect } from "next/navigation"; // Import redirect
@@ -164,7 +165,7 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
             {paper.subject} {paper.exam} {paper.slot} {paper.year}
           </h1>
           <center>
-            <PdfViewer url={paper.finalUrl}></PdfViewer>
+            <PdfViewer url={paper.finalUrl} name={`${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}`}></PdfViewer>
           </center>
         </>
       )}
