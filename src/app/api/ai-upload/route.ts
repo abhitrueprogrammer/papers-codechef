@@ -161,7 +161,7 @@ export async function POST(req: Request) {
     });
     await paper.save();
     return NextResponse.json(
-      { status: "success", url: finalUrl, thumbnailUrl: thumbnailUrl },
+      { status: "success",  },
       { status: 201 },
     );
   } catch (error) {

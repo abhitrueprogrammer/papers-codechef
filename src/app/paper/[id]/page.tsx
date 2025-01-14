@@ -8,6 +8,7 @@ import { extractBracketContent } from "@/util/utils";
 import axios, { type AxiosResponse } from "axios";
 import { type Metadata } from "next";
 import { redirect } from "next/navigation"; // Import redirect
+import QR from "@/components/qr";
 
 export async function generateMetadata({
   params,
