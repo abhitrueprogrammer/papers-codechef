@@ -121,34 +121,34 @@ export default function PdfViewer({ url, name }: PdfViewerProps) {
               <DialogTrigger>
                 <FaShare></FaShare>
               </DialogTrigger>
-              <DialogContent className="max-w-96">
+              <DialogContent className="max-w-96 ">
                 <DialogHeader>
                   <DialogTitle>Share Papers with your friends!</DialogTitle>
                   <DialogDescription>
                     Either scan the QR or copy the link and share
                   </DialogDescription>
                 </DialogHeader>
-                <div className="flex justify-center  space-x-4">
+                <div className="flex flex-col items-center justify-center gap-5  ">
                   <QR url={paperPath}></QR>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    className="flex w-fit items-center justify-between gap-5 px-3"
+                    onClick={async () => {
+                      await toast.promise(
+                        navigator.clipboard.writeText(paperPath), // This is a promise
+                        {
+                          success: "Link copied successfully",
+                          loading: "Copying link...",
+                          error: "Error copying link",
+                        },
+                      );
+                    }}
+                  >
+                    <p>Copy Link To Clipboard</p>
+                    <Copy />
+                  </Button>
                 </div>
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="px-3"
-                  onClick={async () => {
-                    await toast.promise(
-                      navigator.clipboard.writeText(paperPath), // This is a promise
-                      {
-                        success: "Link copied successfully",
-                        loading: "Copying link...",
-                        error: "Error copying link",
-                      },
-                    );
-                  }}
-                >
-                  <span className="sr-only">Copy</span>
-                  <Copy />
-                </Button>
               </DialogContent>
             </Dialog>
           </div>
