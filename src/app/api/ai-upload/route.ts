@@ -39,12 +39,15 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const files: File[] = formData.getAll("files") as File[];
     const isPdf = formData.get("isPdf") === "true"; // Convert string to boolean
-
+    
+    const orderedFiles = Array.from(files).sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
     let imageURL = "";
     if (isPdf) {
       imageURL = formData.get("image") as string;
     } else {
-      const bytes = await files[0]?.arrayBuffer();
+      const bytes = await orderedFiles[0]?.arrayBuffer();
       if (bytes) {
         const buffer = Buffer.from(bytes);
         imageURL = `data:${"image/png"};base64,${buffer.toString("base64")}`;
