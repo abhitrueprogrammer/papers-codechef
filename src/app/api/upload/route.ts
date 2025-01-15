@@ -144,9 +144,7 @@ async function uploadFile(
 async function CreatePDF(files: File[]) {
   const pdfDoc = await PDFDocument.create();
 
-  const orderedFiles = Array.from(files).sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
+  const orderedFiles = files;
 
   for (const file of orderedFiles) {
     const fileBlob = new Blob([file]);
