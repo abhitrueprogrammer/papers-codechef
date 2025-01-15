@@ -126,7 +126,7 @@ export async function POST(req: Request) {
           return;
         }
 
-        const mergedPdfBytes = await CreatePDF(files);
+        const mergedPdfBytes = await CreatePDF(orderedFiles);
         [public_id_cloudinary, finalUrl] = await uploadPDFFile(
           mergedPdfBytes,
           uploadPreset,
@@ -204,12 +204,13 @@ async function uploadFile(
   }
 }
 
-async function CreatePDF(files: File[]) {
+async function CreatePDF(orderedFiles: File[]) {
   const pdfDoc = await PDFDocument.create();
   //sort files using name. Later remove to see if u can without names
-  const orderedFiles = Array.from(files).sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
+  // moved to main function
+  // const orderedFiles = Array.from(files).sort((a, b) => {
+  //   return a.name.localeCompare(b.name);
+  // });
 
   for (const file of orderedFiles) {
     const fileBlob = new Blob([file]);
