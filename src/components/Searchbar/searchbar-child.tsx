@@ -166,6 +166,7 @@ function SearchBarChild({
                       </span>
                     );
                   })()}
+
                 </li>
               ))}
             </ul>

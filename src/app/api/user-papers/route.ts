@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import Paper from "@/db/papers";
-import { StoredSubjects } from "@/interface";
+import { StoredSubjects, TransformedPaper } from "@/interface";
 
 export const dynamic = "force-dynamic";
 
-interface TransformedPaper {
-  subject: string;
-  slots: string[];
-}
 
 export async function POST(req: Request) {
   try {

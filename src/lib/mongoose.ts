@@ -1,27 +1,41 @@
 import mongoose from "mongoose";
-
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your Mongo URI to .env.local");
+declare global {
+  // eslint-disable-next-line no-var
+    var mongoose: { conn: mongoose.Mongoose | null; promise: Promise<mongoose.Mongoose> | null } | undefined; // This must be a `var` and not a `let / const`
 }
 
-const uri = process.env.MONGODB_URI;
+let cached = global.mongoose;
 
-let isConnected = false;
+cached ??= global.mongoose = { conn: null, promise: null };
 
-export const connectToDatabase = async () => {
-  if (isConnected) {
-    return;
+export async function connectToDatabase() {
+  const MONGODB_URI = process.env.MONGODB_URI!;
+
+  if (!MONGODB_URI) {
+    throw new Error(
+      "Please define the MONGODB_URI environment variable inside .env.local",
+    );
   }
 
-  if (mongoose.connection.readyState === mongoose.ConnectionStates.connected) {
-    isConnected = true;
-    return;
+  if (cached?.conn) {
+    return cached.conn;
   }
-
+  if (cached && !cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
   try {
-    await mongoose.connect(uri);
-    isConnected = true;
-  } catch (error) {
-    throw new Error("Failed to connect to MongoDB");
+    cached!.conn = await cached!.promise;
+  } catch (e) {
+    if (cached) {
+      cached.promise = null;
+    }
+    throw e;
   }
-};
+
+  return cached?.conn;
+}

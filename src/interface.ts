@@ -204,3 +204,8 @@ export interface Filters {
 export interface StoredSubjects {
   subjects: string[];
 }
+
+export interface TransformedPaper {
+  subject: string;
+  slots: string[];
+}

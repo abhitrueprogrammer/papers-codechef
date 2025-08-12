@@ -323,17 +323,17 @@ const CatalogueContent = () => {
 
         <div className="flex items-center gap-2 p-7">
           <div>
-            <p className="text-s font-semibold text-white/80">
+            <p className="text-s font-semibold text-gray-700 dark:text-white/80">
               {subject?.split("[")[1]?.replace("]", "")}
             </p>
-            <h2 className="text-2xl font-extrabold text-white md:text-3xl">
+            <h2 className="text-2xl font-extrabold text-gray-700 dark:text-white md:text-3xl">
               {subject?.split(" [")[0]}
             </h2>
           </div>
           <div className="mt-7">
             <button onClick={handlePinToggle}>
               <Pin
-                className={`h-7 w-7 ${pinned ? "fill-[#A78BFA]" : ""} stroke-white`}
+                className={`h-7 w-7 ${pinned ? "fill-[#A78BFA]" : ""} stroke-gray-700 dark:stroke-white`}
               />
             </button>
           </div>

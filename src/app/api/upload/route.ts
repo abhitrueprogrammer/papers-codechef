@@ -181,5 +181,7 @@ async function CreatePDF(orderedFiles: File[]) {
   }
 
   const mergedPdfBytes = await pdfDoc.save();
-  return mergedPdfBytes;
+  const ab = new ArrayBuffer(mergedPdfBytes.byteLength);
+  new Uint8Array(ab).set(mergedPdfBytes);
+  return ab;
 }

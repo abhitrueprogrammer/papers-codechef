@@ -96,17 +96,17 @@ export default function Footer() {
         {/* Events */}
         <div className="flex w-full flex-col gap-2 text-black dark:text-white sm:w-[45%] lg:w-[15%]">
           <h3 className="font-jost text-xl font-semibold">Events</h3>
-          <Link href="https://devsoc25.codechefvit.com">DevSoc</Link>
-          <Link href="https://gravitas.codechefvit.com">CookOff</Link>
-          <Link href="https://gravitas.codechefvit.com">Clueminati</Link>
+          <Link href="https://devsoc25.codechefvit.com" target="_blank">DevSoc</Link>
+          <Link href="https://gravitas.codechefvit.com" target="_blank">CookOff</Link>
+          <Link href="https://gravitas.codechefvit.com" target="_blank">Clueminati</Link>
         </div>
 
         {/* Projects */}
         <div className="flex w-full flex-col gap-2 text-black dark:text-white sm:w-[45%] lg:w-[20%]">
           <h3 className="font-jost text-xl font-semibold">Our Projects</h3>
-          <Link href="https://papers.codechefvit.com">Papers</Link>
-          <Link href="https://contactify.codechefvit.com">Contactify</Link>
-          <Link href="https://ffcs.codechefvit.com">FFCS-inator</Link>
+          <Link href="https://papers.codechefvit.com" target="_blank">Papers</Link>
+          <Link href="https://contactify.codechefvit.com" target="_blank">Contactify</Link>
+          <Link href="https://ffcs.codechefvit.com" target="_blank">FFCS-inator</Link>
         </div>
 
         {/* Suggestions */}

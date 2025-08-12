@@ -40,14 +40,14 @@ function Navbar() {
     <div className="sticky top-0 z-10 w-full bg-[#B2B8FF] px-4 py-4 dark:bg-[#130E1F] md:px-8 md:py-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <a href="https://www.codechefvit.com/">
+            <Link href="https://www.codechefvit.com/" target="_blank">
             <Image
               src={ccLogo as HTMLImageElement}
               alt="codechef-logo"
               height={60}
               width={60}
             />
-          </a>
+          </Link>
 
           <Link
             href="/"
@@ -58,14 +58,14 @@ function Navbar() {
 
           <div className="mt-3 hidden md:flex">
             <Link href="/pinned">
-              <div className="ml-2 flex items-center gap-2 rounded-full border border-[#3A3745] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1A1823]">
+              <div className="ml-2 flex items-center gap-2 rounded-full border bg-[#e8e9ff] dark:bg-black border-[#3A3745] px-4 py-2 text-sm font-semibold dark:text-white transition hover:bg-slate-50 text-gray-700 dark:hover:bg-[#1A1823]">
                 <Pin className="h-4 w-4" />
                 Pinned Subjects
               </div>
             </Link>
             <div className="ml-2 hidden md:flex">
               <Link href="/request">
-                <div className="ml-2 flex items-center gap-2 rounded-full border border-[#3A3745] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1A1823]">
+                <div className="ml-2 flex items-center gap-2 rounded-full border bg-[#e8e9ff] dark:bg-black border-[#3A3745] px-4 py-2 text-sm font-semibold dark:text-white transition hover:bg-slate-50 text-gray-700 dark:hover:bg-[#1A1823]">
                   <ArrowUpRight className="h-4 w-4" />
                   Paper Request
                 </div>
@@ -86,7 +86,7 @@ function Navbar() {
           </div>
 
           <Link href={pathname === "/upload" ? "/" : "/upload"}>
-            <div className="flex items-center gap-2 rounded-full border border-[#3A3745] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1A1823]">
+            <div className="flex items-center gap-2 rounded-full border bg-[#e8e9ff] dark:bg-black border-[#3A3745] px-4 py-2 text-sm font-semibold dark:text-white transition hover:bg-slate-50 text-gray-700 dark:hover:bg-[#1A1823]">
               <ArrowDownLeftIcon className="h-4 w-4 rotate-90" />
               <span>
                 {pathname === "/upload" ? "Search Papers" : "Upload Papers"}
