@@ -9,7 +9,11 @@ import {
   extractBracketContent,
   extractWithoutBracketContent,
 } from "@/util/utils";
-import { getSecureUrl, generateFileName, downloadFile } from "@/util/download";
+import {
+  getSecureUrl,
+  generateFileName,
+  downloadFile,
+} from "@/util/download_paper";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 

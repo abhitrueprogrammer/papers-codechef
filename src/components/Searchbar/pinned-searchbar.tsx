@@ -57,6 +57,7 @@ function PinnedSearchBar({
       setPinned(currentPinnedSubjects.includes(suggestion));
     }
 
+    setShowControls(true);
     setSuggestions([]);
     filtersNotPulled?.();
   };
@@ -110,6 +111,9 @@ function PinnedSearchBar({
 
     localStorage.setItem("userSubjects", JSON.stringify(updated));
     window.dispatchEvent(new Event("userSubjectsChanged"));
+
+    setSearchText("");
+    setPinned(false);
   };
 
   useEffect(() => {

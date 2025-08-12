@@ -6,7 +6,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Download, ZoomIn, ZoomOut, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "./ui/button";
-import { downloadFile } from "@/util/download";
+import { downloadFile } from "@/util/download_paper";
 import ShareButton from "./ShareButton";
 import Loader from "./ui/loader";
 import { FaGreaterThan, FaLessThan } from "react-icons/fa6";

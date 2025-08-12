@@ -14,7 +14,11 @@ import { Filter } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Pin } from "lucide-react";
 import { StoredSubjects } from "@/interface";
-import { getSecureUrl, generateFileName, downloadFile } from "@/util/download";
+import {
+  getSecureUrl,
+  generateFileName,
+  downloadFile,
+} from "@/util/download_paper";
 
 const CatalogueContent = () => {
   const router = useRouter();
