@@ -2,9 +2,7 @@ import mongoose, { Schema, type Model } from "mongoose";
 import { type IPaper, type IAdminPaper, type ICourses } from "@/interface";
 
 const adminSchema = new Schema<IAdminPaper>({
-  public_id_cloudinary: { type: String, required: true },
-  cloudinary_index: { type: Number, required: true },
-  final_url: { type: String, required: true },
+  file_url: { type: String, required: true },
   thumbnail_url: { type: String, required: false },
   subject: { type: String || null, index: true },
   slot: { type: String || null },
@@ -39,7 +37,7 @@ const adminSchema = new Schema<IAdminPaper>({
 });
 
 const paperSchema = new Schema<IPaper>({
-  final_url: { type: String, required: true },
+  file_url: { type: String, required: true },
   thumbnail_url: { type: String, required: true },
   subject: { type: String, required: true, index: true },
   slot: { type: String, required: true },

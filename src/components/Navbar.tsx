@@ -15,7 +15,7 @@ import {
 import FloatingNavbar from "./FloatingNavbar";
 import PWAInstallButton from "./ui/PWAInstallButton";
 import SearchBarChild from "./Searchbar/searchbar-child";
-import Banner from "@/components/bannerDismiss";
+import Banner from "@/components/ui/banners/bannerDismiss";
 import type { ICourses } from "@/interface";
 import {
   DropdownMenu,
@@ -25,7 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCourses } from "@/context/courseContext";
 import PinnedModal from "./ui/PinnedModal";
-import CookoffBanner from "./CookoffBanner";
+import RequestModal from "./ui/RequestModal";
+//import CookoffBanner from "./CookoffBanner";
 
 function Navbar() {
   const pathname: string = usePathname() ?? "/";
@@ -48,22 +49,21 @@ function Navbar() {
 
       <div className="flex h-8 items-center gap-1 rounded-full border border-[#3A3745] bg-[#e8e9ff] px-2.5 py-1 text-xs font-semibold text-gray-700 transition hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] sm:h-9 sm:gap-2 sm:px-3.5 sm:py-1.5 sm:text-sm md:h-10 md:px-4 md:py-2 md:text-base">
         <span className="truncate">
-          <PinnedModal/>
+          <PinnedModal />
         </span>
       </div>
 
-      <Link href="/request" className="ml-2 mt-2 sm:mt-0">
-        <div className="flex h-8 items-center gap-1 rounded-full border border-[#3A3745] bg-[#e8e9ff] px-2.5 py-1 text-xs font-semibold text-gray-700 transition hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] sm:h-9 sm:gap-2 sm:px-3.5 sm:py-1.5 sm:text-sm md:h-10 md:px-4 md:py-2 md:text-base">
-          <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          <span className="truncate">Paper Request</span>
-        </div>
-      </Link>
+      <div className="flex h-8 items-center gap-1 rounded-full border border-[#3A3745] bg-[#e8e9ff] px-2.5 py-1 text-xs font-semibold text-gray-700 transition hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] sm:h-9 sm:gap-2 sm:px-3.5 sm:py-1.5 sm:text-sm md:h-10 md:px-4 md:py-2 md:text-base">
+        <span className="truncate">
+          <RequestModal />
+        </span>
+      </div>
     </>
   );
 
   return (
     <div className="sticky top-0 z-[50] w-full bg-[#B2B8FF] dark:bg-[#130E1F]">
-      {/* <Banner
+      {/*<Banner
         bannerId="freshers"
         bgColor="#fef3c7"
         textColor="#5a3000"
@@ -71,8 +71,9 @@ function Navbar() {
         accentColor="#78350f"
         title="Attention Freshers!"
         message="If papers for your subject are not yet available, click on your subject and explore related subjects until papers become available, as these are newly introduced courses."
-      /> */}
-      <CookoffBanner />
+      />*/}
+      {/* <CookoffBanner /> */}
+
       <div className="flex items-center justify-between bg-inherit px-4 py-4 md:px-8 md:py-5">
         {}
         <div className="relative flex items-center gap-4">
@@ -97,7 +98,7 @@ function Navbar() {
               <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#3A3745] bg-[#e8e9ff] text-gray-700 hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#3A3745] bg-[#e8e9ff] text-gray-700 shadow-lg transition-transform duration-200 hover:scale-105 hover:bg-slate-50 active:scale-95 dark:bg-black dark:text-white dark:hover:bg-[#1A1823]"
                     aria-label="Toggle dropdown"
                   >
                     <ChevronDown
@@ -107,17 +108,20 @@ function Navbar() {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
-                  className="w-56 rounded-2xl border border-[rgba(255,255,255,0.1)] border-[#3A3745] bg-[#e8e9ff] text-gray-700 hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] shadow-2xl backdrop-blur-sm"
+                  className="w-56 rounded-2xl border border-[#3A3745] border-[rgba(255,255,255,0.1)] bg-[#e8e9ff] text-gray-700 shadow-2xl backdrop-blur-sm hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823]"
                   align="start"
                 >
-                  <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
-                    <PinnedModal/>
+                  <DropdownMenuItem
+                    asChild
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <PinnedModal />
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/request" className="flex items-center gap-3">
-                      <ArrowUpRight className="h-4 w-4" />
-                      <span className="font-medium">Paper Request</span>
-                    </Link>
+                  <DropdownMenuItem
+                    asChild
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    <RequestModal />
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -131,7 +135,7 @@ function Navbar() {
                 >
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-[#3A3745] bg-[#e8e9ff] text-gray-700 hover:bg-slate-50 dark:bg-black dark:text-white dark:hover:bg-[#1A1823] shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-[#3A3745] bg-[#e8e9ff] text-gray-700 shadow-lg transition-transform duration-200 hover:scale-105 hover:bg-slate-50 active:scale-95 dark:bg-black dark:text-white dark:hover:bg-[#1A1823]"
                       aria-label="Toggle dropdown"
                     >
                       <ChevronDown
@@ -141,25 +145,25 @@ function Navbar() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
-                  className="xl:hidden mt-2 py-2 w-72 space-y-1 rounded-3xl 
-                  border border-[#3A3745] shadow-lg backdrop-blur-sm transition-colors
-                  bg-[#e8e9ff] text-gray-700 
-                  dark:bg-black dark:text-white dark:border-[#3A3745]"
-                  align="end"
-                >
-                    <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
-                      <PinnedModal/>
+                    className="flex w-72 flex-col gap-1 space-y-1 rounded-3xl border border-[#3A3745] bg-[#e8e9ff] px-4 py-3 text-gray-700 shadow-lg backdrop-blur-sm transition-colors dark:border-[#3A3745] dark:bg-black dark:text-white xl:hidden"
+                    align="end"
+                  >
+                    <DropdownMenuItem
+                      asChild
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <PinnedModal />
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/request" className="flex items-center gap-3">
-                        <ArrowUpRight className="h-4 w-4" />
-                        <span className="font-medium">Paper Request</span>
-                      </Link>
+                    <DropdownMenuItem
+                      asChild
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <RequestModal />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div className="hidden h-10 items-center xl:flex">
+              <div className="hidden h-10 items-center gap-2 xl:flex">
                 {renderHomePageButtons()}
               </div>
             </>

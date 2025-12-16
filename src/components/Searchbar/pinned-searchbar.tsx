@@ -1,24 +1,22 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import PinButton from "../PinButton";
 import Fuse from "fuse.js";
-import NavDropdownButton from "../NavDropdownButton";
-import { StoredSubjects } from "@/interface";
-import FloatingControls from "./floating-controls";
-import { type ICourseWithCount } from "@/interface";
-import { IUpcomingPaper } from "@/interface";
+import { type StoredSubjects, type ICourseWithCount, type IUpcomingPaper } from "@/interface";
 
 function PinnedSearchBar({
   initialSubjects,
   setDisplayPapers,
+  displayPapers,
   filtersNotPulled,
 }: {
   initialSubjects: ICourseWithCount[];
   setDisplayPapers: React.Dispatch<React.SetStateAction<IUpcomingPaper[]>>; 
+  displayPapers : IUpcomingPaper[];
   filtersNotPulled?: () => void;
 }) {
   const router = useRouter();
@@ -31,7 +29,7 @@ function PinnedSearchBar({
   const [fuzzy, setFuzzy] = useState(
     () => new Fuse<ICourseWithCount>([], { keys: ["name"], threshold: 0.3 }),
   );
-
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   useEffect(() => {
     if (initialSubjects && initialSubjects.length > 0) {
       setFuzzy(new Fuse(initialSubjects, { keys: ["name"], threshold: 0.3 }));
@@ -88,13 +86,13 @@ function PinnedSearchBar({
     };
   }, []);
 
-  const handlePinToggle = () => {
+  const handlePinToggle = (searchTextOverride? : string) => {
     const current = !pinned;
     setPinned(current);
-
+    const subject : string = (searchTextOverride ?? searchText).toString().trim();
     if (
-      searchText.trim() === "" ||
-      !initialSubjects.find((s) => s.name === searchText)
+      subject.trim() === "" ||
+      !initialSubjects.find((s) => s.name === subject)
     ) {
       return;
     }
@@ -102,10 +100,17 @@ function PinnedSearchBar({
     const saved = JSON.parse(
       localStorage.getItem("userSubjects") ?? "[]",
     ) as string[];
-    const updated = current
-      ? [...new Set([...saved, searchText])]
-      : saved.filter((s) => s !== searchText);
-  
+
+    let updated: string[] = [];
+
+    if (saved.includes(subject)) {
+      updated = saved.filter((s) => s !== subject);
+      setPinned(false);
+    } else {
+      updated = [...new Set([...saved, subject])];
+      setPinned(true);
+    }
+    
 
     if (updated.length === 0) {
       setShowControls(false);
@@ -116,18 +121,17 @@ function PinnedSearchBar({
     localStorage.setItem("userSubjects", JSON.stringify(updated));
 
     setDisplayPapers((prev) => {
-      if (current) {
-        if (!prev.find((paper) => paper.subject === searchText)) {
-          return [...prev, { subject: searchText, slots: [] }];
-        }
-        return prev;
+      const isAlreadyPinned = prev.find((paper) => paper.subject === subject);
+      if (!isAlreadyPinned) {
+        return [...prev, { subject, slots: [] }];
       } else {
-        return prev.filter((paper) => paper.subject !== searchText);
+        return prev.filter((paper) => paper.subject !== subject);
       }
     });
 
     setSearchText("");
     setPinned(false);
+    setHighlightedIndex(-1);
   };
 
   useEffect(() => {
@@ -186,6 +190,24 @@ function PinnedSearchBar({
                   className={`text-md w-full rounded-lg bg-[#B2B8FF] px-4 py-6 pr-10 font-play tracking-wider text-black shadow-sm ring-0 placeholder:text-black focus:outline-none focus:ring-0 dark:bg-[#7480FF66] dark:text-white placeholder:dark:text-white ${
                     suggestions.length > 0 ? "rounded-b-none" : ""
                   }`}
+                  onKeyDown={(e) => {
+                    if(suggestions.length == 0 && searchText.trim() == "") return;
+                    if(e.key == 'ArrowDown'){
+                      e.preventDefault();
+                      setHighlightedIndex((curr) => (curr + 1) % suggestions.length);
+                    }
+                    else if(e.key == 'ArrowUp'){
+                      e.preventDefault();
+                      setHighlightedIndex((curr) => (curr - 1 + suggestions.length) % suggestions.length);
+                    }
+                    else if(e.key == 'Enter'){
+                      e.preventDefault();
+                      if(suggestions.length > 0 && highlightedIndex >=0 && suggestions[highlightedIndex] != undefined){
+                        handlePinToggle(suggestions[highlightedIndex]);
+                        setSuggestions([]);
+                      }
+                    }
+                  }}
                 />
                 <div className="absolute inset-y-0 right-3 flex items-center">
                   <Search className="h-5 w-5 text-black dark:text-white" />
@@ -202,7 +224,10 @@ function PinnedSearchBar({
                       <li
                         key={index}
                         onClick={() => handleSelectSuggestion(suggestion)}
-                        className="cursor-pointer truncate p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className={`flex cursor-pointer items-center rounded p-2 
+                        ${index === highlightedIndex
+                          ? "bg-gray-200 dark:bg-gray-800"
+                          : "hover:bg-gray-200 dark:hover:bg-gray-800"}`}
                       >
                         {suggestion}
                       </li>

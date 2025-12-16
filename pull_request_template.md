@@ -29,3 +29,6 @@ What problem does it solve, or what feature does it add?
 Examples of a good PR - 
 
 https://github.com/CodeChefVIT/papers-codechef/pull/247
+
+
+**Note:** Open all pull requests to `staging` branch

@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/mongoose";
+import { connectToDatabase } from "@/lib/database/mongoose";
 import { IRelatedSubject } from "@/interface";
 import RelatedSubject from "@/db/relatedSubjects";
+import { escapeRegExp } from "@/lib/utils/regex";
 
 export const dynamic = "force-dynamic";
 
@@ -10,10 +11,6 @@ export async function GET(req: NextRequest) {
     await connectToDatabase();
     const url = req.nextUrl.searchParams;
     const subject = url.get("subject");
-    const escapeRegExp = (text: string) => {
-      return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    };
-    const escapedSubject = escapeRegExp(subject ?? "");
 
     if (!subject) {
       return NextResponse.json(
@@ -21,9 +18,12 @@ export async function GET(req: NextRequest) {
         { status: 400 },
       );
     }
+
+    const escapedSubject = escapeRegExp(subject);
     const subjects: IRelatedSubject[] = await RelatedSubject.find({
       subject: { $regex: new RegExp(`${escapedSubject}`, "i") },
     });
+    
     console.log("realted", subjects);
 
     return NextResponse.json(

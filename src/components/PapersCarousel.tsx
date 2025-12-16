@@ -12,7 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { chunkArray } from "@/util/utils";
+import { chunkArray } from "@/lib/utils/array";
 import { Skeleton } from "@/components/ui/skeleton";
 import SkeletonPaperCard from "@/components/SkeletonPaperCard";
 
@@ -63,65 +63,68 @@ function PapersCarousel() {
   const plugins = [Autoplay({ delay: 8000, stopOnInteraction: true })];
 
   return (
-    <div className="mt-3 px-4">
-      <p className="my-8 hidden text-center font-play text-lg font-semibold md:block">
-        Upcoming Exams
-      </p>
+      <div className="mt-3 px-4">
+        <p className="my-8 text-center font-play text-lg font-semibold md:block">
+          Upcoming Exams
+        </p>
 
-      <Carousel
-        opts={{ align: "start", loop: true }}
-        plugins={plugins}
-        className="w-full"
-      >
-        <div className="relative mt-4 flex justify-end gap-4">
-          <CarouselPrevious className="relative" />
-          <CarouselNext className="relative" />
-        </div>
-
-        <CarouselContent>
-          {isLoading ? (
-            <CarouselItem
-              className={`grid ${
-                chunkSize === 2 ? "grid-cols-1 grid-rows-2" : chunkSize === 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-4"
-              } gap-4 lg:auto-rows-fr`}
-            >
-              <SkeletonPaperCard length={chunkSize} />
-            </CarouselItem>
-          ) : (
-            chunkedPapers.map((paperGroup, index) => {
-              const placeholdersNeeded = chunkSize - paperGroup.length;
-
-              return (
-                <CarouselItem
-                  key={`carousel-item-${index}`}
-                  className={`grid ${
-                    chunkSize === 2 ? "grid-cols-1 grid-rows-2" : chunkSize === 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-4"
-                  } gap-4 lg:auto-rows-fr`}
-                >
-                  {paperGroup.map((paper, subIndex) => (
-                    <div key={subIndex} className="h-full">
-                      <UpcomingPaper
-                        subject={paper.subject}
-                        slots={paper.slots}
-                      />
-                    </div>
-                  ))}
-
-                  {Array.from({ length: placeholdersNeeded }).map(
-                    (_, placeholderIndex) => (
-                      <div
-                        key={`placeholder-${placeholderIndex}`}
-                        className="invisible h-full"
-                      ></div>
-                    ),
-                  )}
-                </CarouselItem>
-              );
-            })
+        <Carousel
+            opts={{ align: "start", loop: true }}
+            plugins={plugins}
+            className="w-full"
+        >
+          {/* Only show arrows when there are multiple chunks to scroll through */}
+          {chunkedPapers.length > 1 && displayPapers.length > chunkSize && (
+              <div className="relative mt-4 flex justify-end gap-4">
+                <CarouselPrevious className="relative" />
+                <CarouselNext className="relative" />
+              </div>
           )}
-        </CarouselContent>
-      </Carousel>
-    </div>
+
+          <CarouselContent>
+            {isLoading ? (
+                <CarouselItem
+                    className={`grid ${
+                        chunkSize === 2 ? "grid-cols-1 grid-rows-2" : chunkSize === 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-4"
+                    } gap-4 lg:auto-rows-fr`}
+                >
+                  <SkeletonPaperCard length={chunkSize} />
+                </CarouselItem>
+            ) : (
+                chunkedPapers.map((paperGroup, index) => {
+                  const placeholdersNeeded = chunkSize - paperGroup.length;
+
+                  return (
+                      <CarouselItem
+                          key={`carousel-item-${index}`}
+                          className={`grid ${
+                              chunkSize === 2 ? "grid-cols-1 grid-rows-2" : chunkSize === 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-4"
+                          } gap-4 lg:auto-rows-fr`}
+                      >
+                        {paperGroup.map((paper, subIndex) => (
+                            <div key={subIndex} className="h-full">
+                              <UpcomingPaper
+                                  subject={paper.subject}
+                                  slots={paper.slots}
+                              />
+                            </div>
+                        ))}
+
+                        {Array.from({ length: placeholdersNeeded }).map(
+                            (_, placeholderIndex) => (
+                                <div
+                                    key={`placeholder-${placeholderIndex}`}
+                                    className="invisible h-full"
+                                ></div>
+                            ),
+                        )}
+                      </CarouselItem>
+                  );
+                })
+            )}
+          </CarouselContent>
+        </Carousel>
+      </div>
   );
 }
 

@@ -3,7 +3,7 @@ import PdfViewer from "@/components/pdfViewer";
 import RelatedPapers from "@/components/RelatedPaper";
 import Loader from "@/components/ui/loader";
 import { type ErrorResponse, type PaperResponse } from "@/interface";
-import { extractBracketContent } from "@/util/utils";
+import { extractBracketContent } from "@/lib/utils/string";
 import axios, { type AxiosResponse } from "axios";
 import { type Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -21,10 +21,10 @@ export async function generateMetadata({
         metadataBase: new URL("https://papers.codechefvit.com/"),
         title: `Papers | ${paper.subject} | ${paper.exam} | ${paper.slot}`,
         description: `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
-        icons: [{ rel: "icon", url: "/favicon.svg" }],
+        icons: [{ rel: "icon", url: "/assets/images/favicon.svg" }],
         openGraph: {
           title: `Papers | ${paper.subject} | ${paper.exam} | ${paper.slot}`,
-          images: [{ url: "/papers.png" }],
+          images: [{ url: "/assets/images/papers.png" }],
           url: "https://papers.codechefvit.com/",
           type: "website",
           description: `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
@@ -34,7 +34,7 @@ export async function generateMetadata({
           card: "summary_large_image",
           title: `Papers | ${paper.subject} | ${paper.exam} | ${paper.slot}`,
           description: `Discover ${paper.subject}'s question paper created by CodeChef-VIT at Vellore Institute of Technology. Made with ♡ to help students excel.`,
-          images: [{ url: "/papers.png" }],
+          images: [{ url: "/assets/images/papers.png" }],
         },
         applicationName: "Papers by CodeChef-VIT",
         keywords: [
@@ -165,7 +165,7 @@ const PaperPage = async ({ params }: { params: { id: string } }) => {
           </h1>
           <center>
             <PdfViewer
-              url={paper.final_url}
+              url={paper.file_url}
               name={`${extractBracketContent(paper.subject)}-${paper.exam}-${paper.slot}-${paper.year}`}
             ></PdfViewer>
           </center>

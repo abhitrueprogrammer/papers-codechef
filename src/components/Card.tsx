@@ -5,15 +5,15 @@ import { type IPaper } from "@/interface";
 import Image from "next/image";
 import { Eye, Download, Check } from "lucide-react";
 import {
-  capsule,
   extractBracketContent,
   extractWithoutBracketContent,
-} from "@/util/utils";
+} from "@/lib/utils/string";
 import {
   getSecureUrl,
   generateFileName,
   downloadFile,
-} from "@/util/download_paper";
+} from "@/lib/utils/download";
+import { Capsule } from "@/components/ui/capsule";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +31,7 @@ const Card = ({ paper, onSelect, isSelected }: CardProps) => {
   }, [isSelected]);
 
   const handleDownload = async (paper: IPaper) => {
-    await downloadFile(getSecureUrl(paper.final_url), generateFileName(paper));
+    await downloadFile(getSecureUrl(paper.file_url), generateFileName(paper));
   };
 
   const handleCheckboxChange = () => {
@@ -88,16 +88,16 @@ const Card = ({ paper, onSelect, isSelected }: CardProps) => {
               {extractWithoutBracketContent(paper.subject)}
             </div>
             <div className="flex flex-wrap gap-2">
-              {capsule(paper.exam)}
-              {capsule(paper.slot)}
-              {capsule(paper.year)}
-              {capsule(paper.semester)}
+              <Capsule>{paper.exam}</Capsule>
+              <Capsule>{paper.slot}</Capsule>
+              <Capsule>{paper.year}</Capsule>
+              <Capsule>{paper.semester}</Capsule>
             </div>
           </div>
         </div>
       </Link>
 
-      <div className="hidden items-center justify-between gap-2 px-4 pb-4 font-play md:flex">
+      <div className="flex items-center justify-between gap-2 px-4 pb-4 font-play">
         <div className="flex items-center gap-2">
           <input
             checked={checked}

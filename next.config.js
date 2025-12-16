@@ -8,7 +8,74 @@ await import("./src/env.js");
 const config = {
   swcMinify: false,
   images: {
-    domains: ["res.cloudinary.com"],
+    domains: ["storage.googleapis.com"],
+  },
+  async headers() {
+    return [
+      {
+        source: "/api/upcoming-papers",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/api/papers",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/api/selected-papers",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/api/related-subject",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/api/course-list",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/:path*\\.(css|js|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+    ];
   },
   webpack: (config, options) => {
     config.resolve.alias.canvas = false;

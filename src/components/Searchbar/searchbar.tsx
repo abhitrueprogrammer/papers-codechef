@@ -8,15 +8,17 @@ import { type IUpcomingPaper } from "@/interface";
 
 export default function SearchBar({
   type = "default",
+  displayPapers,
   setDisplayPapers,
 }: {
   type?: "default" | "pinned",
+  displayPapers?:IUpcomingPaper[]
   setDisplayPapers?: React.Dispatch<React.SetStateAction<IUpcomingPaper[]>> 
 }) {
   const { courses, loading, error, refetch } = useCourses();
 
-  return type === "pinned" && setDisplayPapers !== undefined ? (
-    <PinnedSearchBar initialSubjects={courses} setDisplayPapers={setDisplayPapers} />
+  return type === "pinned" && setDisplayPapers !== undefined && displayPapers !== undefined ? (
+    <PinnedSearchBar initialSubjects={courses} setDisplayPapers={setDisplayPapers} displayPapers={displayPapers} />
   ) : (
     <SearchBarChild initialSubjects={courses} />
   );

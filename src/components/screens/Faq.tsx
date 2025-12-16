@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from 'next/link';
-
+import RequestModal from "../ui/RequestModal";
 import { useState } from "react";
 
 function Faq() {
@@ -29,9 +29,8 @@ const faqs = [
       Click the {" "}
       <Link
         href="https://papers.codechefvit.com/upload"
-        target="_blank"
         rel="noopener noreferrer"
-        className="dark:text-blue-400 text-red-500 underline"
+        className="text-[#562EE7] dark:text-[#A47DE5] underline"
       >
         Upload
       </Link>
@@ -51,7 +50,7 @@ const faqs = [
         href="mailto:codechefvit@gmail.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="dark:text-blue-400 text-red-500 underline"
+        className="text-[#562EE7] dark:text-[#A47DE5] underline"
       >
         codechefvit@gmail.com
       </Link>
@@ -64,15 +63,9 @@ const faqs = [
       answer:
         <>
       If the paper you&apos;re looking for isn’t available, you can{" "}
-      <Link
-        href="https://papers.codechefvit.com/request"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="dark:text-blue-400 text-red-500 underline"
-      >
-        submit a request
-      </Link>
-      .
+      <span>
+        <RequestModal section="faq"/>
+      </span>
     </>,
     },
     {
@@ -108,7 +101,7 @@ const faqs = [
               <h2
                 className={`w-full text-sm font-semibold leading-snug transition-colors sm:text-base md:text-lg ${
                   faqActive === index
-                    ? "text-[#A47DE5]"
+                    ? "text-[#562EE7] dark:text-[#A47DE5] "
                     : "text-black dark:text-white"
                 }`}
               >
@@ -117,7 +110,7 @@ const faqs = [
               <button
                 className={`flex h-6 w-8 shrink-0 items-center justify-center rounded-full text-base font-bold transition-all duration-200 sm:h-7 sm:w-9 sm:text-lg ${
                   faqActive === index
-                    ? "bg-[#A47DE5] text-white"
+                    ? "bg-[#562EE7] dark:bg-[#A47DE5]  text-white"
                     : "bg-black text-white"
                 }`}
               >

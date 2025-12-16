@@ -23,8 +23,8 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   updater,
 }) => (
   <div className="flex w-full flex-col items-baseline justify-between border-b-2 border-[#36266d] px-[10px]">
-    <Accordion className="w-full" type="single" collapsible>
-      <AccordionItem className="border-none no-underline" value="item-1">
+    <Accordion className="w-full" type="single" value={label}>
+      <AccordionItem className="border-none no-underline" value={label}>
         <AccordionTrigger className="w-full no-underline">
           <div className="font-play text-sm no-underline">{label}</div>
         </AccordionTrigger>

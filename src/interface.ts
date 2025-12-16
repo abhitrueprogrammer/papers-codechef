@@ -1,52 +1,4 @@
-// export interface CloudinaryUploadResult {
-//   id: string;
-//   batchId: string;
-//   asset_id: string;
-//   public_id: string;
-//   version: number;
-//   version_id?: string;
-//   signature: string;
-//   width: number;
-//   height: number;
-//   format: string;
-//   access_mode: string;
-//   bytes: number;
-//   created_at: string;
-//   etag: string;
-//   folder: string;
-//   original_filename: string;
-//   path: string;
-//   placeholder: boolean;
-//   resource_type: string;
-//   secure_url: string;
-//   tags: string[];
-//   thumbnail_url: string;
-//   type: string;
-//   url: string;
-
 import { mongo } from "mongoose";
-
-export interface CloudinaryUploadResult {
-  asset_id: string;
-  public_id: string;
-  version: number;
-  version_id: string;
-  signature: string;
-  width: number;
-  height: number;
-  format: string;
-  resource_type: string;
-  created_at: string;
-  tags: string[];
-  bytes: number;
-  type: string;
-  etag: string;
-  placeholder: boolean;
-  url: string;
-  secure_url: string;
-  folder: string;
-  access_mode: string;
-}
 
 export interface IUpcomingSlot {
   slot: string;
@@ -57,17 +9,12 @@ export interface IUpcomingSubject {
   slots: string[];
 }
 
-export interface CloudinaryUploadWidgetProps {
-  info: CloudinaryUploadResult;
-  event?: string;
-}
-
 export interface PostRequestBody {
   tags: string;
 }
 
 export interface PaperResponse {
-  final_url: string;
+  file_url: string;
   subject: string;
   year: string;
   slot: string;
@@ -75,8 +22,7 @@ export interface PaperResponse {
 }
 
 export interface IAdminPaper {
-  public_id_cloudinary: string;
-  final_url: string;
+  file_url: string;
   thumbnail_url: string;
   subject: string | null;
   slot: string | null;
@@ -88,7 +34,6 @@ export interface IAdminPaper {
     | "Summer Semester"
     | "Weekend Semester"
     | null;
-  cloudinary_index: number;
   campus:
     | "Vellore"
     | "Chennai"
@@ -159,7 +104,7 @@ export interface IUpcomingPaper extends mongo.Document {
 export interface IPaper {
   _id: string;
   exam: "CAT-1" | "CAT-2" | "FAT" | "Model CAT-1" | "Model CAT-2" | "Model FAT";
-  final_url: string;
+  file_url: string;
   thumbnail_url: string;
   semester:
     | "Fall Semester"
@@ -202,9 +147,7 @@ export interface Filters {
   unique_semesters: string[];
 }
 
-export interface StoredSubjects {
-  subjects: string[];
-}
+export type StoredSubjects = string[];
 
 export interface TransformedPaper {
   subject: string;

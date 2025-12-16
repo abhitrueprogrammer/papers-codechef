@@ -18,6 +18,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import PinnedModal from "./ui/PinnedModal";
+import RequestModal from "./ui/RequestModal";
+
 interface Props {
   onNavigate: () => void;
 }
@@ -66,15 +68,10 @@ export default function FloatingNavbar({ onNavigate }: Props) {
             </div>
           </DropdownMenuItem>
 
-          <DropdownMenuItem asChild>
-            <Link
-              href="/request"
-              onClick={() => onNavigate()}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-1 hover:bg-[#1A1823] transition"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-              <span className="text-sm font-medium">Paper Request</span>
-            </Link>
+          <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+            <div className="flex w-full items-center gap-3 rounded-lg px-3 py-1 hover:bg-[#1A1823] transition">
+              <RequestModal/>
+            </div>
           </DropdownMenuItem>
           <div className="flex w-full items-center gap-3 rounded-lg px-3 py-1">
             <div className="border rounded-full">
